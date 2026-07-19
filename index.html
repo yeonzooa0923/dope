@@ -758,8 +758,8 @@
             } catch (e) {}
         }
 
-        // RULE 1: Strict Paths 적용하여 Firebase 권한 무결성 유지
-        const getOndanaDocRef = () => doc(db, 'artifacts', appId, 'public', 'data', 'profile-content');
+        // RULE 1: Strict Paths 적용하여 Firebase 권한 무결성 유지 (5마디 경로 -> 4마디 경로로 완벽 수정)
+        const getOndanaDocRef = () => doc(db, 'artifacts', appId, 'public', 'profile-content');
 
         async function authenticate() {
             try {
@@ -817,7 +817,7 @@
                         globalSongsData = defaultSongsData;
                     }
                 } catch (error) {
-                    console.warn("Firestore error, falling back:", error.message);
+                    console.warn("Firestore error, falling back to local:", error.message);
                     fallbackToLocal();
                 }
             } else {
@@ -1582,6 +1582,7 @@
             });
         }
 
+        // Window interface binders for HTML mapping
         function closeProfileEditModal() { 
             const modal = document.getElementById('profile-edit-modal'); 
             modal.classList.add('opacity-0', 'pointer-events-none'); 

@@ -1145,7 +1145,7 @@
             const grid = document.getElementById('upbo-grid');
             if (!grid) return;
             grid.innerHTML = '';
-            if (data.length === 0) { grid.innerHTML = '<div class="col-span-full py-10 text-center text-gray-400 font-bold">검색된 도링이가 없습니다.</div>'; return; }
+            if (data.length === 0) { grid.innerHTML = '<div class="col-span-full py-10 text-center text-gray-400 font-bold">검색된 도야지가 없어요 !</div>'; return; }
 
             data.forEach(user => {
                 const totalItems = (user.items || []).reduce((sum, item) => sum + item.count, 0);

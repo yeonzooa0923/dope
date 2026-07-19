@@ -200,6 +200,11 @@
                                class="w-12 h-12 rounded-xl bg-[#ff0000] border-2 border-black text-white flex items-center justify-center hover:scale-110 transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]" title="YouTube">
                                 <i class="fa-brands fa-youtube text-lg"></i>
                             </a>
+                            <!-- Naver Cafe Link (Hidden by default, shown dynamically) -->
+                            <a id="profile-cafe-link" href="#" target="_blank" 
+                               class="hidden w-12 h-12 rounded-xl bg-[#03cf5d] border-2 border-black text-white items-center justify-center hover:scale-110 transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]" title="공식 팬카페 ☕">
+                                <i class="fa-solid fa-mug-hot text-base"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -356,7 +361,7 @@
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <i class="fa-solid fa-magnifying-glass text-brand text-base"></i>
                         </div>
-                        <input type="text" id="upbo-search" class="w-full bg-[#fffcfc] dark:bg-[#120e0f] border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 text-sm rounded-xl focus:ring-1 focus:ring-brand focus:border-brand block pl-11 p-3.5 outline-none font-bold transition-colors" placeholder="도야지 닉네임을 검색해보세요...">
+                        <input type="text" id="upbo-search" class="w-full bg-[#fffcfc] dark:bg-[#120e0f] border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 text-sm rounded-xl focus:ring-1 focus:ring-brand block pl-11 p-3.5 outline-none font-bold transition-colors" placeholder="도야지 닉네임을 검색해보세요...">
                     </div>
                     <!-- Admin: Add New User -->
                     <button id="admin-add-user-btn" onclick="openAddUserModal()" class="hidden items-center justify-center bg-brand hover:bg-brand-hover text-white font-black py-3.5 px-5 rounded-xl border-2 border-black transition-colors whitespace-nowrap shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] text-sm">
@@ -548,11 +553,11 @@
                     </div>
                     <div>
                         <label class="block text-gray-500 dark:text-pink-300 mb-1.5">곡 제목 (필수)</label>
-                        <input type="text" id="new-song-title" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="예: 첫 만남은 계획대로 되지 않아">
+                        <input type="text" id="new-song-title" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="예: 시차">
                     </div>
                     <div>
                         <label class="block text-gray-500 dark:text-pink-300 mb-1.5">아티스트 (필수)</label>
-                        <input type="text" id="new-song-artist" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="예: TWS">
+                        <input type="text" id="new-song-artist" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="예: 우원재">
                     </div>
                 </div>
                 <div class="mt-6 flex justify-end gap-2 text-xs font-black">
@@ -576,6 +581,26 @@
                         <h4 class="text-sm text-brand-dark dark:text-white mb-2"><i class="fa-regular fa-image text-brand mr-1"></i> 대표 아트 배너</h4>
                         <label class="block text-gray-400 dark:text-pink-350 mb-1.5">상단 커버 URL 이미지</label>
                         <input type="text" id="edit-profile-banner" class="w-full bg-brand-light/30 dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="이미지 주소를 복사해 넣어주세요">
+                    </div>
+                    <hr class="border-brand/10 dark:border-brand/25">
+
+                    <!-- Social Links Configuration -->
+                    <div>
+                        <h4 class="text-sm text-brand-dark dark:text-white mb-2"><i class="fa-solid fa-share-nodes text-brand mr-1"></i> 소셜 미디어 연동</h4>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-gray-400 dark:text-pink-350 mb-1">SOOP 방송국 링크</label>
+                                <input type="text" id="edit-profile-soop" class="w-full bg-brand-light/30 dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-2.5 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-gray-400 dark:text-pink-350 mb-1">유튜브 채널 링크</label>
+                                <input type="text" id="edit-profile-youtube" class="w-full bg-brand-light/30 dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-2.5 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-gray-400 dark:text-pink-350 mb-1">네이버 팬카페 링크 (공백 또는 '준비중' 입력 시 버튼 숨김)</label>
+                                <input type="text" id="edit-profile-cafe" class="w-full bg-brand-light/30 dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-2.5 outline-none" placeholder="준비중">
+                            </div>
+                        </div>
                     </div>
                     <hr class="border-brand/10 dark:border-brand/25">
 
@@ -706,7 +731,7 @@
         
         const defaultProfileData = {
             bannerUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop",
-            introText: `안뇽안뇽~! 뽀용뽀용한 매력의 핑크&블랙 미소녀 스트리머 도페라고 해! 💖🖤\n언제나 시크하지만 다정한 노래와 따뜻한 마음으로 도야지들에게 행복을 충전해 줄게!\n다양한 미소녀 소통 게임, 상큼하고 트렌디한 노래들로 꽉 채운 노래책을 펼쳐봐! ⭐`,
+            introText: "안뇽안뇽~! 뽀용뽀용한 매력의 핑크&블랙 미소녀 스트리머 도페라고 해! 💖🖤\n언제나 시크하지만 다정한 노래와 따뜻한 마음으로 도야지들에게 행복을 충전해 줄게!\n다양한 미소녀 소통 게임, 상큼하고 트렌디한 노래들로 꽉 채운 노래책을 펼쳐봐! ⭐",
             tags: ["ENFP", "도야지", "버츄얼싱어", "미소녀보이스", "핑크앤블랙"],
             broadcast: { time: "매일 밤 9시 방송 온에어 (매주 수요일 정기 충전 휴방!)", content: "달달 가창 타임 · 시크 오디오 수다 · 뽀용 소통", game: "잔잔한 힐링 퍼즐 · 시청자 참여게임 · 미소녀 스토리" },
             likes: ["노래 🎤", "마크 🎮", "사람들이랑 부대끼기 👥"],
@@ -717,20 +742,21 @@
             ],
             socials: {
                 soop: "https://www.sooplive.com/station/likethis1125",
-                youtube: "https://www.youtube.com/@yourdop3"
+                youtube: "https://www.youtube.com/@yourdop3",
+                cafe: "준비중"
             }
         };
 
         const defaultSongsData = [
-            { title: "첫 만남은 계획대로 되지 않아", artist: "TWS", genre: "귀여운곡" },
+            { title: "시차 (We Are)", artist: "우원재 (Feat. 로꼬 & GRAY)", genre: "힙합/R&B" },
+            { title: "Square (2017)", artist: "백예린", genre: "힙합/R&B" },
             { title: "실루엣", artist: "KANA-BOON", genre: "우타이테" },
             { title: "금요일의 아침인사", artist: "HoneyWorks", genre: "우타이테" },
-            { title: "시차 (We Are)", artist: "우원재 (Feat. 로꼬, GRAY)", genre: "힙합/R&B" },
             { title: "Love Lee", artist: "AKMU", genre: "기타/팝" },
             { title: "Sparkle", artist: "RADWIMPS", genre: "J-Pop/애니" },
             { title: "레몬 (Lemon)", artist: "요네즈 켄시", genre: "J-Pop/애니" },
             { title: "밤양갱", artist: "비비(BIBI)", genre: "귀여운곡" },
-            { title: "Square (2017)", artist: "백예린", genre: "힙합/R&B" }
+            { title: "Dilly Dally", artist: "도페", genre: "귀여운곡" }
         ];
         
         let globalUpboData = [];
@@ -744,6 +770,7 @@
         let deleteConfirmState = false; 
         let currentSelectedGenre = '전체';
 
+        // Local Storage Utilities
         function safeGetStorage(key, defaultValue) {
             try { 
                 const item = window.localStorage.getItem(key); 
@@ -793,13 +820,17 @@
                         globalProfileData = data.profile || defaultProfileData;
                         globalSongsData = data.songs || defaultSongsData;
 
+                        // Ensure cafe links support if missing
+                        if (globalProfileData.socials && typeof globalProfileData.socials.cafe === 'undefined') {
+                            globalProfileData.socials.cafe = "준비중";
+                        }
+
                         safeSetStorage('dopeUpboData', globalUpboData);
                         safeSetStorage('dopeNoticeData', globalNoticeData);
                         safeSetStorage('dopeScheduleData', globalScheduleData);
                         safeSetStorage('dopeProfileData', globalProfileData);
                         safeSetStorage('dopeSongsData', globalSongsData);
                     } else {
-                        // 초기화 생성
                         const initialPayload = {
                             upbo: defaultUpboData,
                             notice: defaultNoticeData,
@@ -845,6 +876,7 @@
             }
         }
 
+        // Dark Mode Configuration & Event Triggers
         document.addEventListener('DOMContentLoaded', async () => {
             generateBgGlitter();
 
@@ -913,6 +945,7 @@
             renderSongList();
         });
 
+        // Background glitter hearts and stars for Dope's pink & black theme
         function generateBgGlitter() {
             const container = document.getElementById('glitter-bg');
             if (!container) return;
@@ -1013,6 +1046,30 @@
             const bannerImg = document.getElementById('profile-banner-img');
             if (bannerImg) {
                 bannerImg.src = globalProfileData.bannerUrl || defaultProfileData.bannerUrl;
+            }
+
+            // Update Social Links Dynamic Rendering
+            const socials = globalProfileData.socials || defaultProfileData.socials || {};
+            const soopLink = document.getElementById('profile-soop-link');
+            if (soopLink) soopLink.href = socials.soop || 'https://www.sooplive.com/station/likethis1125';
+            
+            const youtubeLink = document.getElementById('profile-youtube-link');
+            if (youtubeLink) youtubeLink.href = socials.youtube || 'https://www.youtube.com/@yourdop3';
+
+            const cafeLink = document.getElementById('profile-cafe-link');
+            if (cafeLink) {
+                const cafeUrl = (socials.cafe || '').trim();
+                if (!cafeUrl || cafeUrl === '준비중' || cafeUrl === '#' || cafeUrl === '') {
+                    cafeLink.classList.add('hidden');
+                    cafeLink.classList.remove('flex');
+                } else {
+                    cafeLink.href = cafeUrl;
+                    cafeLink.onclick = null;
+                    cafeLink.target = '_blank';
+                    cafeLink.title = "공식 팬카페로 이동 ☕";
+                    cafeLink.classList.remove('hidden');
+                    cafeLink.classList.add('flex');
+                }
             }
 
             const introEl = document.getElementById('profile-intro-text');
@@ -1276,6 +1333,7 @@
             renderSongList();
         }
 
+        // Admin Access and Password configuration (비밀번호: 209075)
         function openAdminLoginModal() {
             if (isAdminMode) {
                 isAdminMode = false;
@@ -1315,6 +1373,7 @@
             }
         }
 
+        // User & Item editing systems
         function saveUpboData() { updateFirestore('upbo', globalUpboData); }
 
         function openUpboEditModal(user, avatarUrl) {
@@ -1437,6 +1496,7 @@
             saveUpboData(); closeAddUserModal(); document.getElementById('upbo-search').dispatchEvent(new Event('input'));
         }
 
+        // Notice configuration operations
         function openNoticeEditModal() {
             const modal = document.getElementById('notice-edit-modal'); renderNoticeEditList();
             requestAnimationFrame(() => { modal.classList.remove('opacity-0', 'pointer-events-none'); modal.querySelector('div').classList.remove('scale-95'); modal.querySelector('div').classList.add('scale-100'); });
@@ -1519,6 +1579,7 @@
             updateFirestore('schedule', globalScheduleData); renderSchedule(); closeScheduleEditModal();
         }
 
+        // Song edit controls
         function openAddSongModal() {
             const modal = document.getElementById('add-song-modal');
             document.getElementById('new-song-title').value = '';
@@ -1544,6 +1605,7 @@
             showToast(`노래책에 "${title}" 신곡을 등록했습니다! 🎵`);
         }
 
+        // Profile modification center
         function openProfileEditModal() {
             const modal = document.getElementById('profile-edit-modal');
             
@@ -1551,6 +1613,11 @@
             document.getElementById('edit-profile-intro').value = globalProfileData.introText || ''; 
             document.getElementById('edit-profile-tags').value = (globalProfileData.tags || []).join(', ');
             
+            const socials = globalProfileData.socials || {};
+            document.getElementById('edit-profile-soop').value = socials.soop || '';
+            document.getElementById('edit-profile-youtube').value = socials.youtube || '';
+            document.getElementById('edit-profile-cafe').value = socials.cafe || '';
+
             const broadcast = globalProfileData.broadcast || {};
             document.getElementById('edit-profile-time').value = broadcast.time || ''; 
             document.getElementById('edit-profile-content').value = broadcast.content || ''; 
@@ -1572,6 +1639,7 @@
             });
         }
 
+        // Window interface binders for HTML mapping
         function closeProfileEditModal() { 
             const modal = document.getElementById('profile-edit-modal'); 
             modal.classList.add('opacity-0', 'pointer-events-none'); 
@@ -1620,6 +1688,11 @@
             globalProfileData.introText = document.getElementById('edit-profile-intro').value; 
             globalProfileData.tags = parse(document.getElementById('edit-profile-tags').value);
             
+            if (!globalProfileData.socials) globalProfileData.socials = {};
+            globalProfileData.socials.soop = document.getElementById('edit-profile-soop').value.trim();
+            globalProfileData.socials.youtube = document.getElementById('edit-profile-youtube').value.trim();
+            globalProfileData.socials.cafe = document.getElementById('edit-profile-cafe').value.trim();
+
             if (!globalProfileData.broadcast) globalProfileData.broadcast = {};
             globalProfileData.broadcast.time = document.getElementById('edit-profile-time').value; 
             globalProfileData.broadcast.content = document.getElementById('edit-profile-content').value; 

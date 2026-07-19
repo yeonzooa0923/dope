@@ -111,7 +111,7 @@
                     <a href="#notice" class="text-brand-dark dark:text-pink-200 hover:text-brand px-3 py-2 rounded-xl transition-all hover:bg-brand/10">공지</a>
                     <a href="#schedule" class="text-brand-dark dark:text-pink-200 hover:text-brand px-3 py-2 rounded-xl transition-all hover:bg-brand/10">스케줄</a>
                     <a href="#homework" class="text-brand-dark dark:text-pink-200 hover:text-brand px-3 py-2 rounded-xl transition-all hover:bg-brand/10">업보 현황</a>
-                    <a href="#songlist" class="text-brand-dark dark:text-pink-200 hover:text-brand px-3 py-2 rounded-xl transition-all hover:bg-brand/10">오르골</a>
+                    <a href="#songlist" class="text-brand-dark dark:text-pink-200 hover:text-brand px-3 py-2 rounded-xl transition-all hover:bg-brand/10">노래책</a>
                     
                     <!-- Theme toggler -->
                     <button id="theme-toggle" class="text-brand dark:text-pink-300 hover:bg-brand/10 p-2.5 rounded-xl transition-colors">
@@ -380,11 +380,11 @@
                         <div class="text-brand font-black tracking-widest text-[11px] uppercase font-logo">
                             <span>DOPE JUKEBOX PLAYLIST</span>
                         </div>
-                        <h2 class="text-2xl font-black text-brand-dark dark:text-white tracking-tight">도페 보물 오르골 🎵</h2>
+                        <h2 class="text-2xl font-black text-brand-dark dark:text-white tracking-tight">도페의 노래책 🎵</h2>
                     </div>
                     <!-- Admin Addition trigger -->
                     <button id="admin-add-song-btn" onclick="openAddSongModal()" class="hidden items-center justify-center bg-brand hover:bg-brand-hover text-white font-black py-2 px-4 rounded-xl border-2 border-black transition-colors whitespace-nowrap text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                        <i class="fa-solid fa-music mr-1.5"></i>오르골 곡 추가
+                        <i class="fa-solid fa-music mr-1.5"></i>노래책 곡 추가
                     </button>
                 </div>
 
@@ -531,7 +531,7 @@
         <div id="add-song-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
             <div class="bg-white dark:bg-brand-cardBg rounded-3xl shadow-2xl w-11/12 max-w-sm p-6 transform scale-95 transition-transform duration-300 border-4 border-black dark:border-brand">
                 <div class="flex justify-between items-center mb-4 border-b-2 border-black dark:border-brand pb-3">
-                    <h3 class="text-lg font-black text-brand-dark dark:text-white flex items-center gap-2"><i class="fa-solid fa-music text-brand"></i> 오르골 신청곡 수납</h3>
+                    <h3 class="text-lg font-black text-brand-dark dark:text-white flex items-center gap-2"><i class="fa-solid fa-music text-brand"></i> 노래책 신청곡 등록</h3>
                     <button onclick="closeAddSongModal()" class="text-brand hover:text-brand-dark"><i class="fa-solid fa-xmark text-xl"></i></button>
                 </div>
                 <div class="space-y-4 font-bold text-xs">
@@ -705,7 +705,7 @@
         
         const defaultProfileData = {
             bannerUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop",
-            introText: `안뇽안뇽~! 뽀용뽀용한 매력의 핑크&블랙 미소녀 스트리머 도페라고 해! 💖🖤\n언제나 시크하지만 다정한 노래와 따뜻한 마음으로 도야지들에게 행복을 충전해 줄게!\n다양한 미소녀 소통 게임, 상큼하고 트렌디한 노래들로 꽉 채운 쥬크박스 오르골을 열어봐! ⭐`,
+            introText: `안뇽안뇽~! 뽀용뽀용한 매력의 핑크&블랙 미소녀 스트리머 도페라고 해! 💖🖤\n언제나 시크하지만 다정한 노래와 따뜻한 마음으로 도야지들에게 행복을 충전해 줄게!\n다양한 미소녀 소통 게임, 상큼하고 트렌디한 노래들로 꽉 채운 노래책을 펼쳐봐! ⭐`,
             tags: ["ENTP", "도야지", "버츄얼싱어", "미소녀보이스", "핑크앤블랙"],
             broadcast: { time: "매일 밤 9시 방송 온에어 (매주 수요일 정기 충전 휴방!)", content: "달달 가창 타임 · 시크 오디오 수다 · 뽀용 소통", game: "잔잔한 힐링 퍼즐 · 시청자 참여게임 · 미소녀 스토리" },
             likes: ["노래 🎤", "마크 🎮", "사람들이랑 부대끼기 👥"],
@@ -1219,7 +1219,7 @@
             }
 
             if (filteredSongs.length === 0) {
-                body.innerHTML = `<tr><td colspan="4" class="px-4 py-8 text-center text-gray-400 font-bold text-xs">오르골 보관함이 텅 비어있습니다.</td></tr>`;
+                body.innerHTML = `<tr><td colspan="4" class="px-4 py-8 text-center text-gray-400 font-bold text-xs">노래책이 텅 비어있습니다.</td></tr>`;
                 return;
             }
 
@@ -1550,7 +1550,7 @@
             updateFirestore('songs', globalSongsData);
             closeAddSongModal();
             renderSongList();
-            showToast(`오르골에 "${title}" 신곡을 보관했습니다! 🎵`);
+            showToast(`노래책에 "${title}" 신곡을 등록했습니다! 🎵`);
         }
 
         // Profile modification center
@@ -1666,7 +1666,7 @@
             globalSongsData.splice(index, 1);
             updateFirestore('songs', globalSongsData);
             renderSongList();
-            showToast(`"${deletedTitle}" 곡이 오르골 리스트에서 삭제되었습니다.`);
+            showToast(`"${deletedTitle}" 곡이 노래책 리스트에서 삭제되었습니다.`);
         }
 
         // Window interface binders for HTML mapping

@@ -94,7 +94,6 @@
     <!-- Background glitter particles container -->
     <div class="absolute inset-0 pointer-events-none overflow-hidden z-0 opacity-55 dark:opacity-40" id="glitter-bg"></div>
 
-    <!-- Header / Navigation -->
     <header class="bg-white/70 dark:bg-brand-dark/80 backdrop-blur-md shadow-md sticky top-0 z-50 transition-all duration-300 border-b-2 border-brand/20 dark:border-brand/40">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
@@ -109,6 +108,7 @@
                 <!-- Desktop Menu links -->
                 <nav class="hidden md:flex space-x-6 items-center font-bold text-sm tracking-wider uppercase">
                     <a href="#profile" class="text-brand-dark dark:text-pink-200 hover:text-brand px-3 py-2 rounded-xl transition-all hover:bg-brand/10">프로필</a>
+                    <a href="#outfits" class="text-brand-dark dark:text-pink-200 hover:text-brand px-3 py-2 rounded-xl transition-all hover:bg-brand/10">방셀 의상</a>
                     <a href="#notice" class="text-brand-dark dark:text-pink-200 hover:text-brand px-3 py-2 rounded-xl transition-all hover:bg-brand/10">공지</a>
                     <a href="#schedule" class="text-brand-dark dark:text-pink-200 hover:text-brand px-3 py-2 rounded-xl transition-all hover:bg-brand/10">스케줄</a>
                     <a href="#homework" class="text-brand-dark dark:text-pink-200 hover:text-brand px-3 py-2 rounded-xl transition-all hover:bg-brand/10">업보 현황</a>
@@ -134,6 +134,7 @@
         <div id="mobile-menu" class="hidden md:hidden bg-white/95 dark:bg-brand-dark/95 border-t-2 border-brand/20 dark:border-brand/40">
             <div class="px-4 pt-2 pb-4 space-y-1.5 font-bold text-sm uppercase">
                 <a href="#profile" class="block text-brand-dark dark:text-pink-200 hover:bg-brand/10 hover:text-brand px-4 py-3 rounded-xl">프로필</a>
+                <a href="#outfits" class="block text-brand-dark dark:text-pink-200 hover:bg-brand/10 hover:text-brand px-4 py-3 rounded-xl">방셀 의상</a>
                 <a href="#notice" class="block text-brand-dark dark:text-pink-200 hover:bg-brand/10 hover:text-brand px-4 py-3 rounded-xl">공지사항</a>
                 <a href="#schedule" class="block text-brand-dark dark:text-pink-200 hover:bg-brand/10 hover:text-brand px-4 py-3 rounded-xl">스케줄</a>
                 <a href="#homework" class="block text-brand-dark dark:text-pink-200 hover:bg-brand/10 hover:text-brand px-4 py-3 rounded-xl">업보 현황</a>
@@ -293,6 +294,33 @@
 
         </section>
 
+        <!-- NEW! 이달의 방셀 의상 코너 -->
+        <section id="outfits" class="scroll-mt-20">
+            <div class="bg-white dark:bg-brand-cardBg rounded-3xl p-6 border-4 border-black dark:border-brand/40 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,84,176,0.3)] transition-colors duration-300">
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-4 border-b border-brand/20 dark:border-brand/45 pb-4">
+                    <div>
+                        <div class="text-brand font-black tracking-widest text-[11px] uppercase font-logo flex items-center gap-1.5">
+                            <span>DOPE MONTHLY FANSIGN OUTFIT GALLERY (PNG SUPPORT)</span>
+                        </div>
+                        <h2 class="text-2xl font-black text-brand-dark dark:text-white tracking-tight">이달의 방셀 의상 👗💕</h2>
+                    </div>
+                    <!-- Admin: Add Outfit -->
+                    <button id="admin-add-outfit-btn" onclick="openAddOutfitModal()" class="hidden items-center justify-center bg-brand hover:bg-brand-hover text-white font-black py-2.5 px-4 rounded-xl border-2 border-black transition-colors whitespace-nowrap text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                        <i class="fa-solid fa-shirt mr-1.5"></i>의상 업로드 (PNG 가능)
+                    </button>
+                </div>
+
+                <p class="text-xs text-gray-500 dark:text-pink-300 font-bold mb-6">
+                    💡 이번 달 도페에게 신청할 수 있는 스페셜 방셀 의상 리스트입니다! 투명 배경(PNG) 의상도 완벽 지원해요!
+                </p>
+
+                <!-- Grid for Outfits -->
+                <div id="outfits-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    <!-- Cards will be injected by JavaScript -->
+                </div>
+            </div>
+        </section>
+
         <!-- 2. Notice & Schedule Row -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Notice Section -->
@@ -384,7 +412,7 @@
                 <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-4 border-b border-brand/20 dark:border-brand/45 pb-4">
                     <div>
                         <div class="text-brand font-black tracking-widest text-[11px] uppercase font-logo">
-                            <span>DOPE JUKEBOX PLAYLIST</span>
+                            <span>DOPE JUKEBOX PLAYLIST WITH STARS</span>
                         </div>
                         <h2 class="text-2xl font-black text-brand-dark dark:text-white tracking-tight">도페의 노래책 🎵</h2>
                     </div>
@@ -421,6 +449,7 @@
                                 <th class="px-4 py-3.5">장르</th>
                                 <th class="px-4 py-3.5">곡 제목</th>
                                 <th class="px-4 py-3.5">아티스트</th>
+                                <th class="px-4 py-3.5 text-center">숙련도</th>
                                 <th class="px-4 py-3.5 text-center">신청</th>
                             </tr>
                         </thead>
@@ -442,6 +471,35 @@
                 <div class="flex justify-end gap-2 text-xs font-black">
                     <button onclick="closeAdminLoginModal()" class="px-4 py-3 rounded-xl bg-gray-200 dark:bg-brand-dark text-gray-700 dark:text-pink-200 hover:bg-gray-300 transition-colors">취소</button>
                     <button onclick="checkAdminPin()" class="px-4 py-3 rounded-xl bg-brand text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-brand-hover transition-colors">인증 완료</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- NEW! Add Outfit Modal -->
+        <div id="add-outfit-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+            <div class="bg-white dark:bg-brand-cardBg rounded-3xl shadow-2xl w-11/12 max-w-sm p-6 transform scale-95 transition-transform duration-300 border-4 border-black dark:border-brand">
+                <div class="flex justify-between items-center mb-4 border-b-2 border-black dark:border-brand pb-3">
+                    <h3 class="text-lg font-black text-brand-dark dark:text-white flex items-center gap-2"><i class="fa-solid fa-shirt text-brand"></i> 방셀 의상 등록</h3>
+                    <button onclick="closeAddOutfitModal()" class="text-brand hover:text-brand-dark"><i class="fa-solid fa-xmark text-xl"></i></button>
+                </div>
+                <div class="space-y-4 font-bold text-xs">
+                    <div>
+                        <label class="block text-gray-500 dark:text-pink-300 mb-1.5">의상 명칭 (필수)</label>
+                        <input type="text" id="new-outfit-name" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="예: 큐티 핑키 드레스">
+                    </div>
+                    <div>
+                        <label class="block text-gray-500 dark:text-pink-300 mb-1.5">의상 설명 및 코멘트 (필수)</label>
+                        <input type="text" id="new-outfit-desc" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="예: 시그니처 핑크 레이스 양갈래 코디 🎀">
+                    </div>
+                    <div>
+                        <label class="block text-gray-500 dark:text-pink-300 mb-1.5">의상 파일 업로드 (PNG 권장 / JPG 지원)</label>
+                        <input type="file" id="new-outfit-file" accept="image/png, image/jpeg, image/jpg, image/webp" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl p-2.5 outline-none font-bold">
+                        <p class="text-[10px] text-gray-400 mt-1">💡 투명도 배경이 들어간 PNG 파일을 선택하시면 예쁜 실루엣이 나타납니다.</p>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end gap-2 text-xs font-black">
+                    <button onclick="closeAddOutfitModal()" class="px-4 py-3 rounded-xl bg-gray-200 dark:bg-brand-dark text-gray-700 dark:text-pink-200 hover:bg-gray-300 transition-colors">취소</button>
+                    <button onclick="submitNewOutfit()" class="px-4 py-3 rounded-xl bg-brand text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-brand-hover transition-colors">업로드 완료</button>
                 </div>
             </div>
         </div>
@@ -533,7 +591,7 @@
             </div>
         </div>
 
-        <!-- Song Addition Modal -->
+        <!-- Song Addition Modal (With NEW Stars Option!) -->
         <div id="add-song-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
             <div class="bg-white dark:bg-brand-cardBg rounded-3xl shadow-2xl w-11/12 max-w-sm p-6 transform scale-95 transition-transform duration-300 border-4 border-black dark:border-brand">
                 <div class="flex justify-between items-center mb-4 border-b-2 border-black dark:border-brand pb-3">
@@ -558,6 +616,17 @@
                     <div>
                         <label class="block text-gray-500 dark:text-pink-300 mb-1.5">아티스트 (필수)</label>
                         <input type="text" id="new-song-artist" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="예: 우원재">
+                    </div>
+                    <!-- NEW! Rating configuration inside add song modal -->
+                    <div>
+                        <label class="block text-gray-500 dark:text-pink-300 mb-1.5">숙련도 별점 (필수)</label>
+                        <select id="new-song-rating" class="w-full bg-white dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none font-bold">
+                            <option value="5">★★★★★ (갓-벽 완성도) 💖</option>
+                            <option value="4">★★★★☆ (자신 가득) ⭐</option>
+                            <option value="3">★★★☆☆ (감성 충만 보통) ✨</option>
+                            <option value="2">★★☆☆☆ (열심히 연습중) 💤</option>
+                            <option value="1">★☆☆☆☆ (밀당곡 가사확인) 🌸</option>
+                        </select>
                     </div>
                 </div>
                 <div class="mt-6 flex justify-end gap-2 text-xs font-black">
@@ -748,15 +817,21 @@
         };
 
         const defaultSongsData = [
-            { title: "시차 (We Are)", artist: "우원재 (Feat. 로꼬 & GRAY)", genre: "힙합/R&B" },
-            { title: "Square (2017)", artist: "백예린", genre: "힙합/R&B" },
-            { title: "실루엣", artist: "KANA-BOON", genre: "우타이테" },
-            { title: "금요일의 아침인사", artist: "HoneyWorks", genre: "우타이테" },
-            { title: "Love Lee", artist: "AKMU", genre: "기타/팝" },
-            { title: "Sparkle", artist: "RADWIMPS", genre: "J-Pop/애니" },
-            { title: "레몬 (Lemon)", artist: "요네즈 켄시", genre: "J-Pop/애니" },
-            { title: "밤양갱", artist: "비비(BIBI)", genre: "귀여운곡" },
-            { title: "Dilly Dally", artist: "도페", genre: "귀여운곡" }
+            { title: "시차 (We Are)", artist: "우원재 (Feat. 로꼬 & GRAY)", genre: "힙합/R&B", rating: 5 },
+            { title: "Square (2017)", artist: "백예린", genre: "힙합/R&B", rating: 4 },
+            { title: "실루엣", artist: "KANA-BOON", genre: "우타이테", rating: 5 },
+            { title: "금요일의 아침인사", artist: "HoneyWorks", genre: "우타이테", rating: 5 },
+            { title: "Love Lee", artist: "AKMU", genre: "기타/팝", rating: 3 },
+            { title: "Sparkle", artist: "RADWIMPS", genre: "J-Pop/애니", rating: 4 },
+            { title: "레몬 (Lemon)", artist: "요네즈 켄시", genre: "J-Pop/애니", rating: 3 },
+            { title: "밤양갱", artist: "비비(BIBI)", genre: "귀여운곡", rating: 5 },
+            { title: "Dilly Dally", artist: "도페", genre: "귀여운곡", rating: 5 }
+        ];
+
+        // NEW! Default Outfits data (Supports PNG and visual layouts)
+        const defaultOutfitsData = [
+            { id: "outfit_1", name: "러블리 핑크 메이드 🎀", desc: "도야지들이 가장 사랑하는 뽀용한 핑크색 에이프런 세트!", img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=600&auto=format&fit=crop" },
+            { id: "outfit_2", name: "시크 고스 로리타 🖤", desc: "시크한 다크매트 테마가 돋보이는 레이스 듬뿍 코디!", img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=600&auto=format&fit=crop" }
         ];
         
         let globalUpboData = [];
@@ -764,6 +839,7 @@
         let globalScheduleData = [];
         let globalProfileData = {};
         let globalSongsData = [];
+        let globalOutfitsData = []; // NEW
         
         let isAdminMode = false;
         let currentEditingUserId = null;
@@ -819,6 +895,7 @@
                         globalScheduleData = data.schedule || defaultScheduleData;
                         globalProfileData = data.profile || defaultProfileData;
                         globalSongsData = data.songs || defaultSongsData;
+                        globalOutfitsData = data.outfits || defaultOutfitsData; // Fetch outfits
 
                         // Ensure cafe links support if missing
                         if (globalProfileData.socials && typeof globalProfileData.socials.cafe === 'undefined') {
@@ -830,13 +907,15 @@
                         safeSetStorage('dopeScheduleData', globalScheduleData);
                         safeSetStorage('dopeProfileData', globalProfileData);
                         safeSetStorage('dopeSongsData', globalSongsData);
+                        safeSetStorage('dopeOutfitsData', globalOutfitsData);
                     } else {
                         const initialPayload = {
                             upbo: defaultUpboData,
                             notice: defaultNoticeData,
                             schedule: defaultScheduleData,
                             profile: defaultProfileData,
-                            songs: defaultSongsData
+                            songs: defaultSongsData,
+                            outfits: defaultOutfitsData
                         };
                         await setDoc(docRef, initialPayload);
                         globalUpboData = defaultUpboData;
@@ -844,6 +923,7 @@
                         globalScheduleData = defaultScheduleData;
                         globalProfileData = defaultProfileData;
                         globalSongsData = defaultSongsData;
+                        globalOutfitsData = defaultOutfitsData;
                     }
                 } catch (error) {
                     console.warn("Firestore error, falling back to local:", error.message);
@@ -861,6 +941,7 @@
             globalScheduleData = safeGetStorage('dopeScheduleData', defaultScheduleData);
             globalProfileData = safeGetStorage('dopeProfileData', defaultProfileData);
             globalSongsData = safeGetStorage('dopeSongsData', defaultSongsData);
+            globalOutfitsData = safeGetStorage('dopeOutfitsData', defaultOutfitsData);
         }
 
         async function updateFirestore(key, data) {
@@ -943,6 +1024,7 @@
             renderNotice();
             renderSchedule();
             renderSongList();
+            renderOutfits(); // Render outfits
         });
 
         // Background glitter hearts and stars for Dope's pink & black theme
@@ -1119,6 +1201,114 @@
             }
         }
 
+        // NEW! Render Outfits list
+        function renderOutfits() {
+            const container = document.getElementById('outfits-grid');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (!globalOutfitsData || globalOutfitsData.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full py-12 text-center text-gray-400 font-bold text-sm">
+                        현재 등록된 방셀 의상이 없습니다. 의상을 올려주세요! 🌸
+                    </div>
+                `;
+                return;
+            }
+
+            globalOutfitsData.forEach((outfit) => {
+                const deleteBtn = isAdminMode ? `
+                    <button onclick="deleteOutfit('${outfit.id}')" class="absolute top-3 right-3 z-20 bg-red-600 text-white hover:bg-red-700 w-8 h-8 rounded-full flex items-center justify-center border-2 border-black transition-colors shadow-md" title="의상 삭제">
+                        <i class="fa-solid fa-trash-can text-xs"></i>
+                    </button>
+                ` : '';
+
+                container.innerHTML += `
+                    <div class="bg-brand-light/30 dark:bg-[#1a1416]/50 border-2 border-black dark:border-brand/40 rounded-2xl p-4 flex flex-col justify-between hover:translate-y-[-4px] transition-all duration-300 relative group shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,84,176,0.15)]">
+                        ${deleteBtn}
+                        
+                        <!-- Image Frame Supporting PNG Transparent background -->
+                        <div class="w-full h-64 bg-white/70 dark:bg-black/60 rounded-xl border border-black/10 dark:border-brand/20 flex items-center justify-center overflow-hidden mb-3 relative pattern-checkered">
+                            <img src="${outfit.img}" alt="${outfit.name}" class="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://placehold.co/300x400/0f0c0d/ff54b0?text=PNG+Outfit'">
+                        </div>
+
+                        <div>
+                            <h3 class="text-brand-dark dark:text-pink-100 font-black text-base mb-1.5">${outfit.name}</h3>
+                            <p class="text-xs text-gray-500 dark:text-pink-300 font-semibold leading-relaxed">${outfit.desc}</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function openAddOutfitModal() {
+            const modal = document.getElementById('add-outfit-modal');
+            document.getElementById('new-outfit-name').value = '';
+            document.getElementById('new-outfit-desc').value = '';
+            document.getElementById('new-outfit-file').value = '';
+            
+            requestAnimationFrame(() => { 
+                modal.classList.remove('opacity-0', 'pointer-events-none'); 
+                modal.querySelector('div').classList.remove('scale-95'); 
+                modal.querySelector('div').classList.add('scale-100'); 
+            });
+        }
+
+        function closeAddOutfitModal() {
+            const modal = document.getElementById('add-outfit-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none'); 
+            modal.querySelector('div').classList.remove('scale-100'); 
+            modal.querySelector('div').classList.add('scale-95');
+        }
+
+        function submitNewOutfit() {
+            const name = document.getElementById('new-outfit-name').value.trim();
+            const desc = document.getElementById('new-outfit-desc').value.trim();
+            const fileInput = document.getElementById('new-outfit-file');
+
+            if (!name || !desc) {
+                showToast("의상 이름과 코멘트를 모두 입력해주세요! 🌸");
+                return;
+            }
+
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const base64Img = e.target.result;
+                    const newId = 'outfit_' + Date.now();
+                    
+                    const newOutfit = {
+                        id: newId,
+                        name: name,
+                        desc: desc,
+                        img: base64Img
+                    };
+
+                    globalOutfitsData.push(newOutfit);
+                    updateFirestore('outfits', globalOutfitsData);
+                    closeAddOutfitModal();
+                    renderOutfits();
+                    showToast(`"${name}" 방셀 의상을 성공적으로 추가했습니다! 👗`);
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                showToast("의상 PNG/JPG 파일을 업로드해 주세요! 👚");
+            }
+        }
+
+        function deleteOutfit(id) {
+            const targetOutfit = globalOutfitsData.find(o => o.id === id);
+            if (!targetOutfit) return;
+
+            globalOutfitsData = globalOutfitsData.filter(o => o.id !== id);
+            updateFirestore('outfits', globalOutfitsData);
+            renderOutfits();
+            showToast(`"${targetOutfit.name}" 의상이 삭제되었습니다.`);
+        }
+
         function renderNotice() {
             const list = document.getElementById('notice-list');
             if (!list) return;
@@ -1272,7 +1462,7 @@
             }
 
             if (filteredSongs.length === 0) {
-                body.innerHTML = `<tr><td colspan="4" class="px-4 py-8 text-center text-gray-400 font-bold text-xs">노래책이 텅 비어있습니다.</td></tr>`;
+                body.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-gray-400 font-bold text-xs">노래책이 텅 비어있습니다.</td></tr>`;
                 return;
             }
 
@@ -1285,11 +1475,24 @@
                     </button>
                 ` : '';
 
+                // NEW! Render Star proficiency score (별점 5개 표현 기능)
+                const currentRating = song.rating || 5; // Default 5 stars if not specified
+                let starsHtml = '<div class="flex justify-center items-center gap-0.5 text-brand">';
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= currentRating) {
+                        starsHtml += `<i class="fa-solid fa-star text-[11px]"></i>`;
+                    } else {
+                        starsHtml += `<i class="fa-regular fa-star text-gray-300 dark:text-zinc-600 text-[11px]"></i>`;
+                    }
+                }
+                starsHtml += '</div>';
+
                 body.innerHTML += `
                     <tr class="hover:bg-brand-light/10 dark:hover:bg-[#1a1416]/50 transition-colors font-semibold">
                         <td class="px-4 py-3"><span class="bg-brand-light dark:bg-brand-dark text-brand text-[10px] px-2 py-0.5 rounded font-black border border-brand/20">${song.genre}</span></td>
                         <td class="px-4 py-3 text-sm text-brand-dark dark:text-pink-100 font-bold">${song.title}</td>
                         <td class="px-4 py-3 text-xs text-gray-500 dark:text-pink-300">${song.artist}</td>
+                        <td class="px-4 py-3 text-center">${starsHtml}</td>
                         <td class="px-4 py-3 text-center">
                             <div class="flex items-center justify-center gap-2">
                                 <button onclick="requestSong('${song.title}', '${song.artist}')" class="px-3 py-1 bg-brand text-white border border-black hover:bg-brand-hover rounded-lg text-xs font-black transition-all shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)]" title="신청 서식 복사">
@@ -1340,8 +1543,10 @@
                 document.getElementById('admin-add-user-btn').classList.add('hidden'); document.getElementById('admin-add-user-btn').classList.remove('flex');
                 document.getElementById('admin-notice-edit-btn').classList.add('hidden'); document.getElementById('admin-schedule-edit-btn').classList.add('hidden'); document.getElementById('admin-profile-edit-btn').classList.add('hidden');
                 document.getElementById('admin-add-song-btn').classList.add('hidden'); document.getElementById('admin-add-song-btn').classList.remove('flex');
+                document.getElementById('admin-add-outfit-btn').classList.add('hidden'); document.getElementById('admin-add-outfit-btn').classList.remove('flex');
                 document.getElementById('upbo-search').dispatchEvent(new Event('input')); 
                 renderSongList();
+                renderOutfits();
                 showToast("로그아웃 되었습니다.");
                 return;
             }
@@ -1363,8 +1568,10 @@
                 document.getElementById('admin-add-user-btn').classList.remove('hidden'); document.getElementById('admin-add-user-btn').classList.add('flex');
                 document.getElementById('admin-notice-edit-btn').classList.remove('hidden'); document.getElementById('admin-schedule-edit-btn').classList.remove('hidden'); document.getElementById('admin-profile-edit-btn').classList.remove('hidden');
                 document.getElementById('admin-add-song-btn').classList.remove('hidden'); document.getElementById('admin-add-song-btn').classList.add('flex');
+                document.getElementById('admin-add-outfit-btn').classList.remove('hidden'); document.getElementById('admin-add-outfit-btn').classList.add('flex');
                 document.getElementById('upbo-search').dispatchEvent(new Event('input'));
                 renderSongList();
+                renderOutfits();
                 showToast("도페님 환영합니다! 🖤");
             } else {
                 const input = document.getElementById('admin-pin');
@@ -1584,6 +1791,7 @@
             const modal = document.getElementById('add-song-modal');
             document.getElementById('new-song-title').value = '';
             document.getElementById('new-song-artist').value = '';
+            document.getElementById('new-song-rating').value = '5'; // default 5 stars
             requestAnimationFrame(() => { modal.classList.remove('opacity-0', 'pointer-events-none'); modal.querySelector('div').classList.remove('scale-95'); modal.querySelector('div').classList.add('scale-100'); });
         }
         function closeAddSongModal() { const modal = document.getElementById('add-song-modal'); modal.classList.add('opacity-0', 'pointer-events-none'); modal.querySelector('div').classList.remove('scale-100'); modal.querySelector('div').classList.add('scale-95'); }
@@ -1592,13 +1800,14 @@
             const genre = document.getElementById('new-song-genre').value;
             const title = document.getElementById('new-song-title').value.trim();
             const artist = document.getElementById('new-song-artist').value.trim();
+            const rating = parseInt(document.getElementById('new-song-rating').value, 10); // get star rating
             
             if (!title || !artist) {
                 showToast("제목과 아티스트 명을 모두 적어주세요! 🌸");
                 return;
             }
 
-            globalSongsData.push({ title, artist, genre });
+            globalSongsData.push({ title, artist, genre, rating });
             updateFirestore('songs', globalSongsData);
             closeAddSongModal();
             renderSongList();
@@ -1764,6 +1973,12 @@
         window.closeAddSongModal = closeAddSongModal;
         window.submitNewSong = submitNewSong;
         window.deleteSong = deleteSong;
+
+        // NEW Window mappings
+        window.openAddOutfitModal = openAddOutfitModal;
+        window.closeAddOutfitModal = closeAddOutfitModal;
+        window.submitNewOutfit = submitNewOutfit;
+        window.deleteOutfit = deleteOutfit;
     </script>
 </body>
 </html>

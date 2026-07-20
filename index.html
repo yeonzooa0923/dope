@@ -13,7 +13,7 @@
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts: Fredoka (Y2K Round), Gowun Dodum, Noto Sans KR -->
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Gowun+Dodum&family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght=500;600;700&family=Gowun+Dodum&family=Gaegu:wght=400;700&family=Noto+Sans+KR:wght=300;400;500;700;900&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
@@ -86,6 +86,24 @@
                 transform: translateY(105vh) translateX(50px) rotate(360deg);
                 opacity: 0;
             }
+        }
+
+        /* 체크무늬 패턴 (투명 PNG 배경 강조용) */
+        .pattern-checkered {
+            background-color: #f3f4f6;
+            background-image: linear-gradient(45deg, #e5e7eb 25%, transparent 25%), 
+                              linear-gradient(-45deg, #e5e7eb 25%, transparent 25%), 
+                              linear-gradient(45deg, transparent 75%, #e5e7eb 75%), 
+                              linear-gradient(-45deg, transparent 75%, #e5e7eb 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        .dark .pattern-checkered {
+            background-color: #1a1416;
+            background-image: linear-gradient(45deg, #110d0e 25%, transparent 25%), 
+                              linear-gradient(-45deg, #110d0e 25%, transparent 25%), 
+                              linear-gradient(45deg, transparent 75%, #110d0e 75%), 
+                              linear-gradient(-45deg, transparent 75%, #110d0e 75%);
         }
     </style>
 </head>
@@ -294,7 +312,7 @@
 
         </section>
 
-        <!-- NEW! 이달의 방셀 의상 코너 -->
+        <!-- 2. 이달의 방셀 의상 코너 -->
         <section id="outfits" class="scroll-mt-20">
             <div class="bg-white dark:bg-brand-cardBg rounded-3xl p-6 border-4 border-black dark:border-brand/40 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,84,176,0.3)] transition-colors duration-300">
                 <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-4 border-b border-brand/20 dark:border-brand/45 pb-4">
@@ -321,7 +339,7 @@
             </div>
         </section>
 
-        <!-- 2. Notice & Schedule Row -->
+        <!-- 3. Notice & Schedule Row -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Notice Section -->
             <section id="notice" class="scroll-mt-20">
@@ -361,7 +379,7 @@
             </section>
         </div>
 
-        <!-- 3. Homework Section (방셀 숙제 현황) -->
+        <!-- 4. Homework Section (방셀 숙제 현황) -->
         <section id="homework" class="scroll-mt-20">
             <div class="bg-white dark:bg-brand-cardBg rounded-3xl p-6 border-4 border-black dark:border-brand/40 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,84,176,0.3)] transition-colors duration-300">
                 
@@ -405,7 +423,7 @@
             </div>
         </section>
 
-        <!-- 4. Songlist Section (노래리스트) -->
+        <!-- 5. Songlist Section (노래리스트) -->
         <section id="songlist" class="scroll-mt-20">
             <div class="bg-white dark:bg-brand-cardBg rounded-3xl p-6 border-4 border-black dark:border-brand/40 shadow-[8px_8px_0px_0px_rgba(255,84,176,0.3)] dark:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-colors duration-300 flex flex-col">
                 
@@ -475,7 +493,7 @@
             </div>
         </div>
 
-        <!-- NEW! Add Outfit Modal -->
+        <!-- Add Outfit Modal -->
         <div id="add-outfit-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
             <div class="bg-white dark:bg-brand-cardBg rounded-3xl shadow-2xl w-11/12 max-w-sm p-6 transform scale-95 transition-transform duration-300 border-4 border-black dark:border-brand">
                 <div class="flex justify-between items-center mb-4 border-b-2 border-black dark:border-brand pb-3">
@@ -591,7 +609,7 @@
             </div>
         </div>
 
-        <!-- Song Addition Modal (With NEW Stars Option!) -->
+        <!-- Song Addition Modal -->
         <div id="add-song-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
             <div class="bg-white dark:bg-brand-cardBg rounded-3xl shadow-2xl w-11/12 max-w-sm p-6 transform scale-95 transition-transform duration-300 border-4 border-black dark:border-brand">
                 <div class="flex justify-between items-center mb-4 border-b-2 border-black dark:border-brand pb-3">
@@ -617,7 +635,7 @@
                         <label class="block text-gray-500 dark:text-pink-300 mb-1.5">아티스트 (필수)</label>
                         <input type="text" id="new-song-artist" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="예: 우원재">
                     </div>
-                    <!-- NEW! Rating configuration inside add song modal -->
+                    <!-- Rating configuration inside add song modal -->
                     <div>
                         <label class="block text-gray-500 dark:text-pink-300 mb-1.5">숙련도 별점 (필수)</label>
                         <select id="new-song-rating" class="w-full bg-white dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none font-bold">
@@ -760,7 +778,7 @@
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase Configuration (사용자가 신규 제공한 도페 데이터베이스 자격 증명)
+        // Firebase Configuration (도페 데이터베이스 자격 증명)
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'dope-profile-app';
         const firebaseConfig = {
             apiKey: "AIzaSyD_pxh2yQKzrJGM5rEoFQyms0_s4AAJjw8",
@@ -828,7 +846,7 @@
             { title: "Dilly Dally", artist: "도페", genre: "귀여운곡", rating: 5 }
         ];
 
-        // NEW! Default Outfits data (Supports PNG and visual layouts)
+        // Default Outfits data
         const defaultOutfitsData = [
             { id: "outfit_1", name: "러블리 핑크 메이드 🎀", desc: "도야지들이 가장 사랑하는 뽀용한 핑크색 에이프런 세트!", img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=600&auto=format&fit=crop" },
             { id: "outfit_2", name: "시크 고스 로리타 🖤", desc: "시크한 다크매트 테마가 돋보이는 레이스 듬뿍 코디!", img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=600&auto=format&fit=crop" }
@@ -839,7 +857,7 @@
         let globalScheduleData = [];
         let globalProfileData = {};
         let globalSongsData = [];
-        let globalOutfitsData = []; // NEW
+        let globalOutfitsData = [];
         
         let isAdminMode = false;
         let currentEditingUserId = null;
@@ -861,7 +879,10 @@
             } catch (e) {}
         }
 
-        const getOndanaDocRef = () => doc(db, 'artifacts', appId, 'public', 'profile-content');
+        // Rule 1 만족을 위한 공식 파이어베이스 보관 경로 정의
+        const getOndanaDocRef = () => doc(db, 'artifacts', appId, 'public', 'data', 'site-data', 'main');
+        // 기존 데이터를 가져오기 위한 호환성용 구형 경로
+        const getOldDocRef = () => doc(db, 'artifacts', appId, 'public', 'profile-content');
 
         async function authenticate() {
             try {
@@ -886,8 +907,25 @@
             if (isAuthed && navigator.onLine) {
                 try {
                     const docRef = getOndanaDocRef();
-                    const docSnap = await getDoc(docRef);
+                    let docSnap = await getDoc(docRef);
                     
+                    // 신규 경로에 데이터가 아직 존재하지 않는 경우 (최초 마이그레이션 실행)
+                    if (!docSnap.exists()) {
+                        const oldRef = getOldDocRef();
+                        try {
+                            const oldSnap = await getDoc(oldRef);
+                            if (oldSnap.exists()) {
+                                // 구버전 경로에 데이터가 존재하면 새 데이터베이로 마이그레이션 복제 진행
+                                const oldData = oldSnap.data();
+                                await setDoc(docRef, oldData);
+                                console.log("구형 DB 데이터 마이그레이션 완료 🖤");
+                                docSnap = await getDoc(docRef);
+                            }
+                        } catch (err) {
+                            console.warn("구버전 데이터 검사 생사 에러:", err.message);
+                        }
+                    }
+
                     if (docSnap.exists()) {
                         const data = docSnap.data();
                         globalUpboData = data.upbo || defaultUpboData;
@@ -895,9 +933,8 @@
                         globalScheduleData = data.schedule || defaultScheduleData;
                         globalProfileData = data.profile || defaultProfileData;
                         globalSongsData = data.songs || defaultSongsData;
-                        globalOutfitsData = data.outfits || defaultOutfitsData; // Fetch outfits
+                        globalOutfitsData = data.outfits || defaultOutfitsData;
 
-                        // Ensure cafe links support if missing
                         if (globalProfileData.socials && typeof globalProfileData.socials.cafe === 'undefined') {
                             globalProfileData.socials.cafe = "준비중";
                         }
@@ -909,6 +946,7 @@
                         safeSetStorage('dopeSongsData', globalSongsData);
                         safeSetStorage('dopeOutfitsData', globalOutfitsData);
                     } else {
+                        // 신규/구버전 모두 아무런 데이터가 없을 경우 디폴트값 세팅
                         const initialPayload = {
                             upbo: defaultUpboData,
                             notice: defaultNoticeData,
@@ -944,10 +982,16 @@
             globalOutfitsData = safeGetStorage('dopeOutfitsData', defaultOutfitsData);
         }
 
+        // Rule 3: Firestore 쓰기 보안 규칙 검사 가드 적용
         async function updateFirestore(key, data) {
             safeSetStorage(`dope${key.charAt(0).toUpperCase() + key.slice(1)}Data`, data);
             
-            if (auth.currentUser && navigator.onLine) {
+            if (!auth.currentUser) {
+                console.warn("데이터베이스 쓰기 거부: 인증된 계정 아님");
+                return;
+            }
+
+            if (navigator.onLine) {
                 try { 
                     const docRef = getOndanaDocRef();
                     await updateDoc(docRef, { [key]: data }); 
@@ -1024,7 +1068,7 @@
             renderNotice();
             renderSchedule();
             renderSongList();
-            renderOutfits(); // Render outfits
+            renderOutfits();
         });
 
         // Background glitter hearts and stars for Dope's pink & black theme
@@ -1201,7 +1245,56 @@
             }
         }
 
-        // NEW! Render Outfits list
+        /**
+         * Canvas를 사용해 화질은 유지하면서 이미지 용량을 획기적으로 줄여주는 압축 헬퍼
+         * @param {File} file - 업로드된 이미지 파일
+         * @param {number} maxWidth - 제한할 최대 가로 폭
+         * @param {number} maxHeight - 제한할 최대 세로 높이
+         * @param {number} quality - JPEG 압축 수준 (0.0 ~ 1.0)
+         * @returns {Promise<string>} - 압축된 Base64 데이터 문자열
+         */
+        function compressImage(file, maxWidth = 800, maxHeight = 800, quality = 0.7) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        // 종횡비 유지 비율 조절
+                        if (width > height) {
+                            if (width > maxWidth) {
+                                height = Math.round((height * maxWidth) / width);
+                                width = maxWidth;
+                            }
+                        } else {
+                            if (height > maxHeight) {
+                                width = Math.round((width * maxHeight) / height);
+                                height = maxHeight;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // 투명 배경 PNG의 경우 투명도 보존을 위해 PNG로 내보냄, 그 외에는 가벼운 JPEG 변환
+                        const mimeType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+                        const dataUrl = canvas.toDataURL(mimeType, quality);
+                        resolve(dataUrl);
+                    };
+                    img.onerror = (err) => reject(err);
+                };
+                reader.onerror = (err) => reject(err);
+            });
+        }
+
+        // Render Outfits list
         function renderOutfits() {
             const container = document.getElementById('outfits-grid');
             if (!container) return;
@@ -1261,7 +1354,7 @@
             modal.querySelector('div').classList.add('scale-95');
         }
 
-        function submitNewOutfit() {
+        async function submitNewOutfit() {
             const name = document.getElementById('new-outfit-name').value.trim();
             const desc = document.getElementById('new-outfit-desc').value.trim();
             const fileInput = document.getElementById('new-outfit-file');
@@ -1273,29 +1366,32 @@
 
             if (fileInput.files && fileInput.files[0]) {
                 const file = fileInput.files[0];
-                const reader = new FileReader();
+                showToast("의상 최적화 및 저장 중... ⏳");
 
-                reader.onload = function(e) {
-                    const base64Img = e.target.result;
-                    const newId = 'outfit_' + Date.now();
+                try {
+                    // 용량 폭증을 막기 위해 가로세로 최대 800px 크기로 압축 변환 적용
+                    const compressedBase64 = await compressImage(file, 800, 800, 0.7);
                     
+                    const newId = 'outfit_' + Date.now();
                     const newOutfit = {
                         id: newId,
                         name: name,
                         desc: desc,
-                        img: base64Img
+                        img: compressedBase64
                     };
 
                     globalOutfitsData.push(newOutfit);
-                    updateFirestore('outfits', globalOutfitsData);
+                    await updateFirestore('outfits', globalOutfitsData);
+                    
                     closeAddOutfitModal();
                     renderOutfits();
-                    showToast(`"${name}" 방셀 의상을 성공적으로 추가했습니다! 👗`);
-                };
-
-                reader.readAsDataURL(file);
+                    showToast(`"${name}" 방셀 의상을 성공적으로 등록했습니다! 👗`);
+                } catch (error) {
+                    console.error("이미지 가공 에러:", error);
+                    showToast("의상 이미지 업로드 중 오류가 발생했습니다. 😥");
+                }
             } else {
-                showToast("의상 PNG/JPG 파일을 업로드해 주세요! 👚");
+                showToast("의상 파일을 선택해 주세요! 👚");
             }
         }
 
@@ -1475,8 +1571,8 @@
                     </button>
                 ` : '';
 
-                // NEW! Render Star proficiency score (별점 5개 표현 기능)
-                const currentRating = song.rating || 5; // Default 5 stars if not specified
+                // Render Star proficiency score (별점 5개 표현 기능)
+                const currentRating = song.rating || 5;
                 let starsHtml = '<div class="flex justify-center items-center gap-0.5 text-brand">';
                 for (let i = 1; i <= 5; i++) {
                     if (i <= currentRating) {
@@ -1974,7 +2070,7 @@
         window.submitNewSong = submitNewSong;
         window.deleteSong = deleteSong;
 
-        // NEW Window mappings
+        // Window mappings for outfits
         window.openAddOutfitModal = openAddOutfitModal;
         window.closeAddOutfitModal = closeAddOutfitModal;
         window.submitNewOutfit = submitNewOutfit;

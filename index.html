@@ -105,6 +105,15 @@
                               linear-gradient(45deg, transparent 75%, #110d0e 75%), 
                               linear-gradient(-45deg, transparent 75%, #110d0e 75%);
         }
+
+        /* 슬라이더의 스크롤바는 숨기면서 기능은 완벽 보존하는 스타일 */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE/Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
     </style>
 </head>
 <body class="bg-[#fff3f6] dark:bg-[#0c0809] text-[#2c1d22] dark:text-pink-100 font-sans text-lg antialiased min-h-screen flex flex-col transition-colors duration-300 relative overflow-x-hidden">
@@ -219,7 +228,7 @@
                                class="w-12 h-12 rounded-xl bg-[#ff0000] border-2 border-black text-white flex items-center justify-center hover:scale-110 transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]" title="YouTube">
                                 <i class="fa-brands fa-youtube text-lg"></i>
                             </a>
-                            <!-- Naver Cafe Link (Hidden by default, shown dynamically) -->
+                            <!-- Naver Cafe Link -->
                             <a id="profile-cafe-link" href="#" target="_blank" 
                                class="hidden w-12 h-12 rounded-xl bg-[#03cf5d] border-2 border-black text-white items-center justify-center hover:scale-110 transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]" title="공식 팬카페 ☕">
                                 <i class="fa-solid fa-mug-hot text-base"></i>
@@ -312,9 +321,9 @@
 
         </section>
 
-        <!-- 2. 이달의 방셀 의상 코너 -->
+        <!-- 이달의 방셀 의상 코너 (스와이프 슬라이더 적용 완료!) -->
         <section id="outfits" class="scroll-mt-20">
-            <div class="bg-white dark:bg-brand-cardBg rounded-3xl p-6 border-4 border-black dark:border-brand/40 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,84,176,0.3)] transition-colors duration-300">
+            <div class="bg-white dark:bg-brand-cardBg rounded-3xl p-6 border-4 border-black dark:border-brand/40 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,84,176,0.3)] transition-colors duration-300 relative">
                 <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-4 border-b border-brand/20 dark:border-brand/45 pb-4">
                     <div>
                         <div class="text-brand font-black tracking-widest text-[11px] uppercase font-logo flex items-center gap-1.5">
@@ -322,24 +331,38 @@
                         </div>
                         <h2 class="text-2xl font-black text-brand-dark dark:text-white tracking-tight">이달의 방셀 의상 👗💕</h2>
                     </div>
-                    <!-- Admin: Add Outfit -->
-                    <button id="admin-add-outfit-btn" onclick="openAddOutfitModal()" class="hidden items-center justify-center bg-brand hover:bg-brand-hover text-white font-black py-2.5 px-4 rounded-xl border-2 border-black transition-colors whitespace-nowrap text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                        <i class="fa-solid fa-shirt mr-1.5"></i>의상 업로드 (PNG 가능)
-                    </button>
+                    
+                    <div class="flex items-center gap-3 self-end sm:self-auto">
+                        <!-- Navigation Arrows (슬라이더 수동 조절용 버튼) -->
+                        <div class="flex items-center gap-2 mr-1">
+                            <button id="outfit-prev-btn" onclick="slideOutfits('left')" class="w-10 h-10 rounded-xl bg-brand-light dark:bg-brand-dark border-2 border-black text-brand flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,84,176,0.2)]" title="이전 의상">
+                                <i class="fa-solid fa-chevron-left text-sm"></i>
+                            </button>
+                            <button id="outfit-next-btn" onclick="slideOutfits('right')" class="w-10 h-10 rounded-xl bg-brand text-white border-2 border-black flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" title="다음 의상">
+                                <i class="fa-solid fa-chevron-right text-sm"></i>
+                            </button>
+                        </div>
+                        <!-- Admin: Add Outfit -->
+                        <button id="admin-add-outfit-btn" onclick="openAddOutfitModal()" class="hidden items-center justify-center bg-brand hover:bg-brand-hover text-white font-black py-2.5 px-4 rounded-xl border-2 border-black transition-colors whitespace-nowrap text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                            <i class="fa-solid fa-shirt mr-1.5"></i>의상 업로드 (PNG 가능)
+                        </button>
+                    </div>
                 </div>
 
                 <p class="text-xs text-gray-500 dark:text-pink-300 font-bold mb-6">
-                    💡 이번 달 도페에게 신청할 수 있는 스페셜 방셀 의상 리스트입니다! 투명 배경(PNG) 의상도 완벽 지원해요!
+                    💡 이번 달 도페에게 신청할 수 있는 스페셜 방셀 의상 리스트입니다! 손가락으로 가볍게 밀거나 양쪽 화살표 버튼을 클릭해 넘겨보세요!
                 </p>
 
-                <!-- Grid for Outfits -->
-                <div id="outfits-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    <!-- Cards will be injected by JavaScript -->
+                <!-- Slider for Outfits (가로 스크롤 & 고유 비율 변형 레이아웃 탑재) -->
+                <div class="relative overflow-hidden">
+                    <div id="outfits-slider" class="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 no-scrollbar">
+                        <!-- Cards will be injected by JavaScript -->
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- 3. Notice & Schedule Row -->
+        <!-- 2. Notice & Schedule Row -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Notice Section -->
             <section id="notice" class="scroll-mt-20">
@@ -379,7 +402,7 @@
             </section>
         </div>
 
-        <!-- 4. Homework Section (방셀 숙제 현황) -->
+        <!-- 3. Homework Section (방셀 숙제 현황) -->
         <section id="homework" class="scroll-mt-20">
             <div class="bg-white dark:bg-brand-cardBg rounded-3xl p-6 border-4 border-black dark:border-brand/40 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,84,176,0.3)] transition-colors duration-300">
                 
@@ -423,7 +446,7 @@
             </div>
         </section>
 
-        <!-- 5. Songlist Section (노래리스트) -->
+        <!-- 4. Songlist Section (노래리스트) -->
         <section id="songlist" class="scroll-mt-20">
             <div class="bg-white dark:bg-brand-cardBg rounded-3xl p-6 border-4 border-black dark:border-brand/40 shadow-[8px_8px_0px_0px_rgba(255,84,176,0.3)] dark:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-colors duration-300 flex flex-col">
                 
@@ -512,7 +535,7 @@
                     <div>
                         <label class="block text-gray-500 dark:text-pink-300 mb-1.5">의상 파일 업로드 (PNG 권장 / JPG 지원)</label>
                         <input type="file" id="new-outfit-file" accept="image/png, image/jpeg, image/jpg, image/webp" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl p-2.5 outline-none font-bold">
-                        <p class="text-[10px] text-gray-400 mt-1">💡 투명도 배경이 들어간 PNG 파일을 선택하시면 예쁜 실루엣이 나타납니다.</p>
+                        <p class="text-[10px] text-gray-400 mt-1">💡 투명도 배경이 들어간 PNG 파일을 선택하시면 실제 비율 맞춤형으로 예쁜 실루엣이 나타납니다.</p>
                     </div>
                 </div>
                 <div class="mt-6 flex justify-end gap-2 text-xs font-black">
@@ -846,7 +869,6 @@
             { title: "Dilly Dally", artist: "도페", genre: "귀여운곡", rating: 5 }
         ];
 
-        // Default Outfits data
         const defaultOutfitsData = [
             { id: "outfit_1", name: "러블리 핑크 메이드 🎀", desc: "도야지들이 가장 사랑하는 뽀용한 핑크색 에이프런 세트!", img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=600&auto=format&fit=crop" },
             { id: "outfit_2", name: "시크 고스 로리타 🖤", desc: "시크한 다크매트 테마가 돋보이는 레이스 듬뿍 코디!", img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=600&auto=format&fit=crop" }
@@ -915,7 +937,7 @@
                         try {
                             const oldSnap = await getDoc(oldRef);
                             if (oldSnap.exists()) {
-                                // 구버전 경로에 데이터가 존재하면 새 데이터베이로 마이그레이션 복제 진행
+                                // 구버전 경로에 데이터가 존재하면 새 데이터베이스로 마이그레이션 복제 진행
                                 const oldData = oldSnap.data();
                                 await setDoc(docRef, oldData);
                                 console.log("구형 DB 데이터 마이그레이션 완료 🖤");
@@ -1245,64 +1267,15 @@
             }
         }
 
-        /**
-         * Canvas를 사용해 화질은 유지하면서 이미지 용량을 획기적으로 줄여주는 압축 헬퍼
-         * @param {File} file - 업로드된 이미지 파일
-         * @param {number} maxWidth - 제한할 최대 가로 폭
-         * @param {number} maxHeight - 제한할 최대 세로 높이
-         * @param {number} quality - JPEG 압축 수준 (0.0 ~ 1.0)
-         * @returns {Promise<string>} - 압축된 Base64 데이터 문자열
-         */
-        function compressImage(file, maxWidth = 800, maxHeight = 800, quality = 0.7) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = (event) => {
-                    const img = new Image();
-                    img.src = event.target.result;
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-
-                        // 종횡비 유지 비율 조절
-                        if (width > height) {
-                            if (width > maxWidth) {
-                                height = Math.round((height * maxWidth) / width);
-                                width = maxWidth;
-                            }
-                        } else {
-                            if (height > maxHeight) {
-                                width = Math.round((width * maxHeight) / height);
-                                height = maxHeight;
-                            }
-                        }
-
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-
-                        // 투명 배경 PNG의 경우 투명도 보존을 위해 PNG로 내보냄, 그 외에는 가벼운 JPEG 변환
-                        const mimeType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
-                        const dataUrl = canvas.toDataURL(mimeType, quality);
-                        resolve(dataUrl);
-                    };
-                    img.onerror = (err) => reject(err);
-                };
-                reader.onerror = (err) => reject(err);
-            });
-        }
-
-        // Render Outfits list
+        // NEW! Render Outfits list (이미지 사이즈에 맞게 카드 높이와 프레임이 최적화 변형되는 특화 레이아웃!)
         function renderOutfits() {
-            const container = document.getElementById('outfits-grid');
+            const container = document.getElementById('outfits-slider');
             if (!container) return;
             container.innerHTML = '';
 
             if (!globalOutfitsData || globalOutfitsData.length === 0) {
                 container.innerHTML = `
-                    <div class="col-span-full py-12 text-center text-gray-400 font-bold text-sm">
+                    <div class="w-full py-12 text-center text-gray-400 font-bold text-sm">
                         현재 등록된 방셀 의상이 없습니다. 의상을 올려주세요! 🌸
                     </div>
                 `;
@@ -1317,12 +1290,12 @@
                 ` : '';
 
                 container.innerHTML += `
-                    <div class="bg-brand-light/30 dark:bg-[#1a1416]/50 border-2 border-black dark:border-brand/40 rounded-2xl p-4 flex flex-col justify-between hover:translate-y-[-4px] transition-all duration-300 relative group shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,84,176,0.15)]">
+                    <div class="flex-shrink-0 w-full sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] snap-start bg-brand-light/30 dark:bg-[#1a1416]/50 border-2 border-black dark:border-brand/40 rounded-2xl p-4 flex flex-col justify-between hover:translate-y-[-4px] transition-all duration-300 relative group shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,84,176,0.15)]">
                         ${deleteBtn}
                         
-                        <!-- Image Frame Supporting PNG Transparent background -->
-                        <div class="w-full h-64 bg-white/70 dark:bg-black/60 rounded-xl border border-black/10 dark:border-brand/20 flex items-center justify-center overflow-hidden mb-3 relative pattern-checkered">
-                            <img src="${outfit.img}" alt="${outfit.name}" class="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://placehold.co/300x400/0f0c0d/ff54b0?text=PNG+Outfit'">
+                        <!-- Image Frame: h-64 강제 고정을 지우고 h-auto 및 max-h-[380px]로 변경하여 업로드한 이미지 비율 그대로 자동 변형 조절됩니다! -->
+                        <div class="w-full rounded-xl border border-black/10 dark:border-brand/20 flex items-center justify-center overflow-hidden mb-3 relative pattern-checkered">
+                            <img src="${outfit.img}" alt="${outfit.name}" class="w-full h-auto max-h-[380px] object-contain transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://placehold.co/300x400/0f0c0d/ff54b0?text=PNG+Outfit'">
                         </div>
 
                         <div>
@@ -1332,6 +1305,19 @@
                     </div>
                 `;
             });
+        }
+
+        // 슬라이더 좌우 버튼 네비게이션 제어
+        function slideOutfits(direction) {
+            const slider = document.getElementById('outfits-slider');
+            if (!slider) return;
+            // 뷰포트 너비의 80% 만큼 부드럽게 스크롤 이동
+            const scrollAmount = slider.clientWidth * 0.8;
+            if (direction === 'left') {
+                slider.scrollLeft -= scrollAmount;
+            } else {
+                slider.scrollLeft += scrollAmount;
+            }
         }
 
         function openAddOutfitModal() {
@@ -1354,6 +1340,47 @@
             modal.querySelector('div').classList.add('scale-95');
         }
 
+        // 이미지 고화질 상태를 유지하며 가로/세로 최대 800px 크기로 용량을 대폭 줄여 업로드가 완벽해지게 가공하는 핵심 압축 유틸리티
+        function compressImage(file, maxWidth, maxHeight, quality) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        // 종횡비를 유지하며 해상도 리사이징 계산
+                        if (width > height) {
+                            if (width > maxWidth) {
+                                height = Math.round((height * maxWidth) / width);
+                                width = maxWidth;
+                            }
+                        } else {
+                            if (height > maxHeight) {
+                                width = Math.round((width * maxHeight) / height);
+                                height = maxHeight;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        // PNG 투명도 보전을 위해 원본 포맷 유지, 그 외 포맷은 JPEG 압축
+                        const mimeType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+                        resolve(canvas.toDataURL(mimeType, quality));
+                    };
+                    img.onerror = (err) => reject(err);
+                };
+                reader.onerror = (err) => reject(err);
+            });
+        }
+
         async function submitNewOutfit() {
             const name = document.getElementById('new-outfit-name').value.trim();
             const desc = document.getElementById('new-outfit-desc').value.trim();
@@ -1366,11 +1393,11 @@
 
             if (fileInput.files && fileInput.files[0]) {
                 const file = fileInput.files[0];
-                showToast("의상 최적화 및 저장 중... ⏳");
+                showToast("의상 이미지 비율 가공 및 업로드 중... ⏳");
 
                 try {
-                    // 용량 폭증을 막기 위해 가로세로 최대 800px 크기로 압축 변환 적용
-                    const compressedBase64 = await compressImage(file, 800, 800, 0.7);
+                    // 고화질 원본 해상도를 최대 800px 한도로 보정 및 자동 압축 (투명 배경 레이어 PNG도 무손식 가공 지원)
+                    const compressedBase64 = await compressImage(file, 800, 800, 0.85);
                     
                     const newId = 'outfit_' + Date.now();
                     const newOutfit = {
@@ -1385,10 +1412,10 @@
                     
                     closeAddOutfitModal();
                     renderOutfits();
-                    showToast(`"${name}" 방셀 의상을 성공적으로 등록했습니다! 👗`);
+                    showToast(`"${name}" 방셀 의상을 고유 비율로 예쁘게 등록 완료했습니다! 👗`);
                 } catch (error) {
-                    console.error("이미지 가공 에러:", error);
-                    showToast("의상 이미지 업로드 중 오류가 발생했습니다. 😥");
+                    console.error("이미지 인코딩 가공 에러:", error);
+                    showToast("의상 업로드 가공 중 오류가 발생했습니다. 😥");
                 }
             } else {
                 showToast("의상 파일을 선택해 주세요! 👚");
@@ -2070,11 +2097,12 @@
         window.submitNewSong = submitNewSong;
         window.deleteSong = deleteSong;
 
-        // Window mappings for outfits
+        // NEW Window mappings
         window.openAddOutfitModal = openAddOutfitModal;
         window.closeAddOutfitModal = closeAddOutfitModal;
         window.submitNewOutfit = submitNewOutfit;
         window.deleteOutfit = deleteOutfit;
+        window.slideOutfits = slideOutfits; 
     </script>
 </body>
 </html>

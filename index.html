@@ -6,7 +6,7 @@
     <title>도페 프로필 💖🖤</title>
     
     <!-- 브라우저 탭 아이콘 (파비콘) - 도페님의 공식 SOOP 프로필 이미지 연동 -->
-    <link rel="icon" href="https://stimg.afreecatv.com/LOGO/li/likethis1125/likethis1125.jpg" type="image/jpeg">
+    <link class="rounded-full" rel="icon" href="https://stimg.afreecatv.com/LOGO/li/likethis1125/likethis1125.jpg" type="image/jpeg">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -321,7 +321,7 @@
 
         </section>
 
-        <!-- 이달의 방셀 의상 코너 (스와이프 슬라이더 적용 완료!) -->
+        <!-- 이달의 방셀 의상 코너 -->
         <section id="outfits" class="scroll-mt-20">
             <div class="bg-white dark:bg-brand-cardBg rounded-3xl p-6 border-4 border-black dark:border-brand/40 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,84,176,0.3)] transition-colors duration-300 relative">
                 <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-4 border-b border-brand/20 dark:border-brand/45 pb-4">
@@ -344,13 +344,13 @@
                         </div>
                         <!-- Admin: Add Outfit -->
                         <button id="admin-add-outfit-btn" onclick="openAddOutfitModal()" class="hidden items-center justify-center bg-brand hover:bg-brand-hover text-white font-black py-2.5 px-4 rounded-xl border-2 border-black transition-colors whitespace-nowrap text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                            <i class="fa-solid fa-shirt mr-1.5"></i>의상 업로드 (PNG 가능)
+                            <i class="fa-solid fa-shirt mr-1.5"></i>의상 등록 (초간편/고화질)
                         </button>
                     </div>
                 </div>
 
                 <p class="text-xs text-gray-500 dark:text-pink-300 font-bold mb-6">
-                    💡 이번 달 도페에게 신청할 수 있는 스페셜 방셀 의상 리스트입니다! 손가락으로 가볍게 밀거나 양쪽 화살표 버튼을 클릭해 넘겨보세요!
+                    💡 이번 달 도페에게 신청할 수 있는 스페셜 방셀 의상 리스트입니다! 
                 </p>
 
                 <!-- Slider for Outfits (가로 스크롤 & 고유 비율 변형 레이아웃 탑재) -->
@@ -448,7 +448,7 @@
 
         <!-- 4. Songlist Section (노래리스트) -->
         <section id="songlist" class="scroll-mt-20">
-            <div class="bg-white dark:bg-brand-cardBg rounded-3xl p-6 border-4 border-black dark:border-brand/40 shadow-[8px_8px_0px_0px_rgba(255,84,176,0.3)] dark:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-colors duration-300 flex flex-col">
+            <div class="bg-white dark:bg-brand-cardBg rounded-3xl p-6 border-4 border-black dark:border-brand/40 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,84,176,0.3)] dark:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-colors duration-300 flex flex-col">
                 
                 <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-4 border-b border-brand/20 dark:border-brand/45 pb-4">
                     <div>
@@ -526,21 +526,31 @@
                 <div class="space-y-4 font-bold text-xs">
                     <div>
                         <label class="block text-gray-500 dark:text-pink-300 mb-1.5">의상 명칭 (필수)</label>
-                        <input type="text" id="new-outfit-name" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="예: 큐티 핑키 드레스">
+                        <input type="text" id="new-outfit-name" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="예: 러블리 바니걸 🐰">
                     </div>
                     <div>
                         <label class="block text-gray-500 dark:text-pink-300 mb-1.5">의상 설명 및 코멘트 (필수)</label>
-                        <input type="text" id="new-outfit-desc" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="예: 시그니처 핑크 레이스 양갈래 코디 🎀">
+                        <input type="text" id="new-outfit-desc" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="예: 레이스 스타킹 포인트 코디 🖤">
                     </div>
-                    <div>
-                        <label class="block text-gray-500 dark:text-pink-300 mb-1.5">의상 파일 업로드 (PNG 권장 / JPG 지원)</label>
-                        <input type="file" id="new-outfit-file" accept="image/png, image/jpeg, image/jpg, image/webp" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl p-2.5 outline-none font-bold">
-                        <p class="text-[10px] text-gray-400 mt-1">💡 투명도 배경이 들어간 PNG 파일을 선택하시면 실제 비율 맞춤형으로 예쁜 실루엣이 나타납니다.</p>
+                    
+                    <div class="p-3 bg-brand-light/20 dark:bg-black/20 rounded-xl border border-dashed border-brand/35">
+                        <span class="block text-brand dark:text-pink-300 font-extrabold mb-2"><i class="fa-solid fa-gear"></i> 이미지 등록 방식 선택</span>
+                        
+                        <div>
+                            <label class="block text-gray-400 dark:text-pink-400 mb-1">방법 A: 의상 파일 직접 업로드</label>
+                            <input type="file" id="new-outfit-file" accept="image/png, image/jpeg, image/jpg, image/webp" class="w-full bg-[#fffcfc] dark:bg-black/30 border border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-lg p-2 outline-none font-bold text-[11px] mb-3" onchange="document.getElementById('new-outfit-url').value=''">
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-400 dark:text-pink-400 mb-1">방법 B: 외부 이미지 주소(URL) 직접 입력</label>
+                            <input type="text" id="new-outfit-url" class="w-full bg-[#fffcfc] dark:bg-black/30 border border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-lg p-2 outline-none text-[11px]" placeholder="https://stimg.afreecatv.com/... 또는 다른 링크" oninput="if(this.value.trim()){document.getElementById('new-outfit-file').value=''}">
+                        </div>
+                        <p class="text-[9px] text-gray-400 mt-2">💡 아프리카TV나 카페에 사진을 먼저 게시하고 이미지 주소(방법 B)를 복사해 올리시면, 용량 제한 걱정 없이 무손실 원본 연동이 가능하여 강력히 추천합니다!</p>
                     </div>
                 </div>
                 <div class="mt-6 flex justify-end gap-2 text-xs font-black">
                     <button onclick="closeAddOutfitModal()" class="px-4 py-3 rounded-xl bg-gray-200 dark:bg-brand-dark text-gray-700 dark:text-pink-200 hover:bg-gray-300 transition-colors">취소</button>
-                    <button onclick="submitNewOutfit()" class="px-4 py-3 rounded-xl bg-brand text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-brand-hover transition-colors">업로드 완료</button>
+                    <button onclick="submitNewOutfit()" class="px-4 py-3 rounded-xl bg-brand text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-brand-hover transition-colors">등록 완료</button>
                 </div>
             </div>
         </div>
@@ -799,7 +809,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Firebase Configuration (도페 데이터베이스 자격 증명)
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'dope-profile-app';
@@ -831,7 +841,7 @@
 
         const defaultScheduleData = [
             { day: '월', content: '도야지들 집합! 뽀용 수다 라디오 🖤', color: 'gray', isRest: false },
-            { day: '화', content: '귀염뽀짝 신나는 노래방 On-Air 🎤', color: 'blue', isRest: false },
+            { day: '화', content: '귀염뽀작 신나는 노래방 On-Air 🎤', color: 'blue', isRest: false },
             { day: '수', content: '도페 충전 시간 (휴방) 💤', color: 'green', isRest: true },
             { day: '목', content: '스팀 힐링 미소녀 육성 시뮬레이션 🎮', color: 'gray', isRest: false },
             { day: '금', content: '도야지 신청곡 100% 보컬 데이 🎵', color: 'blue', isRest: false },
@@ -942,9 +952,16 @@
                                 await setDoc(docRef, oldData);
                                 console.log("구형 DB 데이터 마이그레이션 완료 🖤");
                                 docSnap = await getDoc(docRef);
+
+                                // 구형 DB에서 의상이 발견되면 별도 컬렉션으로 마이그레이션 복제
+                                if (oldData.outfits && Array.isArray(oldData.outfits)) {
+                                    for (const outfit of oldData.outfits) {
+                                        await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'outfits', outfit.id), outfit);
+                                    }
+                                }
                             }
                         } catch (err) {
-                            console.warn("구버전 데이터 검사 생사 에러:", err.message);
+                            console.warn("구버전 데이터 검사 에러:", err.message);
                         }
                     }
 
@@ -955,7 +972,6 @@
                         globalScheduleData = data.schedule || defaultScheduleData;
                         globalProfileData = data.profile || defaultProfileData;
                         globalSongsData = data.songs || defaultSongsData;
-                        globalOutfitsData = data.outfits || defaultOutfitsData;
 
                         if (globalProfileData.socials && typeof globalProfileData.socials.cafe === 'undefined') {
                             globalProfileData.socials.cafe = "준비중";
@@ -966,7 +982,6 @@
                         safeSetStorage('dopeScheduleData', globalScheduleData);
                         safeSetStorage('dopeProfileData', globalProfileData);
                         safeSetStorage('dopeSongsData', globalSongsData);
-                        safeSetStorage('dopeOutfitsData', globalOutfitsData);
                     } else {
                         // 신규/구버전 모두 아무런 데이터가 없을 경우 디폴트값 세팅
                         const initialPayload = {
@@ -974,8 +989,7 @@
                             notice: defaultNoticeData,
                             schedule: defaultScheduleData,
                             profile: defaultProfileData,
-                            songs: defaultSongsData,
-                            outfits: defaultOutfitsData
+                            songs: defaultSongsData
                         };
                         await setDoc(docRef, initialPayload);
                         globalUpboData = defaultUpboData;
@@ -983,8 +997,32 @@
                         globalScheduleData = defaultScheduleData;
                         globalProfileData = defaultProfileData;
                         globalSongsData = defaultSongsData;
-                        globalOutfitsData = defaultOutfitsData;
                     }
+
+                    // [개선!] 1MB 한도를 초과하지 않도록 별도의 'outfits' 컬렉션에서 의상 데이터를 로드합니다.
+                    try {
+                        const outfitsColRef = collection(db, 'artifacts', appId, 'public', 'data', 'outfits');
+                        const outfitsSnap = await getDocs(outfitsColRef);
+                        const fetchedOutfits = [];
+                        outfitsSnap.forEach(d => {
+                            fetchedOutfits.push(d.data());
+                        });
+
+                        if (fetchedOutfits.length > 0) {
+                            globalOutfitsData = fetchedOutfits;
+                        } else {
+                            // 완전히 비어있을 경우 초기 디폴트 의상을 컬렉션에 채워 넣음
+                            globalOutfitsData = defaultOutfitsData;
+                            for (const outfit of defaultOutfitsData) {
+                                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'outfits', outfit.id), outfit);
+                            }
+                        }
+                        safeSetStorage('dopeOutfitsData', globalOutfitsData);
+                    } catch (outfitErr) {
+                        console.warn("의상 전용 컬렉션 로드 실패:", outfitErr.message);
+                        globalOutfitsData = safeGetStorage('dopeOutfitsData', defaultOutfitsData);
+                    }
+
                 } catch (error) {
                     console.warn("Firestore error, falling back to local:", error.message);
                     fallbackToLocal();
@@ -1015,6 +1053,10 @@
 
             if (navigator.onLine) {
                 try { 
+                    if (key === 'outfits') {
+                        // 의상은 개별 문서(Granular Document Sets)로 저장되므로, 메인 단일 문서의 용량 낭비를 막기 위해 패스합니다.
+                        return;
+                    }
                     const docRef = getOndanaDocRef();
                     await updateDoc(docRef, { [key]: data }); 
                 } catch (error) { 
@@ -1267,7 +1309,7 @@
             }
         }
 
-        // NEW! Render Outfits list (이미지 사이즈에 맞게 카드 높이와 프레임이 최적화 변형되는 특화 레이아웃!)
+        // Render Outfits list
         function renderOutfits() {
             const container = document.getElementById('outfits-slider');
             if (!container) return;
@@ -1293,14 +1335,16 @@
                     <div class="flex-shrink-0 w-full sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] snap-start bg-brand-light/30 dark:bg-[#1a1416]/50 border-2 border-black dark:border-brand/40 rounded-2xl p-4 flex flex-col justify-between hover:translate-y-[-4px] transition-all duration-300 relative group shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,84,176,0.15)]">
                         ${deleteBtn}
                         
-                        <!-- Image Frame: h-64 강제 고정을 지우고 h-auto 및 max-h-[380px]로 변경하여 업로드한 이미지 비율 그대로 자동 변형 조절됩니다! -->
+                        <!-- Image Frame: 비율을 보정하며 PNG도 투명 프레임으로 최적 조절합니다! -->
                         <div class="w-full rounded-xl border border-black/10 dark:border-brand/20 flex items-center justify-center overflow-hidden mb-3 relative pattern-checkered">
                             <img src="${outfit.img}" alt="${outfit.name}" class="w-full h-auto max-h-[380px] object-contain transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://placehold.co/300x400/0f0c0d/ff54b0?text=PNG+Outfit'">
                         </div>
 
-                        <div>
-                            <h3 class="text-brand-dark dark:text-pink-100 font-black text-base mb-1.5">${outfit.name}</h3>
-                            <p class="text-xs text-gray-500 dark:text-pink-300 font-semibold leading-relaxed">${outfit.desc}</p>
+                        <div class="flex items-center justify-between gap-2.5 mt-1.5">
+                            <div class="min-w-0">
+                                <h3 class="text-brand-dark dark:text-pink-100 font-black text-base truncate mb-0.5">${outfit.name}</h3>
+                                <p class="text-[11px] text-gray-500 dark:text-pink-300 font-semibold leading-relaxed truncate">${outfit.desc}</p>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -1325,6 +1369,7 @@
             document.getElementById('new-outfit-name').value = '';
             document.getElementById('new-outfit-desc').value = '';
             document.getElementById('new-outfit-file').value = '';
+            document.getElementById('new-outfit-url').value = '';
             
             requestAnimationFrame(() => { 
                 modal.classList.remove('opacity-0', 'pointer-events-none'); 
@@ -1385,49 +1430,83 @@
             const name = document.getElementById('new-outfit-name').value.trim();
             const desc = document.getElementById('new-outfit-desc').value.trim();
             const fileInput = document.getElementById('new-outfit-file');
+            const urlInput = document.getElementById('new-outfit-url').value.trim();
 
             if (!name || !desc) {
                 showToast("의상 이름과 코멘트를 모두 입력해주세요! 🌸");
                 return;
             }
 
-            if (fileInput.files && fileInput.files[0]) {
+            const newId = 'outfit_' + Date.now();
+            let finalImageSrc = "";
+
+            if (urlInput) {
+                // 방법 B: 직접 이미지 외부 링크 사용
+                finalImageSrc = urlInput;
+                saveOutfitData(newId, name, desc, finalImageSrc);
+            } else if (fileInput.files && fileInput.files[0]) {
+                // 방법 A: 직접 사진 업로드
                 const file = fileInput.files[0];
                 showToast("의상 이미지 비율 가공 및 업로드 중... ⏳");
 
                 try {
-                    // 고화질 원본 해상도를 최대 800px 한도로 보정 및 자동 압축 (투명 배경 레이어 PNG도 무손식 가공 지원)
+                    // 고화질 원본 해상도를 최대 800px 한도로 보정 및 자동 압축 (투명 배경 레이어 PNG도 무손실 가공 지원)
                     const compressedBase64 = await compressImage(file, 800, 800, 0.85);
-                    
-                    const newId = 'outfit_' + Date.now();
-                    const newOutfit = {
-                        id: newId,
-                        name: name,
-                        desc: desc,
-                        img: compressedBase64
-                    };
-
-                    globalOutfitsData.push(newOutfit);
-                    await updateFirestore('outfits', globalOutfitsData);
-                    
-                    closeAddOutfitModal();
-                    renderOutfits();
-                    showToast(`"${name}" 방셀 의상을 고유 비율로 예쁘게 등록 완료했습니다! 👗`);
+                    finalImageSrc = compressedBase64;
+                    saveOutfitData(newId, name, desc, finalImageSrc);
                 } catch (error) {
                     console.error("이미지 인코딩 가공 에러:", error);
                     showToast("의상 업로드 가공 중 오류가 발생했습니다. 😥");
                 }
             } else {
-                showToast("의상 파일을 선택해 주세요! 👚");
+                showToast("의상 파일을 선택하거나 이미지 주소 링크를 적어주세요! 👚");
             }
         }
 
-        function deleteOutfit(id) {
+        async function saveOutfitData(newId, name, desc, imgSource) {
+            const newOutfit = {
+                id: newId,
+                name: name,
+                desc: desc,
+                img: imgSource
+            };
+
+            globalOutfitsData.push(newOutfit);
+            
+            // [핵심 해결!] 메인 문서 용량에 누적시키지 않고, 개별 문서로 분할 저장하여 1MB 한도를 원천 회피합니다.
+            if (navigator.onLine && auth.currentUser) {
+                try {
+                    const outfitDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'outfits', newId);
+                    await setDoc(outfitDocRef, newOutfit);
+                } catch (err) {
+                    console.warn("의상 데이터베이스 개별 문서 등록 실패:", err.message);
+                }
+            }
+            
+            await updateFirestore('outfits', globalOutfitsData); // 로컬 캐시 갱신
+            
+            closeAddOutfitModal();
+            renderOutfits();
+            showToast(`"${name}" 방셀 의상을 고유 비율로 예쁘게 등록 완료했습니다! 👗`);
+        }
+
+        async function deleteOutfit(id) {
             const targetOutfit = globalOutfitsData.find(o => o.id === id);
             if (!targetOutfit) return;
 
             globalOutfitsData = globalOutfitsData.filter(o => o.id !== id);
-            updateFirestore('outfits', globalOutfitsData);
+            
+            // 데이터베이스 상의 개별 분할 문서도 깔끔하게 실시간 삭제
+            if (navigator.onLine && auth.currentUser) {
+                try {
+                    const outfitDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'outfits', id);
+                    await deleteDoc(outfitDocRef);
+                } catch (err) {
+                    console.warn("파이어베이스 개별 의상 문서 삭제 실패:", err.message);
+                }
+            }
+
+            await updateFirestore('outfits', globalOutfitsData); // 로컬 캐시 갱신
             renderOutfits();
             showToast(`"${targetOutfit.name}" 의상이 삭제되었습니다.`);
         }
@@ -1498,13 +1577,32 @@
             });
         }
 
-        function getAvatarUrl(user) {
+        // 프로필 사진이 없거나 불러오기 실패 시 💖 이모지 디바이스로 대체 렌더링하는 핵심 컴포넌트
+        function getAvatarHTML(user, isLarge = true) {
+            const sizeClass = isLarge ? 'w-14 h-14 text-2xl mb-2.5' : 'w-10 h-10 text-xl';
+            const marginClass = isLarge ? 'mb-2.5' : '';
+            const borderClass = 'border-2 border-black';
+            
             if (user.id && user.id.trim() !== '') {
                 const prefix = user.id.substring(0, 2);
-                return `https://stimg.afreecatv.com/LOGO/${prefix}/${user.id}/${user.id}.jpg`;
+                const avatarUrl = `https://stimg.afreecatv.com/LOGO/${prefix}/${user.id}/${user.id}.jpg`;
+                
+                return `
+                    <div class="relative ${sizeClass} ${marginClass} flex-shrink-0">
+                        <img src="${avatarUrl}" 
+                             onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');" 
+                             alt="${user.nickname}" 
+                             class="w-full h-full rounded-full object-cover ${borderClass} bg-white">
+                        <div class="hidden w-full h-full rounded-full bg-brand-light dark:bg-brand-dark/50 ${borderClass} flex items-center justify-center select-none">💖</div>
+                    </div>
+                `;
+            } else {
+                return `
+                    <div class="${sizeClass} ${marginClass} rounded-full bg-brand-light dark:bg-brand-dark/50 ${borderClass} flex items-center justify-center flex-shrink-0 select-none">
+                        💖
+                    </div>
+                `;
             }
-            const safeName = user.nickname.length >= 2 ? user.nickname.substring(0,2) : user.nickname;
-            return `https://placehold.co/100x100/0f0c0d/ff54b0?text=${encodeURIComponent(safeName)}`;
         }
 
         function renderUpbo(data) {
@@ -1515,16 +1613,15 @@
 
             data.forEach(user => {
                 const totalItems = (user.items || []).reduce((sum, item) => sum + item.count, 0);
-                
-                const avatarUrl = getAvatarUrl(user);
+                const avatarHtml = getAvatarHTML(user, true);
                 const card = document.createElement('div');
                 card.className = 'bg-white dark:bg-[#1a1416] border-2 border-black dark:border-brand/40 rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-brand-light/20 transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] duration-200 relative group';
-                card.onclick = () => { if (isAdminMode) openUpboEditModal(user, avatarUrl); else openUpboModal(user, avatarUrl); };
+                card.onclick = () => { if (isAdminMode) openUpboEditModal(user); else openUpboModal(user); };
                 const adminBadge = isAdminMode ? `<div class="absolute top-2 right-2 text-brand"><i class="fa-solid fa-pen-to-square text-xs"></i></div>` : '';
 
                 card.innerHTML = `
                     ${adminBadge}
-                    <img src="${avatarUrl}" onerror="this.src='https://placehold.co/100x100/0f0c0d/ff54b0?text=${encodeURIComponent(user.nickname.substring(0,2))}'" alt="${user.nickname}" class="w-14 h-14 rounded-full object-cover mb-2.5 border-2 border-black bg-white">
+                    ${avatarHtml}
                     <div class="text-brand-dark dark:text-pink-100 font-black text-sm mb-2 truncate w-full text-center">${user.nickname}</div>
                     <div class="bg-brand text-white text-[10px] font-black px-2 py-0.5 rounded-lg">숙제 ${totalItems}개</div>
                 `;
@@ -1532,7 +1629,7 @@
             });
         }
 
-        function openUpboModal(user, avatarUrl) {
+        function openUpboModal(user) {
             let modal = document.getElementById('upbo-modal');
             if (!modal) {
                 modal = document.createElement('div'); modal.id = 'upbo-modal'; modal.className = 'fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300';
@@ -1545,11 +1642,13 @@
                 </div>
             `).join('') : `<div class="text-center text-gray-400 py-6 font-bold text-xs">남아있는 방셀 숙제가 없습니다! 프리패스 ✨</div>`;
 
+            const avatarHtml = getAvatarHTML(user, false);
+
             modal.innerHTML = `
                 <div class="bg-white dark:bg-brand-cardBg rounded-3xl shadow-2xl w-11/12 max-w-sm overflow-hidden transform scale-95 transition-transform duration-300 border-4 border-black dark:border-brand">
                     <div class="p-4 flex items-center justify-between border-b-2 border-black dark:border-brand bg-brand-light dark:bg-black">
                         <div class="flex items-center gap-2.5">
-                            <img src="${avatarUrl}" onerror="this.src='https://placehold.co/100x100/0f0c0d/ff54b0?text=${user.nickname.substring(0,2)}'" class="w-10 h-10 rounded-full border border-black object-cover bg-white">
+                            ${avatarHtml}
                             <div>
                                 <div class="text-brand-dark dark:text-white font-black text-sm">${user.nickname}</div>
                                 <div class="text-gray-400 text-[9px] font-bold">(${user.id || '아이디 없음'})</div>
@@ -1706,12 +1805,13 @@
         // User & Item editing systems
         function saveUpboData() { updateFirestore('upbo', globalUpboData); }
 
-        function openUpboEditModal(user, avatarUrl) {
+        function openUpboEditModal(user) {
             currentEditingUserId = user.id; 
             const modal = document.getElementById('upbo-edit-modal');
+            const avatarHtml = getAvatarHTML(user, false);
             
             document.getElementById('edit-modal-header').innerHTML = `
-                <img src="${avatarUrl}" onerror="this.src='https://placehold.co/100x100/0f0c0d/ff54b0?text=${user.nickname.substring(0,2)}'" class="w-10 h-10 rounded-full border border-black object-cover bg-white">
+                ${avatarHtml}
                 <div>
                     <div class="text-brand-dark dark:text-white font-black text-sm">
                         ${user.nickname} 
@@ -2097,7 +2197,7 @@
         window.submitNewSong = submitNewSong;
         window.deleteSong = deleteSong;
 
-        // NEW Window mappings
+        // Window mappings for outfits
         window.openAddOutfitModal = openAddOutfitModal;
         window.closeAddOutfitModal = closeAddOutfitModal;
         window.submitNewOutfit = submitNewOutfit;

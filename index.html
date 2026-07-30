@@ -88,35 +88,15 @@
             }
         }
 
-        /* 체크무늬 패턴 (투명 PNG 배경 강조용) */
-        .pattern-checkered {
-            background-color: #f3f4f6;
-            background-image: linear-gradient(45deg, #e5e7eb 25%, transparent 25%), 
-                              linear-gradient(-45deg, #e5e7eb 25%, transparent 25%), 
-                              linear-gradient(45deg, transparent 75%, #e5e7eb 75%), 
-                              linear-gradient(-45deg, transparent 75%, #e5e7eb 75%);
-            background-size: 20px 20px;
-            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-        }
-        .dark .pattern-checkered {
-            background-color: #1a1416;
-            background-image: linear-gradient(45deg, #110d0e 25%, transparent 25%), 
-                              linear-gradient(-45deg, #110d0e 25%, transparent 25%), 
-                              linear-gradient(45deg, transparent 75%, #110d0e 75%), 
-                              linear-gradient(-45deg, transparent 75%, #110d0e 75%);
-        }
-
-        /* 슬라이더의 스크롤바는 숨기면서 기능은 완벽 보존하는 스타일 */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;  /* IE/Edge */
-            scrollbar-width: none;  /* Firefox */
-        }
+        /* 슬라이더 스크롤바 숨기기 */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="bg-[#fff3f6] dark:bg-[#0c0809] text-[#2c1d22] dark:text-pink-100 font-sans text-lg antialiased min-h-screen flex flex-col transition-colors duration-300 relative overflow-x-hidden">
+
+    <!-- Toast Notification Overlay -->
+    <div id="toast-container" class="fixed top-20 right-4 z-[200] flex flex-col gap-2 pointer-events-none"></div>
 
     <!-- Background glitter particles container -->
     <div class="absolute inset-0 pointer-events-none overflow-hidden z-0 opacity-55 dark:opacity-40" id="glitter-bg"></div>
@@ -141,6 +121,12 @@
                     <a href="#homework" class="text-brand-dark dark:text-pink-200 hover:text-brand px-3 py-2 rounded-xl transition-all hover:bg-brand/10">업보 현황</a>
                     <a href="#songlist" class="text-brand-dark dark:text-pink-200 hover:text-brand px-3 py-2 rounded-xl transition-all hover:bg-brand/10">노래책</a>
                     
+                    <!-- Admin Auth Button -->
+                    <button onclick="openAdminLoginModal()" class="text-brand hover:bg-brand/10 p-2.5 rounded-xl transition-colors flex items-center gap-1.5" title="관리자 로그인">
+                        <i id="nav-lock-icon" class="fa-solid fa-lock text-base"></i>
+                        <span id="nav-auth-status" class="text-xs font-black hidden">로그인됨</span>
+                    </button>
+
                     <!-- Theme toggler -->
                     <button id="theme-toggle" class="text-brand dark:text-pink-300 hover:bg-brand/10 p-2.5 rounded-xl transition-colors">
                         <i class="fa-solid fa-moon text-lg w-5 h-5 flex items-center justify-center"></i>
@@ -148,6 +134,9 @@
                 </nav>
                 <!-- Mobile Menu and theme buttons -->
                 <div class="md:hidden flex items-center gap-1">
+                    <button onclick="openAdminLoginModal()" class="text-brand p-2.5 rounded-xl hover:bg-brand/10">
+                        <i id="mobile-nav-lock-icon" class="fa-solid fa-lock text-lg"></i>
+                    </button>
                     <button id="mobile-theme-toggle" class="text-brand dark:text-pink-300 hover:bg-brand/10 p-2.5 rounded-xl transition-colors">
                         <i class="fa-solid fa-moon text-lg w-5 h-5 flex items-center justify-center"></i>
                     </button>
@@ -180,7 +169,7 @@
             <div class="bg-white dark:bg-brand-dark border-4 border-black dark:border-brand/60 rounded-3xl shadow-[8px_8px_0px_0px_rgba(255,84,176,0.3)] dark:shadow-[8px_8px_0px_0px_rgba(15,12,13,1)] overflow-hidden transition-all duration-300">
                 <!-- Cover Banner with Pink and Black Gradation -->
                 <div class="h-36 sm:h-52 w-full relative overflow-hidden bg-gradient-to-r from-brand-dark via-brand to-black">
-                    <img id="profile-banner-img" src="" 
+                    <img id="profile-banner-img" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop" 
                          onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop'" 
                          class="w-full h-full object-cover absolute inset-0 opacity-70" alt="도페 배너">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
@@ -253,11 +242,13 @@
                             </button>
                         </div>
                         <p id="profile-intro-text" class="text-sm leading-relaxed mb-4 whitespace-pre-wrap font-semibold text-gray-700 dark:text-pink-100">
-                            <!-- JS Rendering -->
+                            안녕하세요! 노래하고 소통하는 버츄얼 스트리머 도페입니다 💖🖤
+도야지 여러분과 매일매일 행복한 추억 만들어가요!
                         </p>
                     </div>
                     <div id="profile-tags-container" class="flex flex-wrap gap-1.5 pt-3 border-t border-brand/10 dark:border-brand/20">
-                        <!-- JS Rendering -->
+                        <span class="px-2.5 py-1 bg-brand-light dark:bg-black text-brand text-xs font-bold rounded-lg border border-brand/30">#보컬스트리머</span>
+                        <span class="px-2.5 py-1 bg-brand-light dark:bg-black text-brand text-xs font-bold rounded-lg border border-brand/30">#도야지_사랑해</span>
                     </div>
                 </div>
 
@@ -283,17 +274,17 @@
                 <div class="space-y-3 font-semibold text-sm">
                     <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
                         <span class="text-brand dark:text-brand font-black text-sm w-24 flex-shrink-0">💕 ON AIR</span>
-                        <span id="profile-broadcast-time" class="text-gray-750 dark:text-pink-200"><!-- JS --></span>
+                        <span id="profile-broadcast-time" class="text-gray-750 dark:text-pink-200">저녁 8시 ~ (공지 참조)</span>
                     </div>
                     <div class="border-b border-dashed border-brand/20 dark:border-brand/30"></div>
                     <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
                         <span class="text-brand dark:text-brand font-black text-sm w-24 flex-shrink-0">💕 CONTENT</span>
-                        <span id="profile-broadcast-content" class="text-gray-750 dark:text-pink-200"><!-- JS --></span>
+                        <span id="profile-broadcast-content" class="text-gray-750 dark:text-pink-200">노래, 영도 반응, 저챗, 게임</span>
                     </div>
                     <div class="border-b border-dashed border-brand/20 dark:border-brand/30"></div>
                     <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
                         <span class="text-brand dark:text-brand font-black text-sm w-24 flex-shrink-0">💕 FAVORITE</span>
-                        <span id="profile-broadcast-game" class="text-gray-750 dark:text-pink-200"><!-- JS --></span>
+                        <span id="profile-broadcast-game" class="text-gray-750 dark:text-pink-200">종합 종합 게임, 종합 서브컬처</span>
                     </div>
                 </div>
             </div>
@@ -333,7 +324,7 @@
                     </div>
                     
                     <div class="flex items-center gap-3 self-end sm:self-auto">
-                        <!-- Navigation Arrows (슬라이더 수동 조절용 버튼) -->
+                        <!-- Navigation Arrows -->
                         <div class="flex items-center gap-2 mr-1">
                             <button id="outfit-prev-btn" onclick="slideOutfits('left')" class="w-10 h-10 rounded-xl bg-brand-light dark:bg-brand-dark border-2 border-black text-brand flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,84,176,0.2)]" title="이전 의상">
                                 <i class="fa-solid fa-chevron-left text-sm"></i>
@@ -353,7 +344,7 @@
                     💡 이번 달 도페에게 신청할 수 있는 스페셜 방셀 의상 리스트입니다! 
                 </p>
 
-                <!-- Slider for Outfits (가로 스크롤 & 고유 비율 변형 레이아웃 탑재) -->
+                <!-- Slider for Outfits -->
                 <div class="relative overflow-hidden">
                     <div id="outfits-slider" class="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 no-scrollbar">
                         <!-- Cards will be injected by JavaScript -->
@@ -410,7 +401,7 @@
                     <div>
                         <div class="text-brand font-black tracking-widest text-[11px] mb-1 flex items-center gap-1.5 uppercase font-logo">
                             <span>DOPE FANSIGN HOMEWORK STATUS</span>
-                            <button onclick="openAdminLoginModal()" class="text-brand-dark/20 dark:text-pink-900 hover:text-brand transition-colors" title="관리인증">
+                            <button onclick="openAdminLoginModal()" class="text-brand-dark/20 dark:text-pink-900 hover:text-brand transition-colors" title="관리자 인증">
                                 <i class="fa-solid fa-lock text-xs"></i>
                             </button>
                         </div>
@@ -419,7 +410,7 @@
                     <div class="flex items-center gap-3">
                         <div id="loading-indicator" class="hidden text-brand text-xs font-black animate-pulse">데이터 싱크 중...</div>
                         <div class="bg-brand-light dark:bg-brand-dark text-brand-dark dark:text-pink-300 text-xs px-3 py-1.5 rounded-xl font-bold border border-black/10 dark:border-brand/35">
-                            업데이트: <span id="upbo-date"></span>
+                            업데이트: <span id="upbo-date">실시간 동기화</span>
                         </div>
                     </div>
                 </div>
@@ -448,7 +439,7 @@
 
         <!-- 4. Songlist Section (노래리스트) -->
         <section id="songlist" class="scroll-mt-20">
-            <div class="bg-white dark:bg-brand-cardBg rounded-3xl p-6 border-4 border-black dark:border-brand/40 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,84,176,0.3)] dark:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-colors duration-300 flex flex-col">
+            <div class="bg-white dark:bg-brand-cardBg rounded-3xl p-6 border-4 border-black dark:border-brand/40 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,84,176,0.3)] transition-colors duration-300 flex flex-col">
                 
                 <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-4 border-b border-brand/20 dark:border-brand/45 pb-4">
                     <div>
@@ -491,7 +482,7 @@
                                 <th class="px-4 py-3.5">곡 제목</th>
                                 <th class="px-4 py-3.5">아티스트</th>
                                 <th class="px-4 py-3.5 text-center">숙련도</th>
-                                <th class="px-4 py-3.5 text-center">신청</th>
+                                <th class="px-4 py-3.5 text-center">관리/신청</th>
                             </tr>
                         </thead>
                         <tbody id="song-list-body" class="divide-y divide-brand/10 dark:divide-brand/20">
@@ -503,1706 +494,1001 @@
             </div>
         </section>
 
-        <!-- Admin Access Modals -->
-        <div id="admin-login-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
-            <div class="bg-white dark:bg-brand-cardBg rounded-3xl shadow-2xl w-11/12 max-w-sm p-6 transform scale-95 transition-transform duration-300 border-4 border-black dark:border-brand">
-                <h3 class="text-xl font-black text-brand-dark dark:text-white mb-2"><i class="fa-solid fa-key text-brand mr-1"></i> 도페 비밀번호 입력</h3>
-                <p class="text-xs text-gray-500 dark:text-pink-300 mb-4 font-bold">도페 전용 비밀번호 카드를 인증해 주세요.</p>
-                <input type="password" id="admin-pin" class="w-full bg-[#fffcfc] dark:bg-black/40 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3.5 mb-4 outline-none text-center tracking-widest font-black text-xl" placeholder="••••••••">
-                <div class="flex justify-end gap-2 text-xs font-black">
-                    <button onclick="closeAdminLoginModal()" class="px-4 py-3 rounded-xl bg-gray-200 dark:bg-brand-dark text-gray-700 dark:text-pink-200 hover:bg-gray-300 transition-colors">취소</button>
-                    <button onclick="checkAdminPin()" class="px-4 py-3 rounded-xl bg-brand text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-brand-hover transition-colors">인증 완료</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Add Outfit Modal -->
-        <div id="add-outfit-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
-            <div class="bg-white dark:bg-brand-cardBg rounded-3xl shadow-2xl w-11/12 max-w-sm p-6 transform scale-95 transition-transform duration-300 border-4 border-black dark:border-brand">
-                <div class="flex justify-between items-center mb-4 border-b-2 border-black dark:border-brand pb-3">
-                    <h3 class="text-lg font-black text-brand-dark dark:text-white flex items-center gap-2"><i class="fa-solid fa-shirt text-brand"></i> 방셀 의상 등록</h3>
-                    <button onclick="closeAddOutfitModal()" class="text-brand hover:text-brand-dark"><i class="fa-solid fa-xmark text-xl"></i></button>
-                </div>
-                <div class="space-y-4 font-bold text-xs">
-                    <div>
-                        <label class="block text-gray-500 dark:text-pink-300 mb-1.5">의상 명칭 (필수)</label>
-                        <input type="text" id="new-outfit-name" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="예: 러블리 바니걸 🐰">
-                    </div>
-                    <div>
-                        <label class="block text-gray-500 dark:text-pink-300 mb-1.5">의상 설명 및 코멘트 (필수)</label>
-                        <input type="text" id="new-outfit-desc" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="예: 레이스 스타킹 포인트 코디 🖤">
-                    </div>
-                    
-                    <div class="p-3 bg-brand-light/20 dark:bg-black/20 rounded-xl border border-dashed border-brand/35">
-                        <span class="block text-brand dark:text-pink-300 font-extrabold mb-2"><i class="fa-solid fa-gear"></i> 이미지 등록 방식 선택</span>
-                        
-                        <div>
-                            <label class="block text-gray-400 dark:text-pink-400 mb-1">방법 A: 의상 파일 직접 업로드</label>
-                            <input type="file" id="new-outfit-file" accept="image/png, image/jpeg, image/jpg, image/webp" class="w-full bg-[#fffcfc] dark:bg-black/30 border border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-lg p-2 outline-none font-bold text-[11px] mb-3" onchange="document.getElementById('new-outfit-url').value=''">
-                        </div>
-
-                        <div>
-                            <label class="block text-gray-400 dark:text-pink-400 mb-1">방법 B: 외부 이미지 주소(URL) 직접 입력</label>
-                            <input type="text" id="new-outfit-url" class="w-full bg-[#fffcfc] dark:bg-black/30 border border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-lg p-2 outline-none text-[11px]" placeholder="https://stimg.afreecatv.com/... 또는 다른 링크" oninput="if(this.value.trim()){document.getElementById('new-outfit-file').value=''}">
-                        </div>
-                        <p class="text-[9px] text-gray-400 mt-2">💡 아프리카TV나 카페에 사진을 먼저 게시하고 이미지 주소(방법 B)를 복사해 올리시면, 용량 제한 걱정 없이 무손실 원본 연동이 가능하여 강력히 추천합니다!</p>
-                    </div>
-                </div>
-                <div class="mt-6 flex justify-end gap-2 text-xs font-black">
-                    <button onclick="closeAddOutfitModal()" class="px-4 py-3 rounded-xl bg-gray-200 dark:bg-brand-dark text-gray-700 dark:text-pink-200 hover:bg-gray-300 transition-colors">취소</button>
-                    <button onclick="submitNewOutfit()" class="px-4 py-3 rounded-xl bg-brand text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-brand-hover transition-colors">등록 완료</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Homework Edit Modal -->
-        <div id="upbo-edit-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
-            <div class="bg-white dark:bg-brand-cardBg rounded-3xl shadow-2xl w-11/12 max-w-md overflow-hidden transform scale-95 transition-transform duration-300 border-4 border-black dark:border-brand flex flex-col max-h-[80vh]">
-                <div class="p-4 flex items-center justify-between border-b-2 border-black dark:border-brand bg-brand-light dark:bg-black">
-                    <div class="flex items-center gap-3" id="edit-modal-header"></div>
-                    <div class="flex items-center gap-2 text-xs font-black">
-                        <button id="delete-user-confirm-btn" class="hidden text-xs bg-red-100 dark:bg-red-950 text-red-600 dark:text-red-400 font-bold px-2.5 py-1.5 rounded-lg border border-red-500 hover:bg-red-200 transition-all">
-                            <i class="fa-solid fa-user-minus mr-1"></i>삭제
-                        </button>
-                        <button onclick="closeUpboEditModal()" class="text-brand hover:text-brand-dark p-2">
-                            <i class="fa-solid fa-xmark text-xl"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="p-4 flex-grow overflow-y-auto" id="edit-modal-body"></div>
-                <div class="p-4 border-t-2 border-black dark:border-brand bg-brand-light/40 dark:bg-[#1a1416]">
-                    <div class="flex gap-2">
-                        <input type="text" id="new-item-name" class="flex-grow bg-white dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 text-sm rounded-xl focus:ring-1 focus:ring-brand p-2.5 outline-none font-bold" placeholder="새 숙제/리액션 추가...">
-                        <button onclick="addNewItem()" class="bg-brand text-white border-2 border-black px-4 py-2 rounded-xl text-xs font-black hover:bg-brand-hover transition-colors">추가</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Add User Modal -->
-        <div id="add-user-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
-            <div class="bg-white dark:bg-brand-cardBg rounded-3xl shadow-2xl w-11/12 max-w-sm p-6 transform scale-95 transition-transform duration-300 border-4 border-black dark:border-brand">
-                <div class="flex justify-between items-center mb-4 border-b-2 border-black dark:border-brand pb-3">
-                    <h3 class="text-lg font-black text-brand-dark dark:text-white flex items-center gap-2"><i class="fa-solid fa-user-plus text-brand"></i> 도야지 등록</h3>
-                    <button onclick="closeAddUserModal()" class="text-brand hover:text-brand-dark"><i class="fa-solid fa-xmark text-xl"></i></button>
-                </div>
-                <div class="space-y-4 font-bold text-xs">
-                    <div>
-                        <label class="block text-gray-500 dark:text-pink-300 mb-1.5">SOOP ID (선택: 프로필 사진 자동 연동용)</label>
-                        <input type="text" id="new-user-id" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="아이디 입력 (예: likethis1125)">
-                    </div>
-                    <div>
-                        <label class="block text-gray-500 dark:text-pink-300 mb-1.5">닉네임 (필수)</label>
-                        <input type="text" id="new-user-nickname" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="도야지 닉네임 입력">
-                    </div>
-                </div>
-                <div class="mt-6 flex justify-end gap-2 text-xs font-black">
-                    <button onclick="closeAddUserModal()" class="px-4 py-3 rounded-xl bg-gray-200 dark:bg-brand-dark text-gray-700 dark:text-pink-200 hover:bg-gray-300 transition-colors">취소</button>
-                    <button onclick="submitNewUser()" class="px-4 py-3 rounded-xl bg-brand text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-brand-hover transition-colors">등록 완료</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Notice Edit Modal -->
-        <div id="notice-edit-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
-            <div class="bg-white dark:bg-brand-cardBg rounded-3xl shadow-2xl w-11/12 max-w-lg overflow-hidden transform scale-95 transition-transform duration-300 border-4 border-black dark:border-brand flex flex-col max-h-[85vh]">
-                <div class="p-4 flex items-center justify-between border-b-2 border-black dark:border-brand bg-brand-light dark:bg-black">
-                    <h3 class="text-lg font-black text-brand-dark dark:text-white flex items-center gap-1.5"><i class="fa-solid fa-bullhorn text-brand"></i> 알림 관리센터</h3>
-                    <button onclick="closeNoticeEditModal()" class="text-brand hover:text-brand-dark p-2"><i class="fa-solid fa-xmark text-xl"></i></button>
-                </div>
-                <div class="p-4 flex-grow overflow-y-auto space-y-3" id="notice-edit-list"></div>
-                <div class="p-4 border-t-2 border-black dark:border-brand bg-brand-light/35 dark:bg-[#1a1416] space-y-3 font-bold text-xs">
-                    <div class="flex gap-2">
-                        <select id="new-notice-type" class="bg-white dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 text-xs rounded-xl focus:ring-1 focus:ring-brand p-2 outline-none w-24 font-black">
-                            <option value="필독">필독 📍</option>
-                            <option value="공지">공지 📢</option>
-                            <option value="일상">일상 🌸</option>
-                        </select>
-                        <input type="text" id="new-notice-content" class="flex-grow bg-white dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 text-xs rounded-xl focus:ring-1 focus:ring-brand p-2.5 outline-none" placeholder="공지할 본문을 입력해 주세요...">
-                    </div>
-                    <div class="flex gap-2">
-                        <input type="text" id="new-notice-link" class="flex-grow bg-white dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 text-xs rounded-xl focus:ring-1 focus:ring-brand p-2.5 outline-none" placeholder="이동 링크 (선택 / https://...)">
-                        <button onclick="addNewNotice()" class="bg-brand text-white border-2 border-black px-5 py-2.5 rounded-xl hover:bg-brand-hover transition-colors whitespace-nowrap font-black">등록</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Schedule Edit Modal -->
-        <div id="schedule-edit-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
-            <div class="bg-white dark:bg-brand-cardBg rounded-3xl shadow-2xl w-11/12 max-w-sm overflow-hidden transform scale-95 transition-transform duration-300 border-4 border-black dark:border-brand flex flex-col max-h-[85vh]">
-                <div class="p-4 flex items-center justify-between border-b-2 border-black dark:border-brand bg-brand-light dark:bg-black">
-                    <h3 class="text-lg font-black text-brand-dark dark:text-white flex items-center gap-1.5"><i class="fa-regular fa-calendar text-brand"></i> 스케줄 변경 센터</h3>
-                    <button onclick="closeScheduleEditModal()" class="text-brand hover:text-brand-dark p-2"><i class="fa-solid fa-xmark text-xl"></i></button>
-                </div>
-                <div class="p-4 flex-grow overflow-y-auto space-y-2.5" id="schedule-edit-list"></div>
-                <div class="p-4 border-t-2 border-black dark:border-brand bg-brand-light/35 dark:bg-[#1a1416] flex justify-end text-xs font-black">
-                    <button onclick="saveScheduleChanges()" class="bg-brand text-white border-2 border-black px-6 py-3 rounded-xl hover:bg-brand-hover transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">저장 완료</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Song Addition Modal -->
-        <div id="add-song-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
-            <div class="bg-white dark:bg-brand-cardBg rounded-3xl shadow-2xl w-11/12 max-w-sm p-6 transform scale-95 transition-transform duration-300 border-4 border-black dark:border-brand">
-                <div class="flex justify-between items-center mb-4 border-b-2 border-black dark:border-brand pb-3">
-                    <h3 class="text-lg font-black text-brand-dark dark:text-white flex items-center gap-2"><i class="fa-solid fa-music text-brand"></i> 노래책 신청곡 등록</h3>
-                    <button onclick="closeAddSongModal()" class="text-brand hover:text-brand-dark"><i class="fa-solid fa-xmark text-xl"></i></button>
-                </div>
-                <div class="space-y-4 font-bold text-xs">
-                    <div>
-                        <label class="block text-gray-500 dark:text-pink-300 mb-1.5">장르</label>
-                        <select id="new-song-genre" class="w-full bg-white dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none font-bold">
-                            <option value="힙합/R&B">힙합/R&B 🎧</option>
-                            <option value="J-Pop/애니">J-Pop/애니 💫</option>
-                            <option value="우타이테">우타이테 🎤</option>
-                            <option value="귀여운곡">귀여운 곡 💕</option>
-                            <option value="기타/팝">기타/팝 🎵</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-gray-500 dark:text-pink-300 mb-1.5">곡 제목 (필수)</label>
-                        <input type="text" id="new-song-title" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="예: 시차">
-                    </div>
-                    <div>
-                        <label class="block text-gray-500 dark:text-pink-300 mb-1.5">아티스트 (필수)</label>
-                        <input type="text" id="new-song-artist" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="예: 우원재">
-                    </div>
-                    <!-- Rating configuration inside add song modal -->
-                    <div>
-                        <label class="block text-gray-500 dark:text-pink-300 mb-1.5">숙련도 별점 (필수)</label>
-                        <select id="new-song-rating" class="w-full bg-white dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none font-bold">
-                            <option value="5">★★★★★ (갓-벽 완성도) 💖</option>
-                            <option value="4">★★★★☆ (자신 가득) ⭐</option>
-                            <option value="3">★★★☆☆ (감성 충만 보통) ✨</option>
-                            <option value="2">★★☆☆☆ (열심히 연습중) 💤</option>
-                            <option value="1">★☆☆☆☆ (밀당곡 가사확인) 🌸</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="mt-6 flex justify-end gap-2 text-xs font-black">
-                    <button onclick="closeAddSongModal()" class="px-4 py-3 rounded-xl bg-gray-200 dark:bg-brand-dark text-gray-700 dark:text-pink-200 hover:bg-gray-300 transition-colors">취소</button>
-                    <button onclick="submitNewSong()" class="px-4 py-3 rounded-xl bg-brand text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-brand-hover transition-colors">등록 완료</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Profile Detail Edit Modal -->
-        <div id="profile-edit-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
-            <div class="bg-white dark:bg-brand-cardBg rounded-3xl shadow-2xl w-11/12 max-w-lg overflow-hidden transform scale-95 transition-transform duration-300 border-4 border-black dark:border-brand flex flex-col max-h-[90vh]">
-                <div class="p-4 flex items-center justify-between border-b-2 border-black dark:border-brand bg-brand-light dark:bg-black">
-                    <h3 class="text-lg font-black text-brand-dark dark:text-white flex items-center gap-2"><i class="fa-solid fa-address-card text-brand"></i> 대표 관리 센터</h3>
-                    <button onclick="closeProfileEditModal()" class="text-brand hover:text-brand-dark p-2"><i class="fa-solid fa-xmark text-xl"></i></button>
-                </div>
-                
-                <div class="p-5 flex-grow overflow-y-auto space-y-6 text-xs font-bold">
-                    <!-- Banner Cover Setting -->
-                    <div>
-                        <h4 class="text-sm text-brand-dark dark:text-white mb-2"><i class="fa-regular fa-image text-brand mr-1"></i> 대표 아트 배너</h4>
-                        <label class="block text-gray-400 dark:text-pink-350 mb-1.5">상단 커버 URL 이미지</label>
-                        <input type="text" id="edit-profile-banner" class="w-full bg-brand-light/30 dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="이미지 주소를 복사해 넣어주세요">
-                    </div>
-                    <hr class="border-brand/10 dark:border-brand/25">
-
-                    <!-- Social Links Configuration -->
-                    <div>
-                        <h4 class="text-sm text-brand-dark dark:text-white mb-2"><i class="fa-solid fa-share-nodes text-brand mr-1"></i> 소셜 미디어 연동</h4>
-                        <div class="space-y-3">
-                            <div>
-                                <label class="block text-gray-400 dark:text-pink-350 mb-1">SOOP 방송국 링크</label>
-                                <input type="text" id="edit-profile-soop" class="w-full bg-brand-light/30 dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-2.5 outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-gray-400 dark:text-pink-350 mb-1">유튜브 채널 링크</label>
-                                <input type="text" id="edit-profile-youtube" class="w-full bg-brand-light/30 dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-2.5 outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-gray-400 dark:text-pink-350 mb-1">네이버 팬카페 링크 (공백 또는 '준비중' 입력 시 버튼 숨김)</label>
-                                <input type="text" id="edit-profile-cafe" class="w-full bg-brand-light/30 dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-2.5 outline-none" placeholder="준비중">
-                            </div>
-                        </div>
-                    </div>
-                    <hr class="border-brand/10 dark:border-brand/25">
-
-                    <!-- Intro Words and Hashtags -->
-                    <div>
-                        <h4 class="text-sm text-brand-dark dark:text-white mb-2"><i class="fa-solid fa-star text-brand"></i> 메인 환영 인사</h4>
-                        <textarea id="edit-profile-intro" rows="3" class="w-full bg-brand-light/30 dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none resize-none mb-2"></textarea>
-                        <label class="block text-gray-400 dark:text-pink-350 mb-1.5 mt-3">키워드 태그 (쉼표(,) 로 분리)</label>
-                        <input type="text" id="edit-profile-tags" class="w-full bg-brand-light/30 dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none">
-                    </div>
-                    <hr class="border-brand/10 dark:border-brand/25">
-                    
-                    <!-- Dynamic Days / Ddays list -->
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <h4 class="text-sm text-brand-dark dark:text-white"><i class="fa-regular fa-clock text-brand"></i> 연동 기념일 관리</h4>
-                            <button type="button" onclick="addEditDdayRow()" class="text-xs bg-brand-light border-2 border-black text-brand-dark dark:bg-brand-dark dark:text-pink-200 font-bold px-2.5 py-1 rounded-lg">
-                                + 추가
-                            </button>
-                        </div>
-                        <div id="edit-dday-list" class="space-y-2">
-                            <!-- JS Generated -->
-                        </div>
-                    </div>
-                    <hr class="border-brand/10 dark:border-brand/25">
-
-                    <!-- Broadcast information Details -->
-                    <div>
-                        <h4 class="text-sm text-brand-dark dark:text-white mb-3"><i class="fa-regular fa-calendar-check text-brand"></i> 방송 정보 구성</h4>
-                        <div class="space-y-3">
-                            <div class="flex items-center gap-3">
-                                <span class="text-gray-400 dark:text-pink-300 w-16 flex-shrink-0">💕 ON AIR</span>
-                                <input type="text" id="edit-profile-time" class="flex-grow bg-brand-light/30 dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-2.5 outline-none">
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <span class="text-gray-400 dark:text-pink-300 w-16 flex-shrink-0">💕 콘텐츠</span>
-                                <input type="text" id="edit-profile-content" class="flex-grow bg-brand-light/30 dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-2.5 outline-none">
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <span class="text-gray-400 dark:text-pink-300 w-16 flex-shrink-0">💕 선호장르</span>
-                                <input type="text" id="edit-profile-game" class="flex-grow bg-brand-light/30 dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-2.5 outline-none">
-                            </div>
-                        </div>
-                    </div>
-                    <hr class="border-brand/10 dark:border-brand/25">
-
-                    <!-- Likes and Dislikes config -->
-                    <div>
-                        <h4 class="text-sm text-brand-dark dark:text-white mb-3"><i class="fa-solid fa-heart text-brand"></i> 호불호 조율 (쉼표(,) 로 분리)</h4>
-                        <div class="space-y-3">
-                            <div>
-                                <label class="block text-gray-400 dark:text-pink-350 mb-1.5">좋아하는 물건/행동</label>
-                                <input type="text" id="edit-profile-likes" class="w-full bg-brand-light/30 dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-gray-400 dark:text-pink-350 mb-1.5">극혐하는 것들</label>
-                                <input type="text" id="edit-profile-dislikes" class="w-full bg-brand-light/30 dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-4 border-t-2 border-black dark:border-brand bg-brand-light/35 dark:bg-[#1a1416] flex justify-end gap-2 text-xs font-black">
-                    <button onclick="closeProfileEditModal()" class="px-4 py-2.5 rounded-xl bg-gray-200 dark:bg-brand-dark text-gray-700 dark:text-pink-200 hover:bg-gray-300 transition-colors">취소</button>
-                    <button onclick="saveProfileChanges()" class="bg-brand text-white border-2 border-black px-6 py-2.5 rounded-xl hover:bg-brand-hover transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">저장 완료</button>
-                </div>
-            </div>
-        </div>
-
     </main>
 
-    <!-- Footer Section -->
-    <footer class="bg-brand-dark text-white py-10 text-center mt-auto transition-colors duration-300 border-t-4 border-brand">
-        <p class="text-sm text-pink-200 font-cute text-2xl tracking-widest leading-relaxed">
-            🎀 언제나 도페와 함께해 줘서 고마워 도야지들! 🎀
-        </p>
-        <p class="text-[11px] text-pink-600 font-mono mt-4 tracking-tighter uppercase">© 2026 DOPE 스트리머. All rights reserved.</p>
-        <p class="text-[11px] text-pink-600 font-mono">made by. 연주아 🍀</p>
-    </footer>
+    <!-- Admin Firebase Auth Login Modal (Email & Password Authentication) -->
+    <div id="admin-login-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white dark:bg-brand-cardBg rounded-3xl shadow-2xl w-11/12 max-w-sm p-6 transform scale-95 transition-transform duration-300 border-4 border-black dark:border-brand">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-xl font-black text-brand-dark dark:text-white flex items-center gap-1.5"><i class="fa-solid fa-user-shield text-brand"></i> 관리자 인증</h3>
+                <button onclick="closeAdminLoginModal()" class="text-brand hover:text-brand-dark"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            
+            <p class="text-xs text-gray-500 dark:text-pink-300 mb-4 font-bold">
+                Firebase에 등록하신 이메일과 비밀번호로 로그인해 주세요.
+            </p>
 
-    <!-- Visual Clipboard Notification Toast -->
-    <div id="toast-message" class="fixed bottom-6 right-6 z-[150] bg-brand-dark text-brand border-2 border-brand font-black text-sm py-4.5 px-6 rounded-2xl shadow-xl transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2">
-        <span id="toast-text">카피 완료! ⭐</span>
+            <div id="auth-login-form" class="space-y-3 font-bold text-xs">
+                <div>
+                    <label class="block text-gray-500 dark:text-pink-300 mb-1">이메일 계정</label>
+                    <input type="email" id="admin-email" class="w-full bg-[#fffcfc] dark:bg-black/40 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none text-sm font-semibold" placeholder="dope@example.com">
+                </div>
+                <div>
+                    <label class="block text-gray-500 dark:text-pink-300 mb-1">비밀번호</label>
+                    <input type="password" id="admin-password" class="w-full bg-[#fffcfc] dark:bg-black/40 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none text-sm font-semibold" placeholder="••••••••">
+                </div>
+
+                <div class="pt-2 flex justify-end gap-2 text-xs font-black">
+                    <button onclick="closeAdminLoginModal()" class="px-4 py-2.5 rounded-xl bg-gray-200 dark:bg-brand-dark text-gray-700 dark:text-pink-200 hover:bg-gray-300 transition-colors">닫기</button>
+                    <button id="admin-login-btn" onclick="handleAdminLogin()" class="px-4 py-2.5 rounded-xl bg-brand text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-brand-hover transition-colors">로그인</button>
+                </div>
+            </div>
+
+            <!-- Logged In State Display inside Modal -->
+            <div id="auth-user-info" class="hidden space-y-4 text-center">
+                <div class="p-4 bg-brand-light dark:bg-black/40 rounded-2xl border-2 border-brand/40">
+                    <i class="fa-solid fa-circle-check text-brand text-3xl mb-2"></i>
+                    <p class="text-sm font-black text-brand-dark dark:text-white">관리자로 인증되었습니다!</p>
+                    <p id="logged-user-email" class="text-xs text-brand font-bold mt-1 break-all"></p>
+                </div>
+                <div class="flex justify-center gap-2 text-xs font-black">
+                    <button onclick="handleAdminLogout()" class="w-full py-3 rounded-xl bg-red-500 text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-red-600 transition-colors">
+                        <i class="fa-solid fa-right-from-bracket mr-1"></i> 로그아웃
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Core JS System: Data synchronization and interactive effects -->
+    <!-- Profile Edit Modal -->
+    <div id="profile-edit-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white dark:bg-brand-cardBg rounded-3xl shadow-2xl w-11/12 max-w-md p-6 transform scale-95 transition-transform duration-300 border-4 border-black dark:border-brand max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4 border-b-2 border-black dark:border-brand pb-3">
+                <h3 class="text-lg font-black text-brand-dark dark:text-white flex items-center gap-2"><i class="fa-solid fa-pen-to-square text-brand"></i> 프로필 정보 수정</h3>
+                <button onclick="closeProfileEditModal()" class="text-brand hover:text-brand-dark"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="space-y-4 font-bold text-xs">
+                <div>
+                    <label class="block text-gray-500 dark:text-pink-300 mb-1">자기소개 문구</label>
+                    <textarea id="edit-profile-intro" rows="3" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl p-2.5 outline-none font-semibold"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-500 dark:text-pink-300 mb-1">배너 이미지 URL</label>
+                    <input type="text" id="edit-profile-banner" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl p-2.5 outline-none">
+                </div>
+                <div>
+                    <label class="block text-gray-500 dark:text-pink-300 mb-1">ON AIR 시간</label>
+                    <input type="text" id="edit-profile-time" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl p-2.5 outline-none">
+                </div>
+                <div>
+                    <label class="block text-gray-500 dark:text-pink-300 mb-1">주요 방송 콘텐츠</label>
+                    <input type="text" id="edit-profile-content" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl p-2.5 outline-none">
+                </div>
+                <div>
+                    <label class="block text-gray-500 dark:text-pink-300 mb-1">선호 게임/취향</label>
+                    <input type="text" id="edit-profile-game" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl p-2.5 outline-none">
+                </div>
+                <div>
+                    <label class="block text-gray-500 dark:text-pink-300 mb-1">좋아하는 것 (쉼표로 구분)</label>
+                    <input type="text" id="edit-profile-likes" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl p-2.5 outline-none">
+                </div>
+                <div>
+                    <label class="block text-gray-500 dark:text-pink-300 mb-1">싫어하는 것 (쉼표로 구분)</label>
+                    <input type="text" id="edit-profile-dislikes" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl p-2.5 outline-none">
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end gap-2 text-xs font-black">
+                <button onclick="closeProfileEditModal()" class="px-4 py-2.5 rounded-xl bg-gray-200 dark:bg-brand-dark text-gray-700 dark:text-pink-200">취소</button>
+                <button onclick="saveProfileEdit()" class="px-4 py-2.5 rounded-xl bg-brand text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-brand-hover">저장 완료</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Outfit Modal -->
+    <div id="add-outfit-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white dark:bg-brand-cardBg rounded-3xl shadow-2xl w-11/12 max-w-sm p-6 transform scale-95 transition-transform duration-300 border-4 border-black dark:border-brand">
+            <div class="flex justify-between items-center mb-4 border-b-2 border-black dark:border-brand pb-3">
+                <h3 class="text-lg font-black text-brand-dark dark:text-white flex items-center gap-2"><i class="fa-solid fa-shirt text-brand"></i> 방셀 의상 등록</h3>
+                <button onclick="closeAddOutfitModal()" class="text-brand hover:text-brand-dark"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="space-y-4 font-bold text-xs">
+                <div>
+                    <label class="block text-gray-500 dark:text-pink-300 mb-1.5">의상 명칭 (필수)</label>
+                    <input type="text" id="new-outfit-name" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="예: 러블리 바니걸 🐰">
+                </div>
+                <div>
+                    <label class="block text-gray-500 dark:text-pink-300 mb-1.5">의상 설명 및 코멘트 (필수)</label>
+                    <input type="text" id="new-outfit-desc" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="예: 레이스 스타킹 포인트 코디 🖤">
+                </div>
+                
+                <div class="p-3 bg-brand-light/20 dark:bg-black/20 rounded-xl border border-dashed border-brand/35">
+                    <span class="block text-brand dark:text-pink-300 font-extrabold mb-2"><i class="fa-solid fa-gear"></i> 이미지 등록 방식 선택</span>
+                    
+                    <div>
+                        <label class="block text-gray-400 dark:text-pink-400 mb-1">방법 A: 의상 파일 직접 업로드</label>
+                        <input type="file" id="new-outfit-file" accept="image/png, image/jpeg, image/jpg, image/webp" class="w-full bg-[#fffcfc] dark:bg-black/30 border border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-lg p-2 outline-none font-bold text-[11px] mb-3" onchange="document.getElementById('new-outfit-url').value=''">
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-400 dark:text-pink-400 mb-1">방법 B: 외부 이미지 주소(URL) 직접 입력</label>
+                        <input type="text" id="new-outfit-url" class="w-full bg-[#fffcfc] dark:bg-black/30 border border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-lg p-2 outline-none text-[11px]" placeholder="https://stimg.afreecatv.com/..." oninput="if(this.value.trim()){document.getElementById('new-outfit-file').value=''}">
+                    </div>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end gap-2 text-xs font-black">
+                <button onclick="closeAddOutfitModal()" class="px-4 py-3 rounded-xl bg-gray-200 dark:bg-brand-dark text-gray-700 dark:text-pink-200 hover:bg-gray-300 transition-colors">취소</button>
+                <button onclick="submitNewOutfit()" class="px-4 py-3 rounded-xl bg-brand text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-brand-hover transition-colors">등록 완료</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Homework Edit Modal -->
+    <div id="upbo-edit-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white dark:bg-brand-cardBg rounded-3xl shadow-2xl w-11/12 max-w-md overflow-hidden transform scale-95 transition-transform duration-300 border-4 border-black dark:border-brand flex flex-col max-h-[80vh]">
+            <div class="p-4 flex items-center justify-between border-b-2 border-black dark:border-brand bg-brand-light dark:bg-black">
+                <div class="flex items-center gap-3" id="edit-modal-header"></div>
+                <div class="flex items-center gap-2 text-xs font-black">
+                    <button id="delete-user-confirm-btn" onclick="deleteCurrentUser()" class="hidden text-xs bg-red-100 dark:bg-red-950 text-red-600 dark:text-red-400 font-bold px-2.5 py-1.5 rounded-lg border border-red-500 hover:bg-red-200 transition-all">
+                        <i class="fa-solid fa-user-minus mr-1"></i>삭제
+                    </button>
+                    <button onclick="closeUpboEditModal()" class="text-brand hover:text-brand-dark p-2">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="p-4 flex-grow overflow-y-auto" id="edit-modal-body"></div>
+            <div class="p-4 border-t-2 border-black dark:border-brand bg-brand-light/40 dark:bg-[#1a1416]">
+                <div class="flex gap-2">
+                    <input type="text" id="new-item-name" class="flex-grow bg-white dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 text-sm rounded-xl focus:ring-1 focus:ring-brand p-2.5 outline-none font-bold" placeholder="새 숙제/리액션 추가...">
+                    <button onclick="addNewItem()" class="bg-brand text-white border-2 border-black px-4 py-2 rounded-xl text-xs font-black hover:bg-brand-hover transition-colors">추가</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div id="add-user-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white dark:bg-brand-cardBg rounded-3xl shadow-2xl w-11/12 max-w-sm p-6 transform scale-95 transition-transform duration-300 border-4 border-black dark:border-brand">
+            <div class="flex justify-between items-center mb-4 border-b-2 border-black dark:border-brand pb-3">
+                <h3 class="text-lg font-black text-brand-dark dark:text-white flex items-center gap-2"><i class="fa-solid fa-user-plus text-brand"></i> 도야지 등록</h3>
+                <button onclick="closeAddUserModal()" class="text-brand hover:text-brand-dark"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="space-y-4 font-bold text-xs">
+                <div>
+                    <label class="block text-gray-500 dark:text-pink-300 mb-1.5">SOOP ID (선택: 프로필 사진 자동 연동용)</label>
+                    <input type="text" id="new-user-id" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="아이디 입력 (예: likethis1125)">
+                </div>
+                <div>
+                    <label class="block text-gray-500 dark:text-pink-300 mb-1.5">닉네임 (필수)</label>
+                    <input type="text" id="new-user-nickname" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl focus:ring-1 focus:ring-brand p-3 outline-none" placeholder="도야지 닉네임 입력">
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end gap-2 text-xs font-black">
+                <button onclick="closeAddUserModal()" class="px-4 py-3 rounded-xl bg-gray-200 dark:bg-brand-dark text-gray-700 dark:text-pink-200 hover:bg-gray-300 transition-colors">취소</button>
+                <button onclick="submitNewUser()" class="px-4 py-3 rounded-xl bg-brand text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-brand-hover transition-colors">등록 완료</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notice Edit Modal -->
+    <div id="notice-edit-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white dark:bg-brand-cardBg rounded-3xl shadow-2xl w-11/12 max-w-lg overflow-hidden transform scale-95 transition-transform duration-300 border-4 border-black dark:border-brand flex flex-col max-h-[85vh]">
+            <div class="p-4 flex items-center justify-between border-b-2 border-black dark:border-brand bg-brand-light dark:bg-black">
+                <h3 class="text-lg font-black text-brand-dark dark:text-white flex items-center gap-1.5"><i class="fa-solid fa-bullhorn text-brand"></i> 알림 관리센터</h3>
+                <button onclick="closeNoticeEditModal()" class="text-brand hover:text-brand-dark p-2"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="p-4 flex-grow overflow-y-auto space-y-3" id="notice-edit-list"></div>
+            <div class="p-4 border-t-2 border-black dark:border-brand bg-brand-light/35 dark:bg-[#1a1416] space-y-3 font-bold text-xs">
+                <div class="flex gap-2">
+                    <select id="new-notice-type" class="bg-white dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 text-xs rounded-xl focus:ring-1 focus:ring-brand p-2 outline-none w-24 font-black">
+                        <option value="필독">필독 📍</option>
+                        <option value="공지">공지 📢</option>
+                        <option value="일상">일상 🌸</option>
+                    </select>
+                    <input type="text" id="new-notice-content" class="flex-grow bg-white dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 text-xs rounded-xl focus:ring-1 focus:ring-brand p-2.5 outline-none" placeholder="공지할 본문을 입력해 주세요...">
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" id="new-notice-link" class="flex-grow bg-white dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 text-xs rounded-xl focus:ring-1 focus:ring-brand p-2.5 outline-none" placeholder="이동 링크 (선택 / https://...)">
+                    <button onclick="addNewNotice()" class="bg-brand text-white border-2 border-black px-5 py-2.5 rounded-xl hover:bg-brand-hover transition-colors whitespace-nowrap font-black">등록</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedule Edit Modal -->
+    <div id="schedule-edit-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white dark:bg-brand-cardBg rounded-3xl shadow-2xl w-11/12 max-w-sm overflow-hidden transform scale-95 transition-transform duration-300 border-4 border-black dark:border-brand flex flex-col max-h-[85vh]">
+            <div class="p-4 flex items-center justify-between border-b-2 border-black dark:border-brand bg-brand-light dark:bg-black">
+                <h3 class="text-lg font-black text-brand-dark dark:text-white flex items-center gap-1.5"><i class="fa-regular fa-calendar text-brand"></i> 스케줄 변경 센터</h3>
+                <button onclick="closeScheduleEditModal()" class="text-brand hover:text-brand-dark p-2"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="p-4 flex-grow overflow-y-auto space-y-2.5" id="schedule-edit-list"></div>
+            <div class="p-4 border-t-2 border-black dark:border-brand bg-brand-light/35 dark:bg-[#1a1416] flex justify-end text-xs font-black">
+                <button onclick="saveScheduleChanges()" class="bg-brand text-white border-2 border-black px-5 py-2.5 rounded-xl hover:bg-brand-hover shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-colors">저장하기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Song Modal -->
+    <div id="add-song-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white dark:bg-brand-cardBg rounded-3xl shadow-2xl w-11/12 max-w-sm p-6 transform scale-95 transition-transform duration-300 border-4 border-black dark:border-brand">
+            <div class="flex justify-between items-center mb-4 border-b-2 border-black dark:border-brand pb-3">
+                <h3 class="text-lg font-black text-brand-dark dark:text-white flex items-center gap-2"><i class="fa-solid fa-music text-brand"></i> 노래책 곡 추가</h3>
+                <button onclick="closeAddSongModal()" class="text-brand hover:text-brand-dark"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="space-y-3 font-bold text-xs">
+                <div>
+                    <label class="block text-gray-500 dark:text-pink-300 mb-1">장르 선택</label>
+                    <select id="new-song-genre" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl p-2.5 outline-none font-bold">
+                        <option value="힙합/R&B">힙합/R&B 🎧</option>
+                        <option value="J-Pop/애니">J-Pop/애니 💫</option>
+                        <option value="우타이테">우타이테 🎤</option>
+                        <option value="귀여운곡">귀여운 곡 💕</option>
+                        <option value="기타/팝">기타/팝 🎵</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-500 dark:text-pink-300 mb-1">곡 제목 (필수)</label>
+                    <input type="text" id="new-song-title" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl p-2.5 outline-none" placeholder="예: 첫눈">
+                </div>
+                <div>
+                    <label class="block text-gray-500 dark:text-pink-300 mb-1">아티스트 명</label>
+                    <input type="text" id="new-song-artist" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl p-2.5 outline-none" placeholder="예: EXO">
+                </div>
+                <div>
+                    <label class="block text-gray-500 dark:text-pink-300 mb-1">숙련도 별점 (1~5)</label>
+                    <input type="number" id="new-song-stars" min="1" max="5" value="5" class="w-full bg-[#fffcfc] dark:bg-black/30 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 rounded-xl p-2.5 outline-none">
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end gap-2 text-xs font-black">
+                <button onclick="closeAddSongModal()" class="px-4 py-2.5 rounded-xl bg-gray-200 dark:bg-brand-dark text-gray-700 dark:text-pink-200">취소</button>
+                <button onclick="submitNewSong()" class="px-4 py-2.5 rounded-xl bg-brand text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-brand-hover">추가 완료</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Script & Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword, 
+            signOut, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            getDoc, 
+            setDoc, 
+            updateDoc, 
+            deleteDoc, 
+            collection, 
+            onSnapshot 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase Configuration (도페 데이터베이스 자격 증명)
+        // Global Firebase Config and Initialization
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'dope-profile-app';
-        const firebaseConfig = {
-            apiKey: "AIzaSyD_pxh2yQKzrJGM5rEoFQyms0_s4AAJjw8",
-            authDomain: "dope-profile-db.firebaseapp.com",
-            projectId: "dope-profile-db",
-            storageBucket: "dope-profile-db.firebasestorage.app",
-            messagingSenderId: "666470131431",
-            appId: "1:666470131431:web:577cd240c4df25cfd92442"
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "",
+            authDomain: "",
+            projectId: "",
+            storageBucket: "",
+            messagingSenderId: "",
+            appId: ""
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
         const auth = getAuth(app);
+        const db = getFirestore(app);
 
-        // 도페님만의 시크하고 뽀용한 디폴트 데이터 세트 설정
-        const defaultUpboData = [
-            { id: 'likethis1125', nickname: '도페대장', items: [{ name: '자필 손편지 방셀', count: 2 }, { name: '애교 보이스 녹음', count: 1 }] },
-            { id: 'dope_fan_1', nickname: '김도야지', items: [{ name: '모닝콜 알람', count: 1 }] },
-            { id: 'dope_fan_2', nickname: '핑블덕후', items: [{ name: '노래 한곡 우선신청권', count: 3 }] }
-        ];
-        
-        const defaultNoticeData = [
-            { type: '필독', date: '2026.07.19', content: '도야지들을 위한 금주 핑크&블랙 방송 일정과 방셀 정산 숙제 대장 업데이트 완료! 💖🖤', typeColor: 'red', link: '' },
-            { type: '공지', date: '2026.07.15', content: '도페의 뽀용뽀용한 미소녀 보이스 커버 영상이 유튜브에 업로드되었어! 멜팅주의! ⭐', typeColor: 'blue', link: 'https://www.youtube.com/@yourdop3' },
-            { type: '일상', date: '2026.07.01', content: '오늘도 귀여운 도야지들 덕분에 텐션 가득 행복한 방송이었어 🖤 평생 사랑해!', typeColor: 'gray', link: '' }
-        ];
+        // Application State
+        window.isAdminLoggedIn = false;
+        window.currentUserEmail = "";
+        window.currentSelectedGenre = "전체";
+        window.activeUpboUser = null;
 
-        const defaultScheduleData = [
-            { day: '월', content: '도야지들 집합! 뽀용 수다 라디오 🖤', color: 'gray', isRest: false },
-            { day: '화', content: '귀염뽀작 신나는 노래방 On-Air 🎤', color: 'blue', isRest: false },
-            { day: '수', content: '도페 충전 시간 (휴방) 💤', color: 'green', isRest: true },
-            { day: '목', content: '스팀 힐링 미소녀 육성 시뮬레이션 🎮', color: 'gray', isRest: false },
-            { day: '금', content: '도야지 신청곡 100% 보컬 데이 🎵', color: 'blue', isRest: false },
-            { day: '토', content: '주말 힐링 합방 & 시청자 참참참 💫', color: 'gray', isRest: false },
-            { day: '일', content: '유튜브 하이라이트 감상 및 정산', color: 'red', isRest: false }
-        ];
-        
-        const defaultProfileData = {
-            bannerUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop",
-            introText: "안뇽안뇽~! 뽀용뽀용한 매력의 핑크&블랙 미소녀 스트리머 도페라고 해! 💖🖤\n언제나 시크하지만 다정한 노래와 따뜻한 마음으로 도야지들에게 행복을 충전해 줄게!\n다양한 미소녀 소통 게임, 상큼하고 트렌디한 노래들로 꽉 채운 노래책을 펼쳐봐! ⭐",
-            tags: ["ENFP", "도야지", "버츄얼싱어", "미소녀보이스", "핑크앤블랙"],
-            broadcast: { time: "매일 밤 9시 방송 온에어 (매주 수요일 정기 충전 휴방!)", content: "달달 가창 타임 · 시크 오디오 수다 · 뽀용 소통", game: "잔잔한 힐링 퍼즐 · 시청자 참여게임 · 미소녀 스토리" },
-            likes: ["노래 🎤", "마크 🎮", "사람들이랑 부대끼기 👥"],
-            dislikes: ["공포를 자극하는 무언가 👻", "재미없는 것 🥱", "사이버 일진 👿", "내 앞길을 가로막는 모든 것 🚧"],
-            ddays: [
-                { title: "🎂 도페 탄생일", type: "birthday", date: "12-16" },
-                { title: "💖 감동의 첫 데뷔일", type: "anniversary", date: "2025-08-31" }
-            ],
-            socials: {
-                soop: "https://www.sooplive.com/station/likethis1125",
-                youtube: "https://www.youtube.com/@yourdop3",
-                cafe: "준비중"
+        // Toast Helper
+        window.showToast = function(msg, isError = false) {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const toast = document.createElement('div');
+            toast.className = `px-4 py-3 rounded-2xl text-xs font-black border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 pointer-events-auto ${
+                isError ? 'bg-red-500 text-white' : 'bg-brand text-white'
+            }`;
+            toast.innerText = msg;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        };
+
+        // Listen to Auth State Changes
+        onAuthStateChanged(auth, (user) => {
+            if (user && !user.isAnonymous) {
+                window.isAdminLoggedIn = true;
+                window.currentUserEmail = user.email || "관리자";
+                document.getElementById('nav-auth-status').innerText = "관리자";
+                document.getElementById('nav-auth-status').classList.remove('hidden');
+                document.getElementById('nav-lock-icon').className = "fa-solid fa-lock-open text-brand";
+                document.getElementById('mobile-nav-lock-icon').className = "fa-solid fa-lock-open text-brand";
+                document.getElementById('logged-user-email').innerText = window.currentUserEmail;
+                document.getElementById('auth-login-form').classList.add('hidden');
+                document.getElementById('auth-user-info').classList.remove('hidden');
+                
+                // Reveal all admin buttons
+                document.querySelectorAll('#admin-profile-edit-btn, #admin-notice-edit-btn, #admin-schedule-edit-btn, #admin-add-outfit-btn, #admin-add-user-btn, #admin-add-song-btn, #delete-user-confirm-btn').forEach(btn => {
+                    btn.classList.remove('hidden');
+                    btn.classList.add('flex');
+                });
+            } else {
+                window.isAdminLoggedIn = false;
+                window.currentUserEmail = "";
+                document.getElementById('nav-auth-status').classList.add('hidden');
+                document.getElementById('nav-lock-icon').className = "fa-solid fa-lock text-brand";
+                document.getElementById('mobile-nav-lock-icon').className = "fa-solid fa-lock text-brand";
+                document.getElementById('auth-login-form').classList.remove('hidden');
+                document.getElementById('auth-user-info').classList.add('hidden');
+
+                // Hide admin edit buttons
+                document.querySelectorAll('#admin-profile-edit-btn, #admin-notice-edit-btn, #admin-schedule-edit-btn, #admin-add-outfit-btn, #admin-add-user-btn, #admin-add-song-btn, #delete-user-confirm-btn').forEach(btn => {
+                    btn.classList.add('hidden');
+                    btn.classList.remove('flex');
+                });
+            }
+        });
+
+        // Login Handler
+        window.handleAdminLogin = async function() {
+            const email = document.getElementById('admin-email').value.trim();
+            const password = document.getElementById('admin-password').value;
+
+            if (!email || !password) {
+                window.showToast("이메일과 비밀번호를 모두 입력해 주세요.", true);
+                return;
+            }
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                window.showToast("성공적으로 관리자 인증되었습니다! 💖");
+                closeAdminLoginModal();
+            } catch (err) {
+                console.error(err);
+                window.showToast("인증 실패: 이메일 또는 비밀번호를 확인해 주세요.", true);
             }
         };
 
-        const defaultSongsData = [
-            { title: "시차 (We Are)", artist: "우원재 (Feat. 로꼬 & GRAY)", genre: "힙합/R&B", rating: 5 },
-            { title: "Square (2017)", artist: "백예린", genre: "힙합/R&B", rating: 4 },
-            { title: "실루엣", artist: "KANA-BOON", genre: "우타이테", rating: 5 },
-            { title: "금요일의 아침인사", artist: "HoneyWorks", genre: "우타이테", rating: 5 },
-            { title: "Love Lee", artist: "AKMU", genre: "기타/팝", rating: 3 },
-            { title: "Sparkle", artist: "RADWIMPS", genre: "J-Pop/애니", rating: 4 },
-            { title: "레몬 (Lemon)", artist: "요네즈 켄시", genre: "J-Pop/애니", rating: 3 },
-            { title: "밤양갱", artist: "비비(BIBI)", genre: "귀여운곡", rating: 5 },
-            { title: "Dilly Dally", artist: "도페", genre: "귀여운곡", rating: 5 }
-        ];
-
-        const defaultOutfitsData = [
-            { id: "outfit_1", name: "러블리 핑크 메이드 🎀", desc: "도야지들이 가장 사랑하는 뽀용한 핑크색 에이프런 세트!", img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=600&auto=format&fit=crop" },
-            { id: "outfit_2", name: "시크 고스 로리타 🖤", desc: "시크한 다크매트 테마가 돋보이는 레이스 듬뿍 코디!", img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=600&auto=format&fit=crop" }
-        ];
-        
-        let globalUpboData = [];
-        let globalNoticeData = [];
-        let globalScheduleData = [];
-        let globalProfileData = {};
-        let globalSongsData = [];
-        let globalOutfitsData = [];
-        
-        let isAdminMode = false;
-        let currentEditingUserId = null;
-        let deleteConfirmState = false; 
-        let currentSelectedGenre = '전체';
-
-        // Local Storage Utilities
-        function safeGetStorage(key, defaultValue) {
-            try { 
-                const item = window.localStorage.getItem(key); 
-                return item ? JSON.parse(item) : defaultValue; 
-            } catch (e) { 
-                return defaultValue; 
-            }
-        }
-        function safeSetStorage(key, value) {
-            try { 
-                window.localStorage.setItem(key, JSON.stringify(value)); 
-            } catch (e) {}
-        }
-
-        // Rule 1 만족을 위한 공식 파이어베이스 보관 경로 정의
-        const getOndanaDocRef = () => doc(db, 'artifacts', appId, 'public', 'data', 'site-data', 'main');
-        // 기존 데이터를 가져오기 위한 호환성용 구형 경로
-        const getOldDocRef = () => doc(db, 'artifacts', appId, 'public', 'profile-content');
-
-        async function authenticate() {
+        // Logout Handler
+        window.handleAdminLogout = async function() {
             try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-                return true;
-            } catch (error) {
-                console.warn("Auth deferred:", error.message);
-                return false;
+                await signOut(auth);
+                window.showToast("로그아웃 되었습니다.");
+                closeAdminLoginModal();
+            } catch (err) {
+                window.showToast("로그아웃 오류 발생", true);
             }
-        }
+        };
 
-        async function fetchSiteData() {
-            const loadingInd = document.getElementById('loading-indicator');
-            if (loadingInd) loadingInd.classList.remove('hidden');
+        // Public Path Helper
+        const getPublicColl = (collName) => collection(db, 'artifacts', appId, 'public', 'data', collName);
+        const getPublicDoc = (collName, docId) => doc(db, 'artifacts', appId, 'public', 'data', collName, docId);
 
-            const isAuthed = await authenticate();
-            
-            if (isAuthed && navigator.onLine) {
-                try {
-                    const docRef = getOndanaDocRef();
-                    let docSnap = await getDoc(docRef);
-                    
-                    // 신규 경로에 데이터가 아직 존재하지 않는 경우 (최초 마이그레이션 실행)
-                    if (!docSnap.exists()) {
-                        const oldRef = getOldDocRef();
-                        try {
-                            const oldSnap = await getDoc(oldRef);
-                            if (oldSnap.exists()) {
-                                // 구버전 경로에 데이터가 존재하면 새 데이터베이스로 마이그레이션 복제 진행
-                                const oldData = oldSnap.data();
-                                await setDoc(docRef, oldData);
-                                console.log("구형 DB 데이터 마이그레이션 완료 🖤");
-                                docSnap = await getDoc(docRef);
+        // 1. Profile Data Listener
+        onSnapshot(getPublicDoc('profile', 'main'), (snap) => {
+            if (snap.exists()) {
+                const data = snap.data();
+                if (data.banner) document.getElementById('profile-banner-img').src = data.banner;
+                if (data.intro) document.getElementById('profile-intro-text').innerText = data.intro;
+                if (data.broadcastTime) document.getElementById('profile-broadcast-time').innerText = data.broadcastTime;
+                if (data.broadcastContent) document.getElementById('profile-broadcast-content').innerText = data.broadcastContent;
+                if (data.broadcastGame) document.getElementById('profile-broadcast-game').innerText = data.broadcastGame;
 
-                                // 구형 DB에서 의상이 발견되면 별도 컬렉션으로 마이그레이션 복제
-                                if (oldData.outfits && Array.isArray(oldData.outfits)) {
-                                    for (const outfit of oldData.outfits) {
-                                        await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'outfits', outfit.id), outfit);
-                                    }
-                                }
-                            }
-                        } catch (err) {
-                            console.warn("구버전 데이터 검사 에러:", err.message);
-                        }
-                    }
-
-                    if (docSnap.exists()) {
-                        const data = docSnap.data();
-                        globalUpboData = data.upbo || defaultUpboData;
-                        globalNoticeData = data.notice || defaultNoticeData;
-                        globalScheduleData = data.schedule || defaultScheduleData;
-                        globalProfileData = data.profile || defaultProfileData;
-                        globalSongsData = data.songs || defaultSongsData;
-
-                        if (globalProfileData.socials && typeof globalProfileData.socials.cafe === 'undefined') {
-                            globalProfileData.socials.cafe = "준비중";
-                        }
-
-                        safeSetStorage('dopeUpboData', globalUpboData);
-                        safeSetStorage('dopeNoticeData', globalNoticeData);
-                        safeSetStorage('dopeScheduleData', globalScheduleData);
-                        safeSetStorage('dopeProfileData', globalProfileData);
-                        safeSetStorage('dopeSongsData', globalSongsData);
-                    } else {
-                        // 신규/구버전 모두 아무런 데이터가 없을 경우 디폴트값 세팅
-                        const initialPayload = {
-                            upbo: defaultUpboData,
-                            notice: defaultNoticeData,
-                            schedule: defaultScheduleData,
-                            profile: defaultProfileData,
-                            songs: defaultSongsData
-                        };
-                        await setDoc(docRef, initialPayload);
-                        globalUpboData = defaultUpboData;
-                        globalNoticeData = defaultNoticeData;
-                        globalScheduleData = defaultScheduleData;
-                        globalProfileData = defaultProfileData;
-                        globalSongsData = defaultSongsData;
-                    }
-
-                    // [개선!] 1MB 한도를 초과하지 않도록 별도의 'outfits' 컬렉션에서 의상 데이터를 로드합니다.
-                    try {
-                        const outfitsColRef = collection(db, 'artifacts', appId, 'public', 'data', 'outfits');
-                        const outfitsSnap = await getDocs(outfitsColRef);
-                        const fetchedOutfits = [];
-                        outfitsSnap.forEach(d => {
-                            fetchedOutfits.push(d.data());
-                        });
-
-                        if (fetchedOutfits.length > 0) {
-                            globalOutfitsData = fetchedOutfits;
-                        } else {
-                            // 완전히 비어있을 경우 초기 디폴트 의상을 컬렉션에 채워 넣음
-                            globalOutfitsData = defaultOutfitsData;
-                            for (const outfit of defaultOutfitsData) {
-                                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'outfits', outfit.id), outfit);
-                            }
-                        }
-                        safeSetStorage('dopeOutfitsData', globalOutfitsData);
-                    } catch (outfitErr) {
-                        console.warn("의상 전용 컬렉션 로드 실패:", outfitErr.message);
-                        globalOutfitsData = safeGetStorage('dopeOutfitsData', defaultOutfitsData);
-                    }
-
-                } catch (error) {
-                    console.warn("Firestore error, falling back to local:", error.message);
-                    fallbackToLocal();
+                if (data.likes) {
+                    const likesContainer = document.getElementById('profile-likes-container');
+                    likesContainer.innerHTML = data.likes.map(l => `<span class="px-2.5 py-1 bg-brand-light dark:bg-black text-brand text-xs font-bold rounded-lg border border-brand/30">${l}</span>`).join('');
+                }
+                if (data.dislikes) {
+                    const dislikesContainer = document.getElementById('profile-dislikes-container');
+                    dislikesContainer.innerHTML = data.dislikes.map(d => `<span class="px-2.5 py-1 bg-gray-100 dark:bg-black text-gray-400 text-xs font-bold rounded-lg border border-gray-300 dark:border-gray-800">${d}</span>`).join('');
                 }
             } else {
-                fallbackToLocal();
+                // Initialize Default Profile
+                setDoc(getPublicDoc('profile', 'main'), {
+                    intro: "안녕하세요! 노래하고 소통하는 버츄얼 스트리머 도페입니다 💖🖤\n도야지 여러분과 매일매일 행복한 추억 만들어가요!",
+                    banner: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop",
+                    broadcastTime: "저녁 8시 ~ (공지 참조)",
+                    broadcastContent: "노래, 영도 반응, 저챗, 게임",
+                    broadcastGame: "종합 서브컬처, 인디게임",
+                    likes: ["노래 부르기 🎵", "도야지 응원 🐷", "스시 🍣", "핑크 & 블랙 💖🖤"],
+                    dislikes: ["벌레 🦟", "매운 음식 🌶️", "아침 일찍 깨기 ⏰"]
+                }).catch(()=>{});
             }
-            if (loadingInd) loadingInd.classList.add('hidden');
-        }
+        }, (err) => console.log(err));
 
-        function fallbackToLocal() {
-            globalUpboData = safeGetStorage('dopeUpboData', defaultUpboData);
-            globalNoticeData = safeGetStorage('dopeNoticeData', defaultNoticeData);
-            globalScheduleData = safeGetStorage('dopeScheduleData', defaultScheduleData);
-            globalProfileData = safeGetStorage('dopeProfileData', defaultProfileData);
-            globalSongsData = safeGetStorage('dopeSongsData', defaultSongsData);
-            globalOutfitsData = safeGetStorage('dopeOutfitsData', defaultOutfitsData);
-        }
-
-        // Rule 3: Firestore 쓰기 보안 규칙 검사 가드 적용
-        async function updateFirestore(key, data) {
-            safeSetStorage(`dope${key.charAt(0).toUpperCase() + key.slice(1)}Data`, data);
-            
-            if (!auth.currentUser) {
-                console.warn("데이터베이스 쓰기 거부: 인증된 계정 아님");
-                return;
-            }
-
-            if (navigator.onLine) {
-                try { 
-                    if (key === 'outfits') {
-                        // 의상은 개별 문서(Granular Document Sets)로 저장되므로, 메인 단일 문서의 용량 낭비를 막기 위해 패스합니다.
-                        return;
-                    }
-                    const docRef = getOndanaDocRef();
-                    await updateDoc(docRef, { [key]: data }); 
-                } catch (error) { 
-                    console.warn("Sync deferred:", error.message);
-                }
-            }
-        }
-
-        // Dark Mode Configuration & Event Triggers
-        document.addEventListener('DOMContentLoaded', async () => {
-            generateBgGlitter();
-
-            const themeToggleBtns = [document.getElementById('theme-toggle'), document.getElementById('mobile-theme-toggle')];
-            const html = document.documentElement;
-            let savedTheme = 'light';
-            try { savedTheme = window.localStorage.getItem('theme'); } catch(e) {}
-            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                html.classList.add('dark'); updateIcons(true);
-            } else {
-                html.classList.remove('dark'); updateIcons(false);
-            }
-            themeToggleBtns.forEach(btn => {
-                if (btn) {
-                    btn.addEventListener('click', () => {
-                        html.classList.toggle('dark');
-                        const isDark = html.classList.contains('dark');
-                        try { window.localStorage.setItem('theme', isDark ? 'dark' : 'light'); } catch(e) {}
-                        updateIcons(isDark);
-                    });
-                }
-            });
-            function updateIcons(isDark) {
-                themeToggleBtns.forEach(btn => {
-                    if (btn) {
-                        const icon = btn.querySelector('i');
-                        if (icon) {
-                            if (isDark) { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); } 
-                            else { icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); }
-                        }
-                    }
-                });
-            }
-
-            const mobileBtn = document.getElementById('mobile-menu-btn');
-            if (mobileBtn) {
-                mobileBtn.addEventListener('click', () => {
-                    document.getElementById('mobile-menu').classList.toggle('hidden');
-                });
-            }
-            document.querySelectorAll('#mobile-menu a').forEach(link => {
-                link.addEventListener('click', () => document.getElementById('mobile-menu').classList.add('hidden'));
-            });
-
+        // D-Day Counter Renderer
+        function renderDDays() {
+            const debutDate = new Date('2025-08-31');
             const today = new Date();
-            const dateSpan = document.getElementById('upbo-date');
-            if (dateSpan) {
-                dateSpan.innerText = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-            }
+            const diffTime = today - debutDate;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-            const searchInput = document.getElementById('upbo-search');
-            if (searchInput) {
-                searchInput.addEventListener('input', (e) => {
-                    const keyword = e.target.value.toLowerCase();
-                    const filtered = globalUpboData.filter(user => user.nickname.toLowerCase().includes(keyword) || user.id.toLowerCase().includes(keyword));
-                    renderUpbo(filtered);
-                });
-            }
-
-            await fetchSiteData();
-            
-            renderProfile();
-            renderUpbo(globalUpboData);
-            renderNotice();
-            renderSchedule();
-            renderSongList();
-            renderOutfits();
-        });
-
-        // Background glitter hearts and stars for Dope's pink & black theme
-        function generateBgGlitter() {
-            const container = document.getElementById('glitter-bg');
-            if (!container) return;
-            const items = ['💖', '🖤', '✨', '⭐', '🎀'];
-            
-            setInterval(() => {
-                const element = document.createElement('div');
-                element.className = 'sparkle-particle text-sm select-none';
-                element.style.left = Math.random() * 100 + 'vw';
-                element.style.top = '-20px';
-                element.style.fontSize = Math.random() * (24 - 12) + 12 + 'px';
-                element.style.animationDuration = Math.random() * (14 - 7) + 7 + 's';
-                element.style.opacity = Math.random() * 0.6 + 0.1;
-                element.innerText = items[Math.floor(Math.random() * items.length)];
-                
-                container.appendChild(element);
-                setTimeout(() => { element.remove(); }, 14000);
-            }, 1400);
+            document.getElementById('dday-container').innerHTML = `
+                <div class="flex justify-between items-center bg-brand-light/40 dark:bg-black/40 p-3 rounded-xl border border-brand/20">
+                    <span class="text-xs font-bold text-brand-dark dark:text-pink-200">🎉 도페 데뷔일</span>
+                    <span class="text-sm font-black text-brand">D+${Math.max(0, diffDays)}일</span>
+                </div>
+                <div class="flex justify-between items-center bg-brand-light/40 dark:bg-black/40 p-3 rounded-xl border border-brand/20">
+                    <span class="text-xs font-bold text-brand-dark dark:text-pink-200">🎂 도페 생일 (12/16)</span>
+                    <span class="text-sm font-black text-brand">12월 16일 💖</span>
+                </div>
+            `;
         }
+        renderDDays();
 
-        function showToast(message) {
-            const toast = document.getElementById('toast-message');
-            const toastText = document.getElementById('toast-text');
-            if (!toast || !toastText) return;
-            
-            toastText.innerText = message;
-            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
-            toast.classList.add('translate-y-0', 'opacity-100');
-            
-            setTimeout(() => {
-                toast.classList.remove('translate-y-0', 'opacity-100');
-                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
-            }, 2500);
-        }
-
-        function linkify(text) {
-            if (!text) return '';
-            const urlPattern = /(https?:\/\/[^\s]+)/g;
-            return text.replace(urlPattern, function(url) {
-                return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-brand dark:text-pink-300 hover:underline font-bold inline-flex items-center gap-1 bg-brand-light dark:bg-pink-950/30 px-2 py-0.5 rounded-lg transition-all text-xs" onclick="event.stopPropagation();">링크 <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i></a>`;
-            });
-        }
-
-        function calculateDDayString(type, dateStr) {
-            const today = new Date();
-            today.setHours(0,0,0,0);
-            
-            if (type === 'birthday') {
-                const cleaned = dateStr.replace(/[^0-9]/g, '-');
-                const parts = cleaned.split('-');
-                if (parts.length < 2) return "날짜 에러";
-                const month = parseInt(parts[0], 10) - 1;
-                const day = parseInt(parts[1], 10);
-                
-                let targetYear = today.getFullYear();
-                let targetDate = new Date(targetYear, month, day);
-                if (targetDate < today) {
-                    targetDate.setFullYear(targetYear + 1);
-                }
-                
-                const diffTime = targetDate - today;
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                if (diffDays === 0 || (today.getMonth() === month && today.getDate() === day)) {
-                    return '<span class="text-brand font-black animate-bounce block text-sm">도페 생일 축하해! 🎂💖</span>';
-                }
-                return `<span class="text-brand font-black text-lg">D-${diffDays}</span>`;
-            } else if (type === 'anniversary') {
-                const cleaned = dateStr.replace(/[^0-9]/g, '-');
-                const parts = cleaned.split('-').filter(p => p !== '');
-                if (parts.length < 3) return "날짜 에러";
-                const targetDate = new Date(parts[0], parseInt(parts[1], 10) - 1, parts[2]);
-                
-                const diffTime = today - targetDate;
-                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
-                if (diffDays <= 0) return `<span class="text-gray-400 text-xs">데뷔 전</span>`;
-                return `<span class="text-brand-dark dark:text-white font-black text-lg">${diffDays}일째</span>`;
-            } else {
-                const cleaned = dateStr.replace(/[^0-9]/g, '-');
-                const parts = cleaned.split('-').filter(p => p !== '');
-                if (parts.length < 3) return "날짜 에러";
-                const targetDate = new Date(parts[0], parseInt(parts[1], 10) - 1, parts[2]);
-                targetDate.setHours(0,0,0,0);
-                
-                const diffTime = targetDate - today;
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                
-                if (diffDays === 0) {
-                    return '<span class="text-brand font-black animate-pulse text-sm">D-DAY! 🖤</span>';
-                } else if (diffDays > 0) {
-                    return `<span class="text-brand font-black text-lg">D-${diffDays}</span>`;
-                } else {
-                    return `<span class="text-gray-400 text-xs">완료 (D+${Math.abs(diffDays)})</span>`;
-                }
+        // 2. Outfits Listener
+        window.outfitsData = [];
+        onSnapshot(getPublicColl('outfits'), (snap) => {
+            window.outfitsData = [];
+            snap.forEach(doc => window.outfitsData.push({ id: doc.id, ...doc.data() }));
+            if (window.outfitsData.length === 0) {
+                // Default outfits seed
+                window.outfitsData = [
+                    { id: '1', name: '러블리 바니걸 🐰', desc: '핑크와 블랙이 조화로운 시그니처 바니 수트', url: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=600&auto=format&fit=crop' },
+                    { id: '2', name: '스쿨 세일러 룩 🎒', desc: '풋풋하고 청량한 레트로 세일러 교복 코디', url: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=600&auto=format&fit=crop' }
+                ];
             }
-        }
+            renderOutfitsSlider();
+        }, (err) => console.log(err));
 
-        function renderProfile() {
-            const bannerImg = document.getElementById('profile-banner-img');
-            if (bannerImg) {
-                bannerImg.src = globalProfileData.bannerUrl || defaultProfileData.bannerUrl;
-            }
-
-            // Update Social Links Dynamic Rendering
-            const socials = globalProfileData.socials || defaultProfileData.socials || {};
-            const soopLink = document.getElementById('profile-soop-link');
-            if (soopLink) soopLink.href = socials.soop || 'https://www.sooplive.com/station/likethis1125';
-            
-            const youtubeLink = document.getElementById('profile-youtube-link');
-            if (youtubeLink) youtubeLink.href = socials.youtube || 'https://www.youtube.com/@yourdop3';
-
-            const cafeLink = document.getElementById('profile-cafe-link');
-            if (cafeLink) {
-                const cafeUrl = (socials.cafe || '').trim();
-                if (!cafeUrl || cafeUrl === '준비중' || cafeUrl === '#' || cafeUrl === '') {
-                    cafeLink.classList.add('hidden');
-                    cafeLink.classList.remove('flex');
-                } else {
-                    cafeLink.href = cafeUrl;
-                    cafeLink.onclick = null;
-                    cafeLink.target = '_blank';
-                    cafeLink.title = "공식 팬카페로 이동 ☕";
-                    cafeLink.classList.remove('hidden');
-                    cafeLink.classList.add('flex');
-                }
-            }
-
-            const introEl = document.getElementById('profile-intro-text');
-            if (introEl) introEl.textContent = globalProfileData.introText;
-            
-            const tagsContainer = document.getElementById('profile-tags-container');
-            if (tagsContainer) {
-                tagsContainer.innerHTML = (globalProfileData.tags || []).map(tag => `<span class="px-3 py-1 bg-brand-light dark:bg-brand-dark text-brand-dark dark:text-brand rounded-lg text-xs font-black border border-black/15 dark:border-brand/40 cursor-default">#${tag.trim()}</span>`).join('');
-            }
-            
-            const ddayContainer = document.getElementById('dday-container');
-            if (ddayContainer) {
-                ddayContainer.innerHTML = '';
-                const ddays = globalProfileData.ddays || defaultProfileData.ddays || [];
-                if (ddays.length === 0) {
-                    ddayContainer.innerHTML = `<div class="text-center text-gray-400 text-xs py-8 font-bold">등록된 기념일이 없습니다.</div>`;
-                } else {
-                    ddays.forEach(dday => {
-                        const ddayResult = calculateDDayString(dday.type, dday.date);
-                        ddayContainer.innerHTML += `
-                            <div class="flex items-center justify-between p-3 bg-brand-light/30 dark:bg-[#1a1416] rounded-xl border border-black/10 dark:border-brand/20">
-                                <div class="flex flex-col">
-                                    <span class="text-sm font-black text-brand-dark dark:text-gray-200">${dday.title}</span>
-                                    <span class="text-[10px] text-gray-400 font-bold mt-0.5">${dday.date}</span>
-                                </div>
-                                <div class="text-right">${ddayResult}</div>
-                            </div>
-                        `;
-                    });
-                }
-            }
-
-            const timeEl = document.getElementById('profile-broadcast-time');
-            if (timeEl) timeEl.innerText = (globalProfileData.broadcast || {}).time || '';
-            const contentEl = document.getElementById('profile-broadcast-content');
-            if (contentEl) contentEl.innerText = (globalProfileData.broadcast || {}).content || '';
-            const gameEl = document.getElementById('profile-broadcast-game');
-            if (gameEl) gameEl.innerText = (globalProfileData.broadcast || {}).game || '';
-            
-            const likesContainer = document.getElementById('profile-likes-container');
-            if (likesContainer) {
-                likesContainer.innerHTML = (globalProfileData.likes || []).map(like => `<span class="px-3 py-1 bg-[#fff0f5] text-brand border border-brand/20 rounded-lg text-xs font-black">${like.trim()}</span>`).join('');
-            }
-            const dislikesContainer = document.getElementById('profile-dislikes-container');
-            if (dislikesContainer) {
-                dislikesContainer.innerHTML = (globalProfileData.dislikes || []).map(dislike => `<span class="px-3 py-1 bg-brand-dark/90 dark:bg-black text-gray-300 rounded-lg text-xs font-black border border-black">${dislike.trim()}</span>`).join('');
-            }
-        }
-
-        // Render Outfits list
-        function renderOutfits() {
+        function renderOutfitsSlider() {
             const container = document.getElementById('outfits-slider');
-            if (!container) return;
-            container.innerHTML = '';
-
-            if (!globalOutfitsData || globalOutfitsData.length === 0) {
-                container.innerHTML = `
-                    <div class="w-full py-12 text-center text-gray-400 font-bold text-sm">
-                        현재 등록된 방셀 의상이 없습니다. 의상을 올려주세요! 🌸
+            container.innerHTML = window.outfitsData.map(item => `
+                <div class="snap-start flex-shrink-0 w-64 bg-brand-light/30 dark:bg-black/50 border-2 border-black dark:border-brand/40 rounded-2xl p-4 flex flex-col justify-between hover:border-brand transition-all">
+                    <div class="h-72 w-full rounded-xl overflow-hidden mb-3 border border-black/10 dark:border-brand/20 bg-black/5 relative">
+                        <img src="${item.url}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x600/0f0c0d/ff54b0?text=Outfit'">
                     </div>
-                `;
-                return;
-            }
-
-            globalOutfitsData.forEach((outfit) => {
-                const deleteBtn = isAdminMode ? `
-                    <button onclick="deleteOutfit('${outfit.id}')" class="absolute top-3 right-3 z-20 bg-red-600 text-white hover:bg-red-700 w-8 h-8 rounded-full flex items-center justify-center border-2 border-black transition-colors shadow-md" title="의상 삭제">
-                        <i class="fa-solid fa-trash-can text-xs"></i>
-                    </button>
-                ` : '';
-
-                container.innerHTML += `
-                    <div class="flex-shrink-0 w-full sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] snap-start bg-brand-light/30 dark:bg-[#1a1416]/50 border-2 border-black dark:border-brand/40 rounded-2xl p-4 flex flex-col justify-between hover:translate-y-[-4px] transition-all duration-300 relative group shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,84,176,0.15)]">
-                        ${deleteBtn}
-                        
-                        <!-- Image Frame: 비율을 보정하며 PNG도 투명 프레임으로 최적 조절합니다! -->
-                        <div class="w-full rounded-xl border border-black/10 dark:border-brand/20 flex items-center justify-center overflow-hidden mb-3 relative pattern-checkered">
-                            <img src="${outfit.img}" alt="${outfit.name}" class="w-full h-auto max-h-[380px] object-contain transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://placehold.co/300x400/0f0c0d/ff54b0?text=PNG+Outfit'">
-                        </div>
-
-                        <div class="flex items-center justify-between gap-2.5 mt-1.5">
-                            <div class="min-w-0">
-                                <h3 class="text-brand-dark dark:text-pink-100 font-black text-base truncate mb-0.5">${outfit.name}</h3>
-                                <p class="text-[11px] text-gray-500 dark:text-pink-300 font-semibold leading-relaxed truncate">${outfit.desc}</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        // 슬라이더 좌우 버튼 네비게이션 제어
-        function slideOutfits(direction) {
-            const slider = document.getElementById('outfits-slider');
-            if (!slider) return;
-            // 뷰포트 너비의 80% 만큼 부드럽게 스크롤 이동
-            const scrollAmount = slider.clientWidth * 0.8;
-            if (direction === 'left') {
-                slider.scrollLeft -= scrollAmount;
-            } else {
-                slider.scrollLeft += scrollAmount;
-            }
-        }
-
-        function openAddOutfitModal() {
-            const modal = document.getElementById('add-outfit-modal');
-            document.getElementById('new-outfit-name').value = '';
-            document.getElementById('new-outfit-desc').value = '';
-            document.getElementById('new-outfit-file').value = '';
-            document.getElementById('new-outfit-url').value = '';
-            
-            requestAnimationFrame(() => { 
-                modal.classList.remove('opacity-0', 'pointer-events-none'); 
-                modal.querySelector('div').classList.remove('scale-95'); 
-                modal.querySelector('div').classList.add('scale-100'); 
-            });
-        }
-
-        function closeAddOutfitModal() {
-            const modal = document.getElementById('add-outfit-modal');
-            modal.classList.add('opacity-0', 'pointer-events-none'); 
-            modal.querySelector('div').classList.remove('scale-100'); 
-            modal.querySelector('div').classList.add('scale-95');
-        }
-
-        // 이미지 고화질 상태를 유지하며 가로/세로 최대 800px 크기로 용량을 대폭 줄여 업로드가 완벽해지게 가공하는 핵심 압축 유틸리티
-        function compressImage(file, maxWidth, maxHeight, quality) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = (event) => {
-                    const img = new Image();
-                    img.src = event.target.result;
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-
-                        // 종횡비를 유지하며 해상도 리사이징 계산
-                        if (width > height) {
-                            if (width > maxWidth) {
-                                height = Math.round((height * maxWidth) / width);
-                                width = maxWidth;
-                            }
-                        } else {
-                            if (height > maxHeight) {
-                                width = Math.round((width * maxHeight) / height);
-                                height = maxHeight;
-                            }
-                        }
-
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-                        
-                        // PNG 투명도 보전을 위해 원본 포맷 유지, 그 외 포맷은 JPEG 압축
-                        const mimeType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
-                        resolve(canvas.toDataURL(mimeType, quality));
-                    };
-                    img.onerror = (err) => reject(err);
-                };
-                reader.onerror = (err) => reject(err);
-            });
-        }
-
-        async function submitNewOutfit() {
-            const name = document.getElementById('new-outfit-name').value.trim();
-            const desc = document.getElementById('new-outfit-desc').value.trim();
-            const fileInput = document.getElementById('new-outfit-file');
-            const urlInput = document.getElementById('new-outfit-url').value.trim();
-
-            if (!name || !desc) {
-                showToast("의상 이름과 코멘트를 모두 입력해주세요! 🌸");
-                return;
-            }
-
-            const newId = 'outfit_' + Date.now();
-            let finalImageSrc = "";
-
-            if (urlInput) {
-                // 방법 B: 직접 이미지 외부 링크 사용
-                finalImageSrc = urlInput;
-                saveOutfitData(newId, name, desc, finalImageSrc);
-            } else if (fileInput.files && fileInput.files[0]) {
-                // 방법 A: 직접 사진 업로드
-                const file = fileInput.files[0];
-                showToast("의상 이미지 비율 가공 및 업로드 중... ⏳");
-
-                try {
-                    // 고화질 원본 해상도를 최대 800px 한도로 보정 및 자동 압축 (투명 배경 레이어 PNG도 무손실 가공 지원)
-                    const compressedBase64 = await compressImage(file, 800, 800, 0.85);
-                    finalImageSrc = compressedBase64;
-                    saveOutfitData(newId, name, desc, finalImageSrc);
-                } catch (error) {
-                    console.error("이미지 인코딩 가공 에러:", error);
-                    showToast("의상 업로드 가공 중 오류가 발생했습니다. 😥");
-                }
-            } else {
-                showToast("의상 파일을 선택하거나 이미지 주소 링크를 적어주세요! 👚");
-            }
-        }
-
-        async function saveOutfitData(newId, name, desc, imgSource) {
-            const newOutfit = {
-                id: newId,
-                name: name,
-                desc: desc,
-                img: imgSource
-            };
-
-            globalOutfitsData.push(newOutfit);
-            
-            // [핵심 해결!] 메인 문서 용량에 누적시키지 않고, 개별 문서로 분할 저장하여 1MB 한도를 원천 회피합니다.
-            if (navigator.onLine && auth.currentUser) {
-                try {
-                    const outfitDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'outfits', newId);
-                    await setDoc(outfitDocRef, newOutfit);
-                } catch (err) {
-                    console.warn("의상 데이터베이스 개별 문서 등록 실패:", err.message);
-                }
-            }
-            
-            await updateFirestore('outfits', globalOutfitsData); // 로컬 캐시 갱신
-            
-            closeAddOutfitModal();
-            renderOutfits();
-            showToast(`"${name}" 방셀 의상을 고유 비율로 예쁘게 등록 완료했습니다! 👗`);
-        }
-
-        async function deleteOutfit(id) {
-            const targetOutfit = globalOutfitsData.find(o => o.id === id);
-            if (!targetOutfit) return;
-
-            globalOutfitsData = globalOutfitsData.filter(o => o.id !== id);
-            
-            // 데이터베이스 상의 개별 분할 문서도 깔끔하게 실시간 삭제
-            if (navigator.onLine && auth.currentUser) {
-                try {
-                    const outfitDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'outfits', id);
-                    await deleteDoc(outfitDocRef);
-                } catch (err) {
-                    console.warn("파이어베이스 개별 의상 문서 삭제 실패:", err.message);
-                }
-            }
-
-            await updateFirestore('outfits', globalOutfitsData); // 로컬 캐시 갱신
-            renderOutfits();
-            showToast(`"${targetOutfit.name}" 의상이 삭제되었습니다.`);
-        }
-
-        function renderNotice() {
-            const list = document.getElementById('notice-list');
-            if (!list) return;
-            list.innerHTML = '';
-            if (globalNoticeData.length === 0) { list.innerHTML = '<li class="text-center text-gray-400 py-6 font-bold">등록된 소식이 없습니다.</li>'; return; }
-
-            globalNoticeData.forEach(notice => {
-                let badgeClass = '', bgClass = 'p-3.5 rounded-2xl hover:bg-brand-light/20 dark:hover:bg-pink-950/10 border-2 border-transparent hover:border-black transition-all';
-                if (notice.typeColor === 'red') { badgeClass = 'bg-brand text-white'; bgClass = 'bg-[#fff0f5] dark:bg-brand-dark p-3.5 rounded-2xl border-2 border-black dark:border-brand/40'; } 
-                else if (notice.typeColor === 'blue') { badgeClass = 'bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400'; } 
-                else { badgeClass = 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-pink-200'; }
-
-                let linkHtml = '';
-                if (notice.link && notice.link.trim() !== '') {
-                    linkHtml = `
-                        <div class="mt-2.5">
-                            <a href="${notice.link}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-black text-white bg-brand border-2 border-black px-3 py-1 rounded-lg hover:bg-brand-hover transition-all">
-                                링크 이동 <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
-                            </a>
-                        </div>
-                    `;
-                }
-
-                list.innerHTML += `
-                    <li class="${bgClass} font-bold">
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="${badgeClass} text-[10px] px-2 py-0.5 rounded font-black uppercase tracking-wider">${notice.type}</span>
-                            <span class="text-[11px] text-gray-400 font-bold">${notice.date}</span>
-                        </div>
-                        <p class="text-sm text-gray-800 dark:text-pink-100 ${notice.typeColor === 'red' ? 'font-black text-brand' : ''}">${linkify(notice.content)}</p>
-                        ${linkHtml}
-                    </li>
-                `;
-            });
-        }
-
-        function renderSchedule() {
-            const list = document.getElementById('schedule-list');
-            if (!list) return;
-            list.innerHTML = '';
-
-            globalScheduleData.forEach(schedule => {
-                const isRest = schedule.isRest;
-                const dayBadgeClass = isRest
-                    ? 'text-white bg-brand border-2 border-black shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)] font-black'
-                    : 'text-gray-500 dark:text-zinc-400 bg-gray-100 dark:bg-zinc-800/80 border border-black/10 dark:border-zinc-700';
-
-                const textClass = isRest
-                    ? 'text-brand dark:text-brand font-black animate-pulse'
-                    : 'text-gray-750 dark:text-pink-100 font-semibold';
-
-                const bgClass = isRest
-                    ? 'bg-brand/5 dark:bg-brand-cardBg border-2 border-brand/25 dark:border-brand/40'
-                    : 'hover:bg-brand-light/20 dark:hover:bg-[#1a1416]/40 transition-colors border border-transparent';
-
-                list.innerHTML += `
-                    <div class="flex items-center justify-between p-2 rounded-xl ${bgClass} transition-all">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 flex items-center justify-center text-xs rounded-lg ${dayBadgeClass}">${schedule.day}</div>
-                            <div class="text-sm ${textClass}">${schedule.content}</div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        // 프로필 사진이 없거나 불러오기 실패 시 💖 이모지 디바이스로 대체 렌더링하는 핵심 컴포넌트
-        function getAvatarHTML(user, isLarge = true) {
-            const sizeClass = isLarge ? 'w-14 h-14 text-2xl mb-2.5' : 'w-10 h-10 text-xl';
-            const marginClass = isLarge ? 'mb-2.5' : '';
-            const borderClass = 'border-2 border-black';
-            
-            if (user.id && user.id.trim() !== '') {
-                const prefix = user.id.substring(0, 2);
-                const avatarUrl = `https://stimg.afreecatv.com/LOGO/${prefix}/${user.id}/${user.id}.jpg`;
-                
-                return `
-                    <div class="relative ${sizeClass} ${marginClass} flex-shrink-0">
-                        <img src="${avatarUrl}" 
-                             onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');" 
-                             alt="${user.nickname}" 
-                             class="w-full h-full rounded-full object-cover ${borderClass} bg-white">
-                        <div class="hidden w-full h-full rounded-full bg-brand-light dark:bg-brand-dark/50 ${borderClass} flex items-center justify-center select-none">💖</div>
-                    </div>
-                `;
-            } else {
-                return `
-                    <div class="${sizeClass} ${marginClass} rounded-full bg-brand-light dark:bg-brand-dark/50 ${borderClass} flex items-center justify-center flex-shrink-0 select-none">
-                        💖
-                    </div>
-                `;
-            }
-        }
-
-        function renderUpbo(data) {
-            const grid = document.getElementById('upbo-grid');
-            if (!grid) return;
-            grid.innerHTML = '';
-            if (data.length === 0) { grid.innerHTML = '<div class="col-span-full py-10 text-center text-gray-400 font-bold">검색된 도야지가 없어요 !</div>'; return; }
-
-            data.forEach(user => {
-                const totalItems = (user.items || []).reduce((sum, item) => sum + item.count, 0);
-                const avatarHtml = getAvatarHTML(user, true);
-                const card = document.createElement('div');
-                card.className = 'bg-white dark:bg-[#1a1416] border-2 border-black dark:border-brand/40 rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-brand-light/20 transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] duration-200 relative group';
-                card.onclick = () => { if (isAdminMode) openUpboEditModal(user); else openUpboModal(user); };
-                const adminBadge = isAdminMode ? `<div class="absolute top-2 right-2 text-brand"><i class="fa-solid fa-pen-to-square text-xs"></i></div>` : '';
-
-                card.innerHTML = `
-                    ${adminBadge}
-                    ${avatarHtml}
-                    <div class="text-brand-dark dark:text-pink-100 font-black text-sm mb-2 truncate w-full text-center">${user.nickname}</div>
-                    <div class="bg-brand text-white text-[10px] font-black px-2 py-0.5 rounded-lg">숙제 ${totalItems}개</div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function openUpboModal(user) {
-            let modal = document.getElementById('upbo-modal');
-            if (!modal) {
-                modal = document.createElement('div'); modal.id = 'upbo-modal'; modal.className = 'fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300';
-                document.body.appendChild(modal);
-            }
-            const itemsHtml = (user.items || []).length > 0 ? user.items.map(item => `
-                <div class="flex justify-between items-center bg-brand-light/30 dark:bg-black/30 border border-black/10 dark:border-brand/30 rounded-xl p-3 mb-2 font-bold text-xs">
-                    <span class="text-brand-dark dark:text-pink-100">${item.name}</span>
-                    <span class="text-brand font-black bg-brand-light border border-brand px-2 py-0.5 rounded-lg text-[10px]">×${item.count}</span>
-                </div>
-            `).join('') : `<div class="text-center text-gray-400 py-6 font-bold text-xs">남아있는 방셀 숙제가 없습니다! 프리패스 ✨</div>`;
-
-            const avatarHtml = getAvatarHTML(user, false);
-
-            modal.innerHTML = `
-                <div class="bg-white dark:bg-brand-cardBg rounded-3xl shadow-2xl w-11/12 max-w-sm overflow-hidden transform scale-95 transition-transform duration-300 border-4 border-black dark:border-brand">
-                    <div class="p-4 flex items-center justify-between border-b-2 border-black dark:border-brand bg-brand-light dark:bg-black">
-                        <div class="flex items-center gap-2.5">
-                            ${avatarHtml}
-                            <div>
-                                <div class="text-brand-dark dark:text-white font-black text-sm">${user.nickname}</div>
-                                <div class="text-gray-400 text-[9px] font-bold">(${user.id || '아이디 없음'})</div>
-                            </div>
-                        </div>
-                        <button onclick="closeUpboModal()" class="text-brand hover:text-brand-dark p-2"><i class="fa-solid fa-xmark text-xl"></i></button>
-                    </div>
-                    <div class="p-4 max-h-64 overflow-y-auto">${itemsHtml}</div>
-                </div>
-            `;
-            requestAnimationFrame(() => { modal.classList.remove('opacity-0', 'pointer-events-none'); modal.querySelector('div').classList.remove('scale-95'); modal.querySelector('div').classList.add('scale-100'); });
-            modal.addEventListener('click', (e) => { if (e.target === modal) closeUpboModal(); });
-        }
-
-        function closeUpboModal() {
-            const modal = document.getElementById('upbo-modal');
-            if (modal) { modal.classList.add('opacity-0', 'pointer-events-none'); modal.querySelector('div').classList.remove('scale-100'); modal.querySelector('div').classList.add('scale-95'); }
-        }
-
-        function renderSongList() {
-            const body = document.getElementById('song-list-body');
-            if (!body) return;
-            body.innerHTML = '';
-
-            const keyword = document.getElementById('song-search-input').value.toLowerCase();
-            
-            let filteredSongs = globalSongsData;
-            if (currentSelectedGenre !== '전체') {
-                filteredSongs = filteredSongs.filter(s => s.genre === currentSelectedGenre);
-            }
-            if (keyword) {
-                filteredSongs = filteredSongs.filter(s => s.title.toLowerCase().includes(keyword) || s.artist.toLowerCase().includes(keyword));
-            }
-
-            if (filteredSongs.length === 0) {
-                body.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-gray-400 font-bold text-xs">노래책이 텅 비어있습니다.</td></tr>`;
-                return;
-            }
-
-            filteredSongs.forEach((song, originalIndex) => {
-                const actualIndex = globalSongsData.findIndex(s => s.title === song.title && s.artist === song.artist);
-                
-                const deleteBtn = isAdminMode ? `
-                    <button onclick="deleteSong(${actualIndex})" class="text-gray-400 hover:text-red-500 transition-colors p-1" title="삭제">
-                        <i class="fa-solid fa-trash-can text-xs"></i>
-                    </button>
-                ` : '';
-
-                // Render Star proficiency score (별점 5개 표현 기능)
-                const currentRating = song.rating || 5;
-                let starsHtml = '<div class="flex justify-center items-center gap-0.5 text-brand">';
-                for (let i = 1; i <= 5; i++) {
-                    if (i <= currentRating) {
-                        starsHtml += `<i class="fa-solid fa-star text-[11px]"></i>`;
-                    } else {
-                        starsHtml += `<i class="fa-regular fa-star text-gray-300 dark:text-zinc-600 text-[11px]"></i>`;
-                    }
-                }
-                starsHtml += '</div>';
-
-                body.innerHTML += `
-                    <tr class="hover:bg-brand-light/10 dark:hover:bg-[#1a1416]/50 transition-colors font-semibold">
-                        <td class="px-4 py-3"><span class="bg-brand-light dark:bg-brand-dark text-brand text-[10px] px-2 py-0.5 rounded font-black border border-brand/20">${song.genre}</span></td>
-                        <td class="px-4 py-3 text-sm text-brand-dark dark:text-pink-100 font-bold">${song.title}</td>
-                        <td class="px-4 py-3 text-xs text-gray-500 dark:text-pink-300">${song.artist}</td>
-                        <td class="px-4 py-3 text-center">${starsHtml}</td>
-                        <td class="px-4 py-3 text-center">
-                            <div class="flex items-center justify-center gap-2">
-                                <button onclick="requestSong('${song.title}', '${song.artist}')" class="px-3 py-1 bg-brand text-white border border-black hover:bg-brand-hover rounded-lg text-xs font-black transition-all shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)]" title="신청 서식 복사">
-                                    <i class="fa-solid fa-copy mr-1"></i>신청
-                                </button>
-                                ${deleteBtn}
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function requestSong(title, artist) {
-            const textToCopy = `!신청 ${title} - ${artist}`;
-            
-            const dummy = document.createElement("textarea");
-            document.body.appendChild(dummy);
-            dummy.value = textToCopy;
-            dummy.select();
-            document.execCommand("copy");
-            document.body.removeChild(dummy);
-
-            showToast(`"${title}" 복사 완료! 방송에 붙여넣기(Ctrl+V) 해주세요 ⭐`);
-        }
-
-        function filterSongsByGenre(genre) {
-            currentSelectedGenre = genre;
-            const tabs = document.querySelectorAll('#song-genre-tabs button');
-            tabs.forEach(tab => {
-                tab.classList.remove('bg-brand', 'text-white', 'shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]', 'border-black');
-                tab.classList.add('bg-brand-light', 'dark:bg-[#1a1416]', 'text-[#2c1d22]', 'dark:text-pink-300', 'border-transparent');
-            });
-            event.target.classList.remove('bg-brand-light', 'dark:bg-[#1a1416]', 'text-[#2c1d22]', 'dark:text-pink-300', 'border-transparent');
-            event.target.classList.add('bg-brand', 'text-white', 'border-black', 'shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]');
-            
-            renderSongList();
-        }
-
-        function handleSongSearch() {
-            renderSongList();
-        }
-
-        // Admin Access and Password configuration (비밀번호: 209075)
-        function openAdminLoginModal() {
-            if (isAdminMode) {
-                isAdminMode = false;
-                document.getElementById('admin-add-user-btn').classList.add('hidden'); document.getElementById('admin-add-user-btn').classList.remove('flex');
-                document.getElementById('admin-notice-edit-btn').classList.add('hidden'); document.getElementById('admin-schedule-edit-btn').classList.add('hidden'); document.getElementById('admin-profile-edit-btn').classList.add('hidden');
-                document.getElementById('admin-add-song-btn').classList.add('hidden'); document.getElementById('admin-add-song-btn').classList.remove('flex');
-                document.getElementById('admin-add-outfit-btn').classList.add('hidden'); document.getElementById('admin-add-outfit-btn').classList.remove('flex');
-                document.getElementById('upbo-search').dispatchEvent(new Event('input')); 
-                renderSongList();
-                renderOutfits();
-                showToast("로그아웃 되었습니다.");
-                return;
-            }
-            const modal = document.getElementById('admin-login-modal');
-            requestAnimationFrame(() => { modal.classList.remove('opacity-0', 'pointer-events-none'); modal.querySelector('div').classList.remove('scale-95'); modal.querySelector('div').classList.add('scale-100'); });
-            document.getElementById('admin-pin').value = ''; document.getElementById('admin-pin').focus();
-        }
-
-        function closeAdminLoginModal() {
-            const modal = document.getElementById('admin-login-modal');
-            modal.classList.add('opacity-0', 'pointer-events-none'); modal.querySelector('div').classList.remove('scale-100'); modal.querySelector('div').classList.add('scale-95');
-        }
-
-        function checkAdminPin() {
-            const pin = document.getElementById('admin-pin').value;
-            // 지정 비밀번호: 209075 완벽 적용
-            if (pin === '209075') { 
-                isAdminMode = true; closeAdminLoginModal();
-                document.getElementById('admin-add-user-btn').classList.remove('hidden'); document.getElementById('admin-add-user-btn').classList.add('flex');
-                document.getElementById('admin-notice-edit-btn').classList.remove('hidden'); document.getElementById('admin-schedule-edit-btn').classList.remove('hidden'); document.getElementById('admin-profile-edit-btn').classList.remove('hidden');
-                document.getElementById('admin-add-song-btn').classList.remove('hidden'); document.getElementById('admin-add-song-btn').classList.add('flex');
-                document.getElementById('admin-add-outfit-btn').classList.remove('hidden'); document.getElementById('admin-add-outfit-btn').classList.add('flex');
-                document.getElementById('upbo-search').dispatchEvent(new Event('input'));
-                renderSongList();
-                renderOutfits();
-                showToast("도페님 환영합니다! 🖤");
-            } else {
-                const input = document.getElementById('admin-pin');
-                input.classList.add('border-red-500'); input.value = ''; input.placeholder = '비밀번호 불일치!';
-                setTimeout(() => { input.classList.remove('border-red-500'); input.placeholder = '••••••••'; }, 1800);
-            }
-        }
-
-        // User & Item editing systems
-        function saveUpboData() { updateFirestore('upbo', globalUpboData); }
-
-        function openUpboEditModal(user) {
-            currentEditingUserId = user.id; 
-            const modal = document.getElementById('upbo-edit-modal');
-            const avatarHtml = getAvatarHTML(user, false);
-            
-            document.getElementById('edit-modal-header').innerHTML = `
-                ${avatarHtml}
-                <div>
-                    <div class="text-brand-dark dark:text-white font-black text-sm">
-                        ${user.nickname} 
-                        <span class="text-[9px] bg-brand text-white px-1.5 py-0.5 rounded ml-1">EDIT</span>
-                    </div>
-                    <div class="text-gray-400 text-[9px] font-bold">(${user.id})</div>
-                </div>
-            `;
-            
-            const deleteUserBtn = document.getElementById('delete-user-confirm-btn');
-            if (deleteUserBtn) {
-                deleteUserBtn.classList.remove('hidden');
-                deleteUserBtn.classList.add('block');
-                deleteConfirmState = false; 
-                deleteUserBtn.innerHTML = `<i class="fa-solid fa-user-minus mr-1"></i>삭제`;
-                deleteUserBtn.className = "text-xs bg-red-100 text-red-600 font-bold px-2.5 py-1.5 rounded-lg border border-red-500 hover:bg-red-200 transition-all";
-                deleteUserBtn.onclick = () => handleDeleteUser(user.id);
-            }
-
-            renderEditItems();
-            requestAnimationFrame(() => { 
-                modal.classList.remove('opacity-0', 'pointer-events-none'); 
-                modal.querySelector('div').classList.remove('scale-95'); 
-                modal.querySelector('div').classList.add('scale-100'); 
-            });
-            document.getElementById('new-item-name').onkeypress = function(e) { if (e.key === 'Enter') addNewItem(); };
-        }
-
-        function closeUpboEditModal() {
-            const modal = document.getElementById('upbo-edit-modal'); 
-            modal.classList.add('opacity-0', 'pointer-events-none'); 
-            modal.querySelector('div').classList.remove('scale-100'); 
-            modal.querySelector('div').classList.add('scale-95'); 
-            currentEditingUserId = null;
-        }
-
-        function handleDeleteUser(userId) {
-            const btn = document.getElementById('delete-user-confirm-btn');
-            if (!btn) return;
-
-            if (!deleteConfirmState) {
-                deleteConfirmState = true;
-                btn.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i>진짜삭제?`;
-                btn.className = "text-xs bg-red-600 text-white font-bold px-2.5 py-1.5 rounded-lg border-2 border-black hover:bg-red-700 transition-all animate-pulse";
-                
-                setTimeout(() => {
-                    if (deleteConfirmState && currentEditingUserId === userId) {
-                        btn.innerHTML = `<i class="fa-solid fa-user-minus mr-1"></i>삭제`;
-                        btn.className = "text-xs bg-red-100 text-red-600 font-bold px-2.5 py-1.5 rounded-lg border border-red-500 hover:bg-red-200 transition-all";
-                        deleteConfirmState = false;
-                    }
-                }, 3000);
-            } else {
-                globalUpboData = globalUpboData.filter(u => u.id !== userId);
-                saveUpboData();
-                closeUpboEditModal();
-                document.getElementById('upbo-search').dispatchEvent(new Event('input'));
-                deleteConfirmState = false;
-            }
-        }
-
-        function renderEditItems() {
-            const user = globalUpboData.find(u => u.id === currentEditingUserId); if (!user) return;
-            const body = document.getElementById('edit-modal-body');
-            if (user.items.length === 0) { body.innerHTML = `<div class="text-center text-gray-400 py-6 font-bold text-xs">수정 가능한 숙제가 아직 비어있습니다.</div>`; return; }
-            body.innerHTML = user.items.map((item, index) => `
-                <div class="flex justify-between items-center bg-brand-light/30 dark:bg-black/30 border border-black/10 dark:border-brand/20 rounded-xl p-3 mb-2 font-bold">
-                    <span class="text-brand-dark dark:text-pink-100 text-xs">${item.name}</span>
-                    <div class="flex items-center gap-2">
-                        <button onclick="changeItemCount(${index}, -1)" class="w-6 h-6 flex items-center justify-center rounded-lg bg-gray-200 dark:bg-brand-dark text-gray-700 hover:bg-red-100 transition-colors"><i class="fa-solid fa-minus text-[10px]"></i></button>
-                        <span class="w-5 text-center text-xs text-brand-dark dark:text-white">${item.count}</span>
-                        <button onclick="changeItemCount(${index}, 1)" class="w-6 h-6 flex items-center justify-center rounded-lg bg-gray-200 dark:bg-brand-dark text-gray-700 hover:bg-pink-100 transition-colors"><i class="fa-solid fa-plus text-[10px]"></i></button>
-                        <button onclick="deleteItem(${index})" class="ml-2 text-gray-400 hover:text-red-500 transition-colors p-1"><i class="fa-solid fa-trash-can text-xs"></i></button>
+                    <div>
+                        <h4 class="font-black text-brand-dark dark:text-white text-base mb-1">${item.name}</h4>
+                        <p class="text-xs font-semibold text-gray-600 dark:text-pink-200">${item.desc}</p>
                     </div>
                 </div>
             `).join('');
         }
 
-        function changeItemCount(index, delta) {
-            const user = globalUpboData.find(u => u.id === currentEditingUserId); if (!user) return;
-            user.items[index].count += delta; if (user.items[index].count <= 0) user.items[index].count = 0;
-            saveUpboData(); renderEditItems(); document.getElementById('upbo-search').dispatchEvent(new Event('input'));
-        }
+        window.slideOutfits = function(direction) {
+            const container = document.getElementById('outfits-slider');
+            container.scrollBy({ left: direction === 'left' ? -280 : 280, behavior: 'smooth' });
+        };
 
-        function deleteItem(index) {
-            const user = globalUpboData.find(u => u.id === currentEditingUserId); if (!user) return;
-            user.items.splice(index, 1); saveUpboData(); renderEditItems(); document.getElementById('upbo-search').dispatchEvent(new Event('input'));
-        }
-
-        function addNewItem() {
-            const input = document.getElementById('new-item-name'); const name = input.value.trim(); if (!name) return;
-            let user = globalUpboData.find(u => u.id === currentEditingUserId); if (!user) return;
-            const existing = user.items.find(i => i.name === name);
-            if (existing) existing.count += 1; else user.items.push({ name: name, count: 1 });
-            input.value = ''; saveUpboData(); renderEditItems(); document.getElementById('upbo-search').dispatchEvent(new Event('input'));
-        }
-
-        function openAddUserModal() {
-            const modal = document.getElementById('add-user-modal'); document.getElementById('new-user-id').value = ''; document.getElementById('new-user-nickname').value = '';
-            requestAnimationFrame(() => { modal.classList.remove('opacity-0', 'pointer-events-none'); modal.querySelector('div').classList.remove('scale-95'); modal.querySelector('div').classList.add('scale-100'); }); document.getElementById('new-user-nickname').focus();
-        }
-        function closeAddUserModal() { const modal = document.getElementById('add-user-modal'); modal.classList.add('opacity-0', 'pointer-events-none'); modal.querySelector('div').classList.remove('scale-100'); modal.querySelector('div').classList.add('scale-95'); }
-
-        function submitNewUser() {
-            const idInput = document.getElementById('new-user-id').value.trim(); const nickInput = document.getElementById('new-user-nickname').value.trim();
-            if (!nickInput) {
-                const nickEl = document.getElementById('new-user-nickname'); nickEl.classList.add('border-red-500'); nickEl.placeholder = '닉네임을 써주세요!';
-                setTimeout(() => { nickEl.classList.remove('border-red-500'); nickEl.placeholder = '도링이 이름'; }, 2000); return;
+        // 3. Notice Listener
+        window.noticesData = [];
+        onSnapshot(getPublicColl('notices'), (snap) => {
+            window.noticesData = [];
+            snap.forEach(doc => window.noticesData.push({ id: doc.id, ...doc.data() }));
+            if (window.noticesData.length === 0) {
+                window.noticesData = [
+                    { id: 'n1', type: '필독', content: '도페 SOOP 방송국 게시판 이용 수칙 안내', link: 'https://www.sooplive.com/station/likethis1125' },
+                    { id: 'n2', type: '공지', content: '팬카페 개설 완료! 도야지들 많이 놀러오세요 💕', link: '#' }
+                ];
             }
-            const finalId = idInput || 'dope_fan_' + Math.random().toString(36).substring(2, 9);
-            globalUpboData.unshift({ id: finalId, nickname: nickInput, items: [] });
-            saveUpboData(); closeAddUserModal(); document.getElementById('upbo-search').dispatchEvent(new Event('input'));
+            renderNotices();
+        }, (err) => console.log(err));
+
+        function renderNotices() {
+            const list = document.getElementById('notice-list');
+            list.innerHTML = window.noticesData.map(n => `
+                <li class="flex items-start gap-2 p-2.5 rounded-xl bg-brand-light/30 dark:bg-black/30 border border-brand/10">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-black ${n.type === '필독' ? 'bg-rose-500 text-white' : 'bg-brand text-white'}">${n.type}</span>
+                    <div class="flex-grow">
+                        <p class="font-bold text-gray-800 dark:text-pink-100">${n.content}</p>
+                        ${n.link && n.link !== '#' ? `<a href="${n.link}" target="_blank" class="text-[11px] text-brand hover:underline font-bold"><i class="fa-solid fa-link text-[10px] mr-1"></i>링크 바로가기</a>` : ''}
+                    </div>
+                </li>
+            `).join('');
         }
 
-        // Notice configuration operations
-        function openNoticeEditModal() {
-            const modal = document.getElementById('notice-edit-modal'); renderNoticeEditList();
-            requestAnimationFrame(() => { modal.classList.remove('opacity-0', 'pointer-events-none'); modal.querySelector('div').classList.remove('scale-95'); modal.querySelector('div').classList.add('scale-100'); });
-            document.getElementById('new-notice-content').onkeypress = function(e) { if (e.key === 'Enter') addNewNotice(); };
-        }
-        function closeNoticeEditModal() { const modal = document.getElementById('notice-edit-modal'); modal.classList.add('opacity-0', 'pointer-events-none'); modal.querySelector('div').classList.remove('scale-100'); modal.querySelector('div').classList.add('scale-95'); }
+        // 4. Schedule Listener
+        onSnapshot(getPublicDoc('schedules', 'weekly'), (snap) => {
+            const days = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];
+            let data = snap.exists() ? snap.data() : {
+                '월요일': '저녁 8시 - 노래 & 소통 방송',
+                '화요일': '휴방 💤',
+                '수요일': '저녁 8시 - 종합 게임 데이 🎮',
+                '목요일': '저녁 8시 - 신곡 연습 & 영도 반응',
+                '금요일': '저녁 8시 - 도야지들과 뱅셀 혜택 라이브 💖',
+                '토요일': '랜덤 킬보 스케줄 ⏰',
+                '일요일': '휴방 또는 보컬 콘서트 🎤'
+            };
+            window.scheduleData = data;
+            const container = document.getElementById('schedule-list');
+            container.innerHTML = days.map(day => `
+                <div class="flex justify-between items-center p-2 rounded-xl bg-brand-light/20 dark:bg-black/20 text-xs font-bold border border-brand/10">
+                    <span class="text-brand font-black w-16">${day}</span>
+                    <span class="text-gray-700 dark:text-pink-100 font-semibold flex-grow text-right">${data[day] || '일정 없음'}</span>
+                </div>
+            `).join('');
+        }, (err) => console.log(err));
 
-        function renderNoticeEditList() {
-            const list = document.getElementById('notice-edit-list'); list.innerHTML = '';
-            if (globalNoticeData.length === 0) { list.innerHTML = '<div class="text-center text-gray-400 py-4 font-bold text-xs">알림이 비어있습니다.</div>'; return; }
-            globalNoticeData.forEach((notice, index) => {
-                let linkBadge = '';
-                if (notice.link && notice.link.trim() !== '') {
-                    linkBadge = `<span class="text-[9px] bg-brand-light text-brand border border-brand px-1.5 py-0.5 rounded truncate max-w-[120px]" title="${notice.link}"><i class="fa-solid fa-link mr-1"></i>${notice.link}</span>`;
+        // 5. Homework/Upbo Listener
+        window.upboData = [];
+        onSnapshot(getPublicColl('homework'), (snap) => {
+            window.upboData = [];
+            snap.forEach(doc => window.upboData.push({ id: doc.id, ...doc.data() }));
+            if (window.upboData.length === 0) {
+                // Seed default
+                window.upboData = [
+                    { id: 'u1', nickname: '도야지1호', soopId: 'likethis1125', items: [{ name: '러블리 바니걸 방셀', done: false }, { name: '손편지 리액션', done: true }] },
+                    { id: 'u2', nickname: '애청자A', soopId: '', items: [{ name: '모닝콜 음성 파일', done: false }] }
+                ];
+            }
+            renderUpboGrid();
+        }, (err) => console.log(err));
+
+        function renderUpboGrid() {
+            const search = document.getElementById('upbo-search')?.value.toLowerCase() || "";
+            const grid = document.getElementById('upbo-grid');
+            const filtered = window.upboData.filter(u => u.nickname.toLowerCase().includes(search));
+
+            grid.innerHTML = filtered.map(u => {
+                const total = u.items ? u.items.length : 0;
+                const completed = u.items ? u.items.filter(i => i.done).length : 0;
+                const avatar = u.soopId ? `https://stimg.afreecatv.com/LOGO/li/${u.soopId}/${u.soopId}.jpg` : 'https://placehold.co/100x100/ff54b0/ffffff?text=🐷';
+
+                return `
+                    <div onclick="openUpboEditModal('${u.id}')" class="bg-brand-light/30 dark:bg-black/40 border-2 border-black dark:border-brand/40 rounded-2xl p-3 flex flex-col items-center justify-between cursor-pointer hover:border-brand hover:scale-105 transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                        <img src="${avatar}" onerror="this.src='https://placehold.co/100x100/ff54b0/ffffff?text=🐷'" class="w-14 h-14 rounded-full border-2 border-black object-cover mb-2">
+                        <p class="font-black text-xs text-brand-dark dark:text-white truncate max-w-full mb-1">${u.nickname}</p>
+                        <span class="text-[10px] font-black px-2 py-0.5 rounded-full ${completed === total && total > 0 ? 'bg-green-500 text-white' : 'bg-brand text-white'}">
+                            ${completed}/${total} 완료
+                        </span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        document.getElementById('upbo-search')?.addEventListener('input', renderUpboGrid);
+
+        // 6. Songlist Listener
+        window.songsData = [];
+        onSnapshot(getPublicColl('songlist'), (snap) => {
+            window.songsData = [];
+            snap.forEach(doc => window.songsData.push({ id: doc.id, ...doc.data() }));
+            if (window.songsData.length === 0) {
+                window.songsData = [
+                    { id: 's1', genre: '힙합/R&B', title: '첫눈', artist: 'EXO', stars: 5 },
+                    { id: 's2', genre: 'J-Pop/애니', title: '포니테일과 슈슈', artist: 'AKB48', stars: 4 },
+                    { id: 's3', genre: '우타이테', title: '팬서비스', artist: 'HoneyWorks', stars: 5 },
+                    { id: 's4', genre: '귀여운곡', title: '고양이 송', artist: '도페 커버', stars: 5 }
+                ];
+            }
+            renderSongsTable();
+        }, (err) => console.log(err));
+
+        window.filterSongsByGenre = function(genre) {
+            window.currentSelectedGenre = genre;
+            document.querySelectorAll('.genre-tab').forEach(tab => {
+                if (tab.innerText.includes(genre) || (genre === '전체' && tab.innerText.includes('전체'))) {
+                    tab.className = "genre-tab active px-4 py-2 rounded-xl text-xs font-black bg-brand text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all";
+                } else {
+                    tab.className = "genre-tab px-4 py-2 rounded-xl text-xs font-black bg-brand-light dark:bg-[#1a1416] text-[#2c1d22] dark:text-pink-300 border-2 border-transparent hover:border-black transition-all";
                 }
-                list.innerHTML += `
-                    <div class="bg-brand-light/25 dark:bg-[#1a1416] border border-black/10 dark:border-brand/40 p-3 rounded-xl flex justify-between items-start gap-3 font-bold text-xs">
-                        <div class="flex-grow min-w-0">
-                            <div class="flex items-center gap-2 mb-1 flex-wrap font-sans">
-                                <span class="text-[9px] bg-brand text-white px-1.5 py-0.5 rounded font-black">${notice.type}</span>
-                                <span class="text-[10px] text-gray-400">${notice.date}</span>
-                                ${linkBadge}
-                            </div>
-                            <p class="text-xs text-gray-700 dark:text-pink-200 break-all">${linkify(notice.content)}</p>
+            });
+            renderSongsTable();
+        };
+
+        window.handleSongSearch = function() {
+            renderSongsTable();
+        };
+
+        function renderSongsTable() {
+            const search = document.getElementById('song-search-input')?.value.toLowerCase() || "";
+            const tbody = document.getElementById('song-list-body');
+            
+            const filtered = window.songsData.filter(s => {
+                const matchesGenre = window.currentSelectedGenre === '전체' || s.genre === window.currentSelectedGenre;
+                const matchesSearch = s.title.toLowerCase().includes(search) || s.artist.toLowerCase().includes(search);
+                return matchesGenre && matchesSearch;
+            });
+
+            tbody.innerHTML = filtered.map(s => `
+                <tr class="hover:bg-brand-light/30 dark:hover:bg-black/30 transition-colors">
+                    <td class="px-4 py-3"><span class="px-2 py-0.5 bg-brand-light dark:bg-black text-brand rounded text-[10px] font-black border border-brand/20">${s.genre}</span></td>
+                    <td class="px-4 py-3 font-bold text-gray-900 dark:text-pink-100">${s.title}</td>
+                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-pink-300 font-semibold">${s.artist}</td>
+                    <td class="px-4 py-3 text-center text-amber-400 text-xs">${'★'.repeat(s.stars || 5)}</td>
+                    <td class="px-4 py-3 text-center">
+                        <div class="flex items-center justify-center gap-1.5">
+                            <a href="https://www.sooplive.com/station/likethis1125" target="_blank" class="px-2.5 py-1 bg-brand text-white text-[11px] font-black rounded-lg border border-black hover:bg-brand-hover shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">신청</a>
+                            ${window.isAdminLoggedIn ? `<button onclick="deleteSong('${s.id}')" class="text-xs text-red-500 hover:text-red-700 p-1"><i class="fa-solid fa-trash"></i></button>` : ''}
                         </div>
-                        <button onclick="deleteNotice(${index})" class="text-gray-400 hover:text-red-500 p-1 flex-shrink-0"><i class="fa-solid fa-trash-can text-xs"></i></button>
-                    </div>
-                `;
-            });
-        }
-        function addNewNotice() {
-            const type = document.getElementById('new-notice-type').value; 
-            const contentInput = document.getElementById('new-notice-content'); 
-            const linkInput = document.getElementById('new-notice-link');
-            const content = contentInput.value.trim();
-            let link = linkInput.value.trim();
-            
-            if (!content) return; 
-            if (link && !/^https?:\/\//i.test(link)) link = 'https://' + link;
-            
-            let typeColor = 'gray'; 
-            if (type === '필독') typeColor = 'red'; 
-            if (type === '공지') typeColor = 'blue';
-            
-            const today = new Date(); 
-            const dateStr = `${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, '0')}.${String(today.getDate()).padStart(2, '0')}`;
-            
-            globalNoticeData.unshift({ type, date: dateStr, content, link, typeColor });
-            updateFirestore('notice', globalNoticeData); 
-            contentInput.value = ''; linkInput.value = '';
-            renderNoticeEditList(); renderNotice();
-        }
-        function deleteNotice(index) { globalNoticeData.splice(index, 1); updateFirestore('notice', globalNoticeData); renderNoticeEditList(); renderNotice(); }
-
-        function openScheduleEditModal() {
-            const modal = document.getElementById('schedule-edit-modal'); renderScheduleEditList();
-            requestAnimationFrame(() => { modal.classList.remove('opacity-0', 'pointer-events-none'); modal.querySelector('div').classList.remove('scale-95'); modal.querySelector('div').classList.add('scale-100'); });
-        }
-        function closeScheduleEditModal() { const modal = document.getElementById('schedule-edit-modal'); modal.classList.add('opacity-0', 'pointer-events-none'); modal.querySelector('div').classList.remove('scale-100'); modal.querySelector('div').classList.add('scale-95'); }
-        function renderScheduleEditList() {
-            const list = document.getElementById('schedule-edit-list'); list.innerHTML = '';
-            globalScheduleData.forEach((schedule, index) => {
-                list.innerHTML += `
-                    <div class="flex items-center gap-3 bg-brand-light/30 dark:bg-[#1a1416] border border-black/10 dark:border-brand/40 p-2 rounded-xl font-bold">
-                        <div class="w-6 text-center text-xs text-brand font-black">${schedule.day}</div>
-                        <input type="text" id="schedule-input-${index}" value="${schedule.content}" class="flex-grow bg-white dark:bg-black/40 border-2 border-black dark:border-brand text-gray-950 dark:text-pink-100 text-xs rounded-lg p-1.5 outline-none">
-                        <label class="flex items-center gap-1 text-[10px] text-gray-400 cursor-pointer flex-shrink-0">
-                            <input type="checkbox" id="schedule-rest-${index}" ${schedule.isRest ? 'checked' : ''} class="w-4 h-4 text-brand rounded focus:ring-brand">휴방
-                        </label>
-                    </div>
-                `;
-            });
-        }
-        function saveScheduleChanges() {
-            globalScheduleData.forEach((schedule, index) => {
-                const content = document.getElementById(`schedule-input-${index}`).value; const isRest = document.getElementById(`schedule-rest-${index}`).checked;
-                schedule.content = content; schedule.isRest = isRest;
-                if (isRest) { schedule.color = 'green'; } else { if (schedule.day === '토') schedule.color = 'blue'; else if (schedule.day === '일') schedule.color = 'red'; else schedule.color = 'gray'; }
-            });
-            updateFirestore('schedule', globalScheduleData); renderSchedule(); closeScheduleEditModal();
+                    </td>
+                </tr>
+            `).join('');
         }
 
-        // Song edit controls
-        function openAddSongModal() {
-            const modal = document.getElementById('add-song-modal');
-            document.getElementById('new-song-title').value = '';
-            document.getElementById('new-song-artist').value = '';
-            document.getElementById('new-song-rating').value = '5'; // default 5 stars
-            requestAnimationFrame(() => { modal.classList.remove('opacity-0', 'pointer-events-none'); modal.querySelector('div').classList.remove('scale-95'); modal.querySelector('div').classList.add('scale-100'); });
-        }
-        function closeAddSongModal() { const modal = document.getElementById('add-song-modal'); modal.classList.add('opacity-0', 'pointer-events-none'); modal.querySelector('div').classList.remove('scale-100'); modal.querySelector('div').classList.add('scale-95'); }
-        
-        function submitNewSong() {
-            const genre = document.getElementById('new-song-genre').value;
-            const title = document.getElementById('new-song-title').value.trim();
-            const artist = document.getElementById('new-song-artist').value.trim();
-            const rating = parseInt(document.getElementById('new-song-rating').value, 10); // get star rating
-            
-            if (!title || !artist) {
-                showToast("제목과 아티스트 명을 모두 적어주세요! 🌸");
+        // Modal Trigger Globals
+        window.openAdminLoginModal = () => {
+            const modal = document.getElementById('admin-login-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.children[0].classList.remove('scale-95');
+        };
+        window.closeAdminLoginModal = () => {
+            const modal = document.getElementById('admin-login-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.children[0].classList.add('scale-95');
+        };
+
+        window.openProfileEditModal = () => {
+            document.getElementById('edit-profile-intro').value = document.getElementById('profile-intro-text').innerText;
+            document.getElementById('edit-profile-banner').value = document.getElementById('profile-banner-img').src;
+            document.getElementById('edit-profile-time').value = document.getElementById('profile-broadcast-time').innerText;
+            document.getElementById('edit-profile-content').value = document.getElementById('profile-broadcast-content').innerText;
+            document.getElementById('edit-profile-game').value = document.getElementById('profile-broadcast-game').innerText;
+
+            const modal = document.getElementById('profile-edit-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.children[0].classList.remove('scale-95');
+        };
+        window.closeProfileEditModal = () => {
+            const modal = document.getElementById('profile-edit-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.children[0].classList.add('scale-95');
+        };
+
+        window.saveProfileEdit = async () => {
+            if (!window.isAdminLoggedIn) {
+                window.showToast("관리자 로그인이 필요합니다.", true);
+                return;
+            }
+            try {
+                await setDoc(getPublicDoc('profile', 'main'), {
+                    intro: document.getElementById('edit-profile-intro').value,
+                    banner: document.getElementById('edit-profile-banner').value,
+                    broadcastTime: document.getElementById('edit-profile-time').value,
+                    broadcastContent: document.getElementById('edit-profile-content').value,
+                    broadcastGame: document.getElementById('edit-profile-game').value,
+                    likes: document.getElementById('edit-profile-likes').value.split(',').map(s=>s.trim()).filter(Boolean),
+                    dislikes: document.getElementById('edit-profile-dislikes').value.split(',').map(s=>s.trim()).filter(Boolean)
+                }, { merge: true });
+                window.showToast("프로필이 수정되었습니다! 💖");
+                closeProfileEditModal();
+            } catch (e) {
+                window.showToast("수정 실패: Firestore 권한 확인", true);
+            }
+        };
+
+        // Outfits Modal
+        window.openAddOutfitModal = () => {
+            const modal = document.getElementById('add-outfit-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.children[0].classList.remove('scale-95');
+        };
+        window.closeAddOutfitModal = () => {
+            const modal = document.getElementById('add-outfit-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.children[0].classList.add('scale-95');
+        };
+
+        window.submitNewOutfit = async () => {
+            if (!window.isAdminLoggedIn) {
+                window.showToast("관리자 로그인이 필요합니다.", true);
+                return;
+            }
+            const name = document.getElementById('new-outfit-name').value.trim();
+            const desc = document.getElementById('new-outfit-desc').value.trim();
+            let url = document.getElementById('new-outfit-url').value.trim();
+            const fileInput = document.getElementById('new-outfit-file');
+
+            if (!name || !desc) {
+                window.showToast("의상명과 설명을 입력해주세요.", true);
                 return;
             }
 
-            globalSongsData.push({ title, artist, genre, rating });
-            updateFirestore('songs', globalSongsData);
-            closeAddSongModal();
-            renderSongList();
-            showToast(`노래책에 "${title}" 신곡을 등록했습니다! 🎵`);
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    url = e.target.result;
+                    await saveOutfitDoc(name, desc, url);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else if (url) {
+                await saveOutfitDoc(name, desc, url);
+            } else {
+                window.showToast("이미지 파일 또는 URL을 등록해 주세요.", true);
+            }
+        };
+
+        async function saveOutfitDoc(name, desc, url) {
+            try {
+                const newDocRef = doc(getPublicColl('outfits'));
+                await setDoc(newDocRef, { name, desc, url });
+                window.showToast("새 의상이 성공적으로 등록되었습니다! 👗");
+                closeAddOutfitModal();
+            } catch (e) {
+                window.showToast("등록 실패: 관리자 권한 필요", true);
+            }
         }
 
-        // Profile modification center
-        function openProfileEditModal() {
-            const modal = document.getElementById('profile-edit-modal');
-            
-            document.getElementById('edit-profile-banner').value = globalProfileData.bannerUrl || defaultProfileData.bannerUrl || '';
-            document.getElementById('edit-profile-intro').value = globalProfileData.introText || ''; 
-            document.getElementById('edit-profile-tags').value = (globalProfileData.tags || []).join(', ');
-            
-            const socials = globalProfileData.socials || {};
-            document.getElementById('edit-profile-soop').value = socials.soop || '';
-            document.getElementById('edit-profile-youtube').value = socials.youtube || '';
-            document.getElementById('edit-profile-cafe').value = socials.cafe || '';
+        // Homework / Upbo Modals
+        window.openAddUserModal = () => {
+            const modal = document.getElementById('add-user-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.children[0].classList.remove('scale-95');
+        };
+        window.closeAddUserModal = () => {
+            const modal = document.getElementById('add-user-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.children[0].classList.add('scale-95');
+        };
 
-            const broadcast = globalProfileData.broadcast || {};
-            document.getElementById('edit-profile-time').value = broadcast.time || ''; 
-            document.getElementById('edit-profile-content').value = broadcast.content || ''; 
-            document.getElementById('edit-profile-game').value = broadcast.game || '';
-            
-            document.getElementById('edit-profile-likes').value = (globalProfileData.likes || []).join(', '); 
-            document.getElementById('edit-profile-dislikes').value = (globalProfileData.dislikes || []).join(', ');
+        window.submitNewUser = async () => {
+            if (!window.isAdminLoggedIn) {
+                window.showToast("관리자 로그인이 필요합니다.", true);
+                return;
+            }
+            const nickname = document.getElementById('new-user-nickname').value.trim();
+            const soopId = document.getElementById('new-user-id').value.trim();
 
-            if (!globalProfileData.ddays || globalProfileData.ddays.length === 0) {
-                globalProfileData.ddays = JSON.parse(JSON.stringify(defaultProfileData.ddays));
+            if (!nickname) {
+                window.showToast("닉네임을 입력해 주세요.", true);
+                return;
             }
 
-            renderEditDdays();
+            try {
+                const newDocRef = doc(getPublicColl('homework'));
+                await setDoc(newDocRef, { nickname, soopId, items: [] });
+                window.showToast(`${nickname} 도야님이 추가되었습니다! 🐷`);
+                closeAddUserModal();
+            } catch (e) {
+                window.showToast("추가 실패", true);
+            }
+        };
 
-            requestAnimationFrame(() => { 
-                modal.classList.remove('opacity-0', 'pointer-events-none'); 
-                modal.querySelector('div').classList.remove('scale-95'); 
-                modal.querySelector('div').classList.add('scale-100'); 
-            });
-        }
+        window.openUpboEditModal = (userId) => {
+            const user = window.upboData.find(u => u.id === userId);
+            if (!user) return;
+            window.activeUpboUser = user;
 
-        // Window interface binders for HTML mapping
-        function closeProfileEditModal() { 
-            const modal = document.getElementById('profile-edit-modal'); 
-            modal.classList.add('opacity-0', 'pointer-events-none'); 
-            modal.querySelector('div').classList.remove('scale-100'); 
-            modal.querySelector('div').classList.add('scale-95'); 
-        }
+            const avatar = user.soopId ? `https://stimg.afreecatv.com/LOGO/li/${user.soopId}/${user.soopId}.jpg` : 'https://placehold.co/100x100/ff54b0/ffffff?text=🐷';
+            document.getElementById('edit-modal-header').innerHTML = `
+                <img src="${avatar}" onerror="this.src='https://placehold.co/100x100/ff54b0/ffffff?text=🐷'" class="w-10 h-10 rounded-full border-2 border-black object-cover">
+                <div>
+                    <h4 class="font-black text-sm text-brand-dark dark:text-white">${user.nickname}</h4>
+                    <p class="text-[10px] text-brand font-bold">도야지 업보 목록</p>
+                </div>
+            `;
 
-        function renderEditDdays() {
-            const list = document.getElementById('edit-dday-list');
-            if (!list) return;
-            list.innerHTML = '';
-            
-            const ddays = globalProfileData.ddays || defaultProfileData.ddays || [];
-            ddays.forEach((dday, index) => {
-                list.innerHTML += `
-                    <div class="flex items-center gap-2 bg-[#fffcfd] dark:bg-black p-2 rounded-xl border border-black dark:border-brand/40 font-bold">
-                        <input type="text" id="edit-dday-title-${index}" value="${dday.title}" class="w-1/3 bg-white dark:bg-black/30 border border-black rounded-lg p-1.5 text-[10px] outline-none" placeholder="타이틀">
-                        <select id="edit-dday-type-${index}" class="w-1/4 bg-white dark:bg-black/30 border border-black rounded-lg p-1.5 text-[10px] outline-none">
-                            <option value="birthday" ${dday.type === 'birthday' ? 'selected' : ''}>생일</option>
-                            <option value="anniversary" ${dday.type === 'anniversary' ? 'selected' : ''}>기념일</option>
-                            <option value="dday" ${dday.type === 'dday' ? 'selected' : ''}>디데이</option>
-                        </select>
-                        <input type="text" id="edit-dday-date-${index}" value="${dday.date}" class="w-1/4 bg-white dark:bg-black/30 border border-black rounded-lg p-1.5 text-[10px] outline-none" placeholder="예: 2025-09-07">
-                        <button type="button" onclick="deleteEditDdayRow(${index})" class="text-gray-400 hover:text-red-500 p-1"><i class="fa-solid fa-trash-can"></i></button>
+            renderUpboItemList();
+            const modal = document.getElementById('upbo-edit-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.children[0].classList.remove('scale-95');
+        };
+
+        window.closeUpboEditModal = () => {
+            const modal = document.getElementById('upbo-edit-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.children[0].classList.add('scale-95');
+            window.activeUpboUser = null;
+        };
+
+        function renderUpboItemList() {
+            const user = window.activeUpboUser;
+            if (!user) return;
+            const body = document.getElementById('edit-modal-body');
+
+            if (!user.items || user.items.length === 0) {
+                body.innerHTML = `<p class="text-xs text-center text-gray-400 font-bold py-6">등록된 숙제가 없습니다 🎈</p>`;
+                return;
+            }
+
+            body.innerHTML = user.items.map((item, idx) => `
+                <div class="flex items-center justify-between p-2.5 mb-2 rounded-xl bg-brand-light/30 dark:bg-black/30 border border-brand/20">
+                    <div class="flex items-center gap-2 cursor-pointer" onclick="toggleItemDone(${idx})">
+                        <i class="fa-regular ${item.done ? 'fa-circle-check text-green-500' : 'fa-circle text-gray-400'} text-lg"></i>
+                        <span class="text-xs font-bold ${item.done ? 'line-through text-gray-400' : 'text-gray-800 dark:text-pink-100'}">${item.name}</span>
                     </div>
-                `;
+                    ${window.isAdminLoggedIn ? `<button onclick="removeItem(${idx})" class="text-xs text-red-500 hover:text-red-700 p-1"><i class="fa-solid fa-trash"></i></button>` : ''}
+                </div>
+            `).join('');
+        }
+
+        window.toggleItemDone = async (idx) => {
+            if (!window.isAdminLoggedIn) return;
+            const user = window.activeUpboUser;
+            user.items[idx].done = !user.items[idx].done;
+            renderUpboItemList();
+            await updateDoc(getPublicDoc('homework', user.id), { items: user.items });
+        };
+
+        window.removeItem = async (idx) => {
+            if (!window.isAdminLoggedIn) return;
+            const user = window.activeUpboUser;
+            user.items.splice(idx, 1);
+            renderUpboItemList();
+            await updateDoc(getPublicDoc('homework', user.id), { items: user.items });
+        };
+
+        window.addNewItem = async () => {
+            if (!window.isAdminLoggedIn) {
+                window.showToast("관리자 권한이 필요합니다.", true);
+                return;
+            }
+            const input = document.getElementById('new-item-name');
+            const val = input.value.trim();
+            if (!val || !window.activeUpboUser) return;
+
+            const user = window.activeUpboUser;
+            if (!user.items) user.items = [];
+            user.items.push({ name: val, done: false });
+            input.value = "";
+            renderUpboItemList();
+            await updateDoc(getPublicDoc('homework', user.id), { items: user.items });
+        };
+
+        window.deleteCurrentUser = async () => {
+            if (!window.isAdminLoggedIn || !window.activeUpboUser) return;
+            try {
+                await deleteDoc(getPublicDoc('homework', window.activeUpboUser.id));
+                window.showToast("도야지가 삭제되었습니다.");
+                closeUpboEditModal();
+            } catch (e) {
+                window.showToast("삭제 오류 발생", true);
+            }
+        };
+
+        // Notice Modal Actions
+        window.openNoticeEditModal = () => {
+            renderNoticeEditList();
+            const modal = document.getElementById('notice-edit-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.children[0].classList.remove('scale-95');
+        };
+        window.closeNoticeEditModal = () => {
+            const modal = document.getElementById('notice-edit-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.children[0].classList.add('scale-95');
+        };
+
+        function renderNoticeEditList() {
+            const container = document.getElementById('notice-edit-list');
+            container.innerHTML = window.noticesData.map(n => `
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-brand-light/30 dark:bg-black/30 border border-brand/20 text-xs font-bold">
+                    <span class="text-gray-800 dark:text-pink-100 flex-grow">${n.type}: ${n.content}</span>
+                    <button onclick="deleteNotice('${n.id}')" class="text-red-500 hover:text-red-700 ml-2"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
+        }
+
+        window.addNewNotice = async () => {
+            if (!window.isAdminLoggedIn) return;
+            const type = document.getElementById('new-notice-type').value;
+            const content = document.getElementById('new-notice-content').value.trim();
+            const link = document.getElementById('new-notice-link').value.trim();
+
+            if (!content) return;
+            const newRef = doc(getPublicColl('notices'));
+            await setDoc(newRef, { type, content, link });
+            document.getElementById('new-notice-content').value = "";
+            window.showToast("새 공지가 등록되었습니다!");
+            renderNoticeEditList();
+        };
+
+        window.deleteNotice = async (id) => {
+            if (!window.isAdminLoggedIn) return;
+            await deleteDoc(getPublicDoc('notices', id));
+            window.showToast("공지가 삭제되었습니다.");
+            renderNoticeEditList();
+        };
+
+        // Schedule Modal Actions
+        window.openScheduleEditModal = () => {
+            const days = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];
+            const data = window.scheduleData || {};
+            const container = document.getElementById('schedule-edit-list');
+            container.innerHTML = days.map(day => `
+                <div class="space-y-1">
+                    <label class="block text-xs font-black text-brand">${day}</label>
+                    <input type="text" id="sch-${day}" value="${data[day] || ''}" class="w-full bg-[#fffcfc] dark:bg-black/30 border border-brand/30 rounded-xl p-2 text-xs font-bold text-gray-900 dark:text-pink-100 outline-none">
+                </div>
+            `).join('');
+
+            const modal = document.getElementById('schedule-edit-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.children[0].classList.remove('scale-95');
+        };
+
+        window.closeScheduleEditModal = () => {
+            const modal = document.getElementById('schedule-edit-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.children[0].classList.add('scale-95');
+        };
+
+        window.saveScheduleChanges = async () => {
+            if (!window.isAdminLoggedIn) return;
+            const days = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];
+            const updated = {};
+            days.forEach(d => {
+                updated[d] = document.getElementById(`sch-${d}`).value.trim();
+            });
+            await setDoc(getPublicDoc('schedules', 'weekly'), updated);
+            window.showToast("스케줄 변경사항이 저장되었습니다!");
+            closeScheduleEditModal();
+        };
+
+        // Song Modal Actions
+        window.openAddSongModal = () => {
+            const modal = document.getElementById('add-song-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.children[0].classList.remove('scale-95');
+        };
+        window.closeAddSongModal = () => {
+            const modal = document.getElementById('add-song-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.children[0].classList.add('scale-95');
+        };
+
+        window.submitNewSong = async () => {
+            if (!window.isAdminLoggedIn) return;
+            const genre = document.getElementById('new-song-genre').value;
+            const title = document.getElementById('new-song-title').value.trim();
+            const artist = document.getElementById('new-song-artist').value.trim() || '아티스트 미상';
+            const stars = parseInt(document.getElementById('new-song-stars').value) || 5;
+
+            if (!title) {
+                window.showToast("곡 제목을 입력해주세요.", true);
+                return;
+            }
+
+            const newDocRef = doc(getPublicColl('songlist'));
+            await setDoc(newDocRef, { genre, title, artist, stars });
+            window.showToast("노래책에 곡이 추가되었습니다! 🎵");
+            closeAddSongModal();
+        };
+
+        window.deleteSong = async (id) => {
+            if (!window.isAdminLoggedIn) return;
+            await deleteDoc(getPublicDoc('songlist', id));
+            window.showToast("곡이 삭제되었습니다.");
+        };
+
+        // Dark Mode Toggle Logic
+        const themeBtn = document.getElementById('theme-toggle');
+        const mobileThemeBtn = document.getElementById('mobile-theme-toggle');
+
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+        if (themeBtn) themeBtn.addEventListener('click', toggleDarkMode);
+        if (mobileThemeBtn) mobileThemeBtn.addEventListener('click', toggleDarkMode);
+
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (menuBtn) {
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
             });
         }
 
-        function addEditDdayRow() {
-            if (!globalProfileData.ddays) globalProfileData.ddays = [];
-            globalProfileData.ddays.push({ title: "새 기념일", type: "dday", date: "2026-09-07" });
-            renderEditDdays();
-        }
-
-        function deleteEditDdayRow(index) {
-            if (!globalProfileData.ddays) return;
-            globalProfileData.ddays.splice(index, 1);
-            renderEditDdays();
-        }
-
-        function saveProfileChanges() {
-            const parse = (str) => str.split(',').map(item => item.trim()).filter(item => item !== '');
+        // Background Glitter Particle Animation Effect
+        function createGlitterParticles() {
+            const container = document.getElementById('glitter-bg');
+            if (!container) return;
+            const symbols = ['✨', '💖', '🖤', '🌸', '⭐'];
             
-            globalProfileData.bannerUrl = document.getElementById('edit-profile-banner').value.trim();
-            globalProfileData.introText = document.getElementById('edit-profile-intro').value; 
-            globalProfileData.tags = parse(document.getElementById('edit-profile-tags').value);
-            
-            if (!globalProfileData.socials) globalProfileData.socials = {};
-            globalProfileData.socials.soop = document.getElementById('edit-profile-soop').value.trim();
-            globalProfileData.socials.youtube = document.getElementById('edit-profile-youtube').value.trim();
-            globalProfileData.socials.cafe = document.getElementById('edit-profile-cafe').value.trim();
+            setInterval(() => {
+                const el = document.createElement('span');
+                el.className = 'sparkle-particle text-xs';
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.animationDuration = (Math.random() * 5 + 4) + 's';
+                el.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                container.appendChild(el);
 
-            if (!globalProfileData.broadcast) globalProfileData.broadcast = {};
-            globalProfileData.broadcast.time = document.getElementById('edit-profile-time').value; 
-            globalProfileData.broadcast.content = document.getElementById('edit-profile-content').value; 
-            globalProfileData.broadcast.game = document.getElementById('edit-profile-game').value;
-            
-            globalProfileData.likes = parse(document.getElementById('edit-profile-likes').value); 
-            globalProfileData.dislikes = parse(document.getElementById('edit-profile-dislikes').value);
-
-            const ddaysCount = (globalProfileData.ddays || []).length;
-            const savedDdays = [];
-            for (let i = 0; i < ddaysCount; i++) {
-                const titleEl = document.getElementById(`edit-dday-title-${i}`);
-                if (!titleEl) continue;
-                
-                const title = titleEl.value.trim();
-                const type = document.getElementById(`edit-dday-type-${i}`).value;
-                const date = document.getElementById(`edit-dday-date-${i}`).value.trim();
-                
-                if (title !== '' && date !== '') {
-                    savedDdays.push({ title, type, date });
-                }
-            }
-            globalProfileData.ddays = savedDdays;
-
-            updateFirestore('profile', globalProfileData); 
-            renderProfile(); 
-            closeProfileEditModal();
-            showToast("도페의 프로필 데이터 변경 완료 🖤");
+                setTimeout(() => el.remove(), 9000);
+            }, 800);
         }
-
-        function deleteSong(index) {
-            const deletedTitle = globalSongsData[index].title;
-            globalSongsData.splice(index, 1);
-            updateFirestore('songs', globalSongsData);
-            renderSongList();
-            showToast(`"${deletedTitle}" 곡이 노래책 리스트에서 삭제되었습니다.`);
-        }
-
-        // Window interface binders for HTML mapping
-        window.openProfileEditModal = openProfileEditModal;
-        window.closeProfileEditModal = closeProfileEditModal;
-        window.saveProfileChanges = saveProfileChanges;
-        window.openUpboEditModal = openUpboEditModal;
-        window.closeUpboEditModal = closeUpboEditModal;
-        window.openUpboModal = openUpboModal;
-        window.closeUpboModal = closeUpboModal;
-        window.openAdminLoginModal = openAdminLoginModal;
-        window.closeAdminLoginModal = closeAdminLoginModal;
-        window.checkAdminPin = checkAdminPin;
-        window.addNewItem = addNewItem;
-        window.changeItemCount = changeItemCount;
-        window.deleteItem = deleteItem;
-        window.openAddUserModal = openAddUserModal;
-        window.closeAddUserModal = closeAddUserModal;
-        window.submitNewUser = submitNewUser;
-        window.openNoticeEditModal = openNoticeEditModal;
-        window.closeNoticeEditModal = closeNoticeEditModal;
-        window.addNewNotice = addNewNotice;
-        window.deleteNotice = deleteNotice;
-        window.openScheduleEditModal = openScheduleEditModal;
-        window.closeScheduleEditModal = closeScheduleEditModal;
-        window.saveScheduleChanges = saveScheduleChanges;
-        window.addEditDdayRow = addEditDdayRow;
-        window.deleteEditDdayRow = deleteEditDdayRow;
-        window.handleDeleteUser = handleDeleteUser;
-        window.requestSong = requestSong;
-        window.filterSongsByGenre = filterSongsByGenre;
-        window.openAddSongModal = openAddSongModal;
-        window.closeAddSongModal = closeAddSongModal;
-        window.submitNewSong = submitNewSong;
-        window.deleteSong = deleteSong;
-
-        // Window mappings for outfits
-        window.openAddOutfitModal = openAddOutfitModal;
-        window.closeAddOutfitModal = closeAddOutfitModal;
-        window.submitNewOutfit = submitNewOutfit;
-        window.deleteOutfit = deleteOutfit;
-        window.slideOutfits = slideOutfits; 
+        createGlitterParticles();
     </script>
 </body>
 </html>

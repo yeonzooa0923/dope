@@ -892,16 +892,15 @@
 
             if (unsubscribeFirestore) unsubscribeFirestore();
 
-            // onSnapshot을 통해 서버의 데이터 변경사항을 모바일과 PC에 실시간으로 즉시 동기화
             unsubscribeFirestore = onSnapshot(docRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    globalUpboData = data.upbo || defaultUpboData;
-                    globalNoticeData = data.notice || defaultNoticeData;
-                    globalScheduleData = data.schedule || defaultScheduleData;
+                    globalUpboData = Array.isArray(data.upbo) ? data.upbo : defaultUpboData;
+                    globalNoticeData = Array.isArray(data.notice) ? data.notice : defaultNoticeData;
+                    globalScheduleData = Array.isArray(data.schedule) ? data.schedule : defaultScheduleData;
                     globalProfileData = data.profile || defaultProfileData;
-                    globalSongsData = data.songs || defaultSongsData;
-                    globalOutfitsData = data.outfits || defaultOutfitsData;
+                    globalSongsData = Array.isArray(data.songs) ? data.songs : defaultSongsData;
+                    globalOutfitsData = Array.isArray(data.outfits) ? data.outfits : defaultOutfitsData;
 
                     if (globalProfileData.socials && typeof globalProfileData.socials.cafe === 'undefined') {
                         globalProfileData.socials.cafe = "준비중";
@@ -916,7 +915,6 @@
                     
                     renderAll();
                 } else {
-                    // 문서가 데이터베이스에 아직 없을 경우 초기화
                     saveAllToFirestore();
                 }
             }, (error) => {
@@ -949,12 +947,22 @@
         }
 
         function fallbackToLocal() {
-            globalUpboData = safeGetStorage('dopeUpboData', defaultUpboData);
-            globalNoticeData = safeGetStorage('dopeNoticeData', defaultNoticeData);
-            globalScheduleData = safeGetStorage('dopeScheduleData', defaultScheduleData);
+            const localUpbo = safeGetStorage('dopeUpboData', null);
+            globalUpboData = Array.isArray(localUpbo) ? localUpbo : defaultUpboData;
+
+            const localNotice = safeGetStorage('dopeNoticeData', null);
+            globalNoticeData = Array.isArray(localNotice) ? localNotice : defaultNoticeData;
+
+            const localSchedule = safeGetStorage('dopeScheduleData', null);
+            globalScheduleData = Array.isArray(localSchedule) ? localSchedule : defaultScheduleData;
+
             globalProfileData = safeGetStorage('dopeProfileData', defaultProfileData);
-            globalSongsData = safeGetStorage('dopeSongsData', defaultSongsData);
-            globalOutfitsData = safeGetStorage('dopeOutfitsData', defaultOutfitsData);
+
+            const localSongs = safeGetStorage('dopeSongsData', null);
+            globalSongsData = Array.isArray(localSongs) ? localSongs : defaultSongsData;
+
+            const localOutfits = safeGetStorage('dopeOutfitsData', null);
+            globalOutfitsData = Array.isArray(localOutfits) ? localOutfits : defaultOutfitsData;
         }
 
         async function updateFirestore(key, data) {
@@ -963,7 +971,6 @@
             if (auth && auth.currentUser && navigator.onLine) {
                 try { 
                     const docRef = getOndanaDocRef();
-                    // setDoc + merge: true를 사용하여 문서 미생성 상태에서도 에러 없이 자동 생성 및 안전한 병합 저장
                     await setDoc(docRef, { [key]: data }, { merge: true }); 
                 } catch (error) { 
                     console.warn("Sync deferred:", error.message);
@@ -1237,11 +1244,21 @@
             if (!container) return;
             container.innerHTML = '';
 
-            const outfits = globalOutfitsData && globalOutfitsData.length > 0 ? globalOutfitsData : defaultOutfitsData;
+            const outfits = Array.isArray(globalOutfitsData) ? globalOutfitsData : defaultOutfitsData;
 
-            outfits.forEach((outfit) => {
+            if (outfits.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12 text-gray-400 dark:text-pink-300/60 font-bold text-xs">
+                        등록된 이달의 방셀 의상이 없습니다. ${isAdminMode ? '우측 상단 버튼으로 의상을 추가해보세요! 👗' : ''}
+                    </div>
+                `;
+                return;
+            }
+
+            outfits.forEach((outfit, index) => {
+                const outfitId = outfit.id || `outfit_idx_${index}`;
                 const deleteBtn = isAdminMode ? `
-                    <button onclick="deleteOutfit('${outfit.id}')" class="absolute top-3 right-3 z-20 bg-red-600 text-white hover:bg-red-700 w-8 h-8 rounded-full flex items-center justify-center border-2 border-black transition-colors shadow-md" title="의상 삭제">
+                    <button onclick="event.stopPropagation(); deleteOutfit('${outfitId}', ${index})" class="absolute top-3 right-3 z-20 bg-red-600 text-white hover:bg-red-700 w-8 h-8 rounded-full flex items-center justify-center border-2 border-black transition-colors shadow-md" title="의상 삭제">
                         <i class="fa-solid fa-trash-can text-xs"></i>
                     </button>
                 ` : '';
@@ -1407,7 +1424,7 @@
             if (!body) return;
             body.innerHTML = '';
 
-            const songs = globalSongsData && globalSongsData.length > 0 ? globalSongsData : defaultSongsData;
+            const songs = Array.isArray(globalSongsData) ? globalSongsData : defaultSongsData;
             const keyword = document.getElementById('song-search-input').value.toLowerCase();
             
             let filteredSongs = songs;
@@ -1423,11 +1440,11 @@
                 return;
             }
 
-            filteredSongs.forEach((song, originalIndex) => {
+            filteredSongs.forEach((song) => {
                 const actualIndex = globalSongsData.findIndex(s => s.title === song.title && s.artist === song.artist);
                 
                 const deleteBtn = isAdminMode ? `
-                    <button onclick="deleteSong(${actualIndex})" class="text-gray-400 hover:text-red-500 transition-colors p-1" title="삭제">
+                    <button onclick="event.stopPropagation(); deleteSong(${actualIndex})" class="text-gray-400 hover:text-red-500 transition-colors p-1" title="삭제">
                         <i class="fa-solid fa-trash-can text-xs"></i>
                     </button>
                 ` : '';
@@ -1702,6 +1719,10 @@
                     
                     const newOutfit = { id: newId, name: name, desc: desc, img: base64Img };
 
+                    if (!Array.isArray(globalOutfitsData)) {
+                        globalOutfitsData = [];
+                    }
+
                     globalOutfitsData.push(newOutfit);
                     updateFirestore('outfits', globalOutfitsData);
                     closeAddOutfitModal();
@@ -1715,14 +1736,30 @@
             }
         }
 
-        function deleteOutfit(id) {
-            const targetOutfit = globalOutfitsData.find(o => o.id === id);
-            if (!targetOutfit) return;
+        function deleteOutfit(id, index) {
+            if (window.event) window.event.stopPropagation();
 
-            globalOutfitsData = globalOutfitsData.filter(o => o.id !== id);
+            if (!Array.isArray(globalOutfitsData)) return;
+
+            let targetIndex = -1;
+            if (id) {
+                targetIndex = globalOutfitsData.findIndex(o => o && o.id === id);
+            }
+            if (targetIndex === -1 && typeof index === 'number' && index >= 0 && index < globalOutfitsData.length) {
+                targetIndex = index;
+            }
+
+            if (targetIndex === -1) {
+                showToast("삭제할 의상을 찾을 수 없습니다.");
+                return;
+            }
+
+            const targetName = globalOutfitsData[targetIndex].name || "의상";
+            globalOutfitsData.splice(targetIndex, 1);
+            
             updateFirestore('outfits', globalOutfitsData);
             renderOutfits();
-            showToast(`"${targetOutfit.name}" 의상이 삭제되었습니다.`);
+            showToast(`"${targetName}" 의상이 삭제되었습니다. 🖤`);
         }
 
         function openNoticeEditModal() {

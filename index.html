@@ -109,26 +109,26 @@
                     </a>
                 </div>
                 <!-- Desktop Menu links -->
-                <nav class="hidden md:flex space-x-6 items-center font-bold text-sm tracking-wider uppercase">
-                    <a href="#profile" class="text-brand-dark dark:text-pink-200 hover:text-brand px-3 py-2 rounded-xl transition-all hover:bg-brand/10">프로필</a>
-                    <a href="#outfits" class="text-brand-dark dark:text-pink-200 hover:text-brand px-3 py-2 rounded-xl transition-all hover:bg-brand/10">방셀 의상</a>
-                    <a href="#notice" class="text-brand-dark dark:text-pink-200 hover:text-brand px-3 py-2 rounded-xl transition-all hover:bg-brand/10">공지</a>
-                    <a href="#schedule" class="text-brand-dark dark:text-pink-200 hover:text-brand px-3 py-2 rounded-xl transition-all hover:bg-brand/10">스케줄</a>
-                    <a href="#homework" class="text-brand-dark dark:text-pink-200 hover:text-brand px-3 py-2 rounded-xl transition-all hover:bg-brand/10">업보 현황</a>
-                    <a href="#songlist" class="text-brand-dark dark:text-pink-200 hover:text-brand px-3 py-2 rounded-xl transition-all hover:bg-brand/10">노래책</a>
+                <nav class="hidden lg:flex space-x-2 xl:space-x-4 items-center font-bold text-xs lg:text-sm tracking-wider uppercase">
+                    <a href="#profile" class="text-brand-dark dark:text-pink-200 hover:text-brand px-2.5 py-2 rounded-xl transition-all hover:bg-brand/10 whitespace-nowrap">프로필</a>
+                    <a href="#outfits" class="text-brand-dark dark:text-pink-200 hover:text-brand px-2.5 py-2 rounded-xl transition-all hover:bg-brand/10 whitespace-nowrap">방셀 의상</a>
+                    <a href="#notice" class="text-brand-dark dark:text-pink-200 hover:text-brand px-2.5 py-2 rounded-xl transition-all hover:bg-brand/10 whitespace-nowrap">공지</a>
+                    <a href="#schedule" class="text-brand-dark dark:text-pink-200 hover:text-brand px-2.5 py-2 rounded-xl transition-all hover:bg-brand/10 whitespace-nowrap">스케줄</a>
+                    <a href="#homework" class="text-brand-dark dark:text-pink-200 hover:text-brand px-2.5 py-2 rounded-xl transition-all hover:bg-brand/10 whitespace-nowrap">업보 현황</a>
+                    <a href="#songlist" class="text-brand-dark dark:text-pink-200 hover:text-brand px-2.5 py-2 rounded-xl transition-all hover:bg-brand/10 whitespace-nowrap">노래책</a>
                     
                     <!-- Force Refresh Server Data -->
-                    <button onclick="forceSyncServerData()" class="text-brand dark:text-pink-300 hover:bg-brand/10 p-2.5 rounded-xl transition-colors" title="서버 데이터 강제 동기화">
+                    <button onclick="forceSyncServerData()" class="text-brand dark:text-pink-300 hover:bg-brand/10 p-2 rounded-xl transition-colors flex-shrink-0" title="서버 데이터 강제 동기화">
                         <i class="fa-solid fa-rotate text-base"></i>
                     </button>
 
                     <!-- Theme toggler -->
-                    <button id="theme-toggle" class="text-brand dark:text-pink-300 hover:bg-brand/10 p-2.5 rounded-xl transition-colors">
+                    <button id="theme-toggle" class="text-brand dark:text-pink-300 hover:bg-brand/10 p-2 rounded-xl transition-colors flex-shrink-0">
                         <i class="fa-solid fa-moon text-lg w-5 h-5 flex items-center justify-center"></i>
                     </button>
                 </nav>
                 <!-- Mobile Menu and theme buttons -->
-                <div class="md:hidden flex items-center gap-1">
+                <div class="lg:hidden flex items-center gap-1">
                     <button onclick="forceSyncServerData()" class="text-brand dark:text-pink-300 hover:bg-brand/10 p-2.5 rounded-xl transition-colors" title="서버 동기화">
                         <i class="fa-solid fa-rotate text-base"></i>
                     </button>
@@ -142,7 +142,7 @@
             </div>
         </div>
         <!-- Mobile expandable panel -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white/95 dark:bg-brand-dark/95 border-t-2 border-brand/20 dark:border-brand/40">
+        <div id="mobile-menu" class="hidden lg:hidden bg-white/95 dark:bg-brand-dark/95 border-t-2 border-brand/20 dark:border-brand/40">
             <div class="px-4 pt-2 pb-4 space-y-1.5 font-bold text-sm uppercase">
                 <a href="#profile" class="block text-brand-dark dark:text-pink-200 hover:bg-brand/10 hover:text-brand px-4 py-3 rounded-xl">프로필</a>
                 <a href="#outfits" class="block text-brand-dark dark:text-pink-200 hover:bg-brand/10 hover:text-brand px-4 py-3 rounded-xl">방셀 의상</a>

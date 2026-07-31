@@ -117,6 +117,11 @@
                     <a href="#homework" class="text-brand-dark dark:text-pink-200 hover:text-brand px-3 py-2 rounded-xl transition-all hover:bg-brand/10">업보 현황</a>
                     <a href="#songlist" class="text-brand-dark dark:text-pink-200 hover:text-brand px-3 py-2 rounded-xl transition-all hover:bg-brand/10">노래책</a>
                     
+                    <!-- Force Refresh Server Data -->
+                    <button onclick="forceSyncServerData()" class="text-brand dark:text-pink-300 hover:bg-brand/10 p-2.5 rounded-xl transition-colors" title="서버 데이터 강제 동기화">
+                        <i class="fa-solid fa-rotate text-base"></i>
+                    </button>
+
                     <!-- Theme toggler -->
                     <button id="theme-toggle" class="text-brand dark:text-pink-300 hover:bg-brand/10 p-2.5 rounded-xl transition-colors">
                         <i class="fa-solid fa-moon text-lg w-5 h-5 flex items-center justify-center"></i>
@@ -124,6 +129,9 @@
                 </nav>
                 <!-- Mobile Menu and theme buttons -->
                 <div class="md:hidden flex items-center gap-1">
+                    <button onclick="forceSyncServerData()" class="text-brand dark:text-pink-300 hover:bg-brand/10 p-2.5 rounded-xl transition-colors" title="서버 동기화">
+                        <i class="fa-solid fa-rotate text-base"></i>
+                    </button>
                     <button id="mobile-theme-toggle" class="text-brand dark:text-pink-300 hover:bg-brand/10 p-2.5 rounded-xl transition-colors">
                         <i class="fa-solid fa-moon text-lg w-5 h-5 flex items-center justify-center"></i>
                     </button>
@@ -758,7 +766,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'dope-profile-app';
         const firebaseConfig = {
@@ -770,7 +778,7 @@
             appId: "1:666470131431:web:577cd240c4df25cfd92442"
         };
 
-        let app, db, auth;
+        let app, db, auth, unsubscribeFirestore = null;
         try {
             app = initializeApp(firebaseConfig);
             db = getFirestore(app);
@@ -868,9 +876,7 @@
         async function authenticate() {
             try {
                 if (!auth) return false;
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
+                if (!auth.currentUser) {
                     await signInAnonymously(auth);
                 }
                 return true;
@@ -880,41 +886,65 @@
             }
         }
 
-        async function fetchSiteData() {
+        function setupRealtimeFirestore() {
             if (!db) return;
-            const isAuthed = await authenticate();
-            
-            if (isAuthed && navigator.onLine) {
-                try {
-                    const docRef = getOndanaDocRef();
-                    const docSnap = await getDoc(docRef);
-                    
-                    if (docSnap.exists()) {
-                        const data = docSnap.data();
-                        globalUpboData = data.upbo || defaultUpboData;
-                        globalNoticeData = data.notice || defaultNoticeData;
-                        globalScheduleData = data.schedule || defaultScheduleData;
-                        globalProfileData = data.profile || defaultProfileData;
-                        globalSongsData = data.songs || defaultSongsData;
-                        globalOutfitsData = data.outfits || defaultOutfitsData;
+            const docRef = getOndanaDocRef();
 
-                        if (globalProfileData.socials && typeof globalProfileData.socials.cafe === 'undefined') {
-                            globalProfileData.socials.cafe = "준비중";
-                        }
+            if (unsubscribeFirestore) unsubscribeFirestore();
 
-                        safeSetStorage('dopeUpboData', globalUpboData);
-                        safeSetStorage('dopeNoticeData', globalNoticeData);
-                        safeSetStorage('dopeScheduleData', globalScheduleData);
-                        safeSetStorage('dopeProfileData', globalProfileData);
-                        safeSetStorage('dopeSongsData', globalSongsData);
-                        safeSetStorage('dopeOutfitsData', globalOutfitsData);
-                        
-                        // 백그라운드 데이터 수신 후 화면 재갱신
-                        renderAll();
+            // onSnapshot을 통해 서버의 데이터 변경사항을 모바일과 PC에 실시간으로 즉시 동기화
+            unsubscribeFirestore = onSnapshot(docRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    globalUpboData = data.upbo || defaultUpboData;
+                    globalNoticeData = data.notice || defaultNoticeData;
+                    globalScheduleData = data.schedule || defaultScheduleData;
+                    globalProfileData = data.profile || defaultProfileData;
+                    globalSongsData = data.songs || defaultSongsData;
+                    globalOutfitsData = data.outfits || defaultOutfitsData;
+
+                    if (globalProfileData.socials && typeof globalProfileData.socials.cafe === 'undefined') {
+                        globalProfileData.socials.cafe = "준비중";
                     }
-                } catch (error) {
-                    console.warn("Firestore sync error, using cached data:", error.message);
+
+                    safeSetStorage('dopeUpboData', globalUpboData);
+                    safeSetStorage('dopeNoticeData', globalNoticeData);
+                    safeSetStorage('dopeScheduleData', globalScheduleData);
+                    safeSetStorage('dopeProfileData', globalProfileData);
+                    safeSetStorage('dopeSongsData', globalSongsData);
+                    safeSetStorage('dopeOutfitsData', globalOutfitsData);
+                    
+                    renderAll();
+                } else {
+                    // 문서가 데이터베이스에 아직 없을 경우 초기화
+                    saveAllToFirestore();
                 }
+            }, (error) => {
+                console.warn("Firestore Realtime Sync Error:", error.message);
+            });
+        }
+
+        async function saveAllToFirestore() {
+            if (!db || !auth || !auth.currentUser) return;
+            try {
+                const docRef = getOndanaDocRef();
+                await setDoc(docRef, {
+                    upbo: globalUpboData,
+                    notice: globalNoticeData,
+                    schedule: globalScheduleData,
+                    profile: globalProfileData,
+                    songs: globalSongsData,
+                    outfits: globalOutfitsData
+                }, { merge: true });
+            } catch (e) {
+                console.warn("Save initial state fail:", e.message);
+            }
+        }
+
+        async function fetchSiteData() {
+            const isAuthed = await authenticate();
+            if (isAuthed && navigator.onLine) {
+                setupRealtimeFirestore();
             }
         }
 
@@ -933,12 +963,21 @@
             if (auth && auth.currentUser && navigator.onLine) {
                 try { 
                     const docRef = getOndanaDocRef();
-                    await updateDoc(docRef, { [key]: data }); 
+                    // setDoc + merge: true를 사용하여 문서 미생성 상태에서도 에러 없이 자동 생성 및 안전한 병합 저장
+                    await setDoc(docRef, { [key]: data }, { merge: true }); 
                 } catch (error) { 
                     console.warn("Sync deferred:", error.message);
                 }
             }
         }
+
+        window.forceSyncServerData = async function() {
+            showToast("서버 최신 데이터를 불러오는 중...");
+            fallbackToLocal();
+            renderAll();
+            await fetchSiteData();
+            showToast("서버 동기화 완료! ✨");
+        };
 
         function renderAll() {
             renderProfile();
@@ -1017,20 +1056,9 @@
                 });
             }
 
-            // 7. 백그라운드 원격 Firestore 데이터 동기화 (타임아웃 적용)
-            fetchSiteDataWithTimeout();
+            // 7. 실시간 Firestore 수신 연결
+            fetchSiteData();
         });
-
-        async function fetchSiteDataWithTimeout() {
-            try {
-                const timeoutPromise = new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Network timeout')), 3500)
-                );
-                await Promise.race([fetchSiteData(), timeoutPromise]);
-            } catch(e) {
-                console.warn("Remote sync skipped or timed out:", e.message);
-            }
-        }
 
         function generateBgGlitter() {
             const container = document.getElementById('glitter-bg');
@@ -1498,7 +1526,6 @@
             }
 
             try {
-                // Firebase 서버 인증 처리 (하드코딩 제거)
                 await signInWithEmailAndPassword(auth, email, password);
                 isAdminMode = true; 
                 closeAdminLoginModal();

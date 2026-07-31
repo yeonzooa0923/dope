@@ -154,7 +154,6 @@
         </div>
     </header>
 
-    <!-- Main Content Container -->
     <main class="flex-grow w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8 sm:space-y-12 relative z-10">
 
         <!-- 1. Profile Section -->
@@ -219,9 +218,7 @@
                 </div>
             </div>
 
-            <!-- Two Column Intro & Anniversary -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                
                 <!-- Introduction Card -->
                 <div class="bg-white dark:bg-brand-cardBg rounded-2xl p-5 sm:p-6 transition-colors duration-300 flex flex-col justify-between border-2 border-black dark:border-brand/40 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,84,176,0.2)]">
                     <div>
@@ -253,7 +250,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
 
             <!-- Broadcast Outline Info -->
@@ -329,7 +325,7 @@
             </div>
         </section>
 
-        <!-- 2. Notice & Schedule Row -->
+        <!-- Notice & Schedule Row -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Notice Section -->
             <section id="notice" class="scroll-mt-20">
@@ -369,10 +365,9 @@
             </section>
         </div>
 
-        <!-- 3. Homework Section (방셀 숙제 현황) -->
+        <!-- Homework Section (방셀 숙제 현황) -->
         <section id="homework" class="scroll-mt-20">
             <div class="bg-white dark:bg-brand-cardBg rounded-3xl p-5 sm:p-6 border-3 sm:border-4 border-black dark:border-brand/40 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,84,176,0.3)] transition-colors duration-300">
-                
                 <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-4 border-b border-brand/20 dark:border-brand/45 pb-4">
                     <div>
                         <div class="text-brand font-black tracking-widest text-[10px] sm:text-[11px] mb-1 flex items-center gap-1.5 uppercase font-logo">
@@ -409,14 +404,12 @@
                 <div id="upbo-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
                     <!-- Cards injected by JS -->
                 </div>
-
             </div>
         </section>
 
-        <!-- 4. Songlist Section (노래리스트) -->
+        <!-- Songlist Section (노래리스트) -->
         <section id="songlist" class="scroll-mt-20">
             <div class="bg-white dark:bg-brand-cardBg rounded-3xl p-5 sm:p-6 border-3 sm:border-4 border-black dark:border-brand/40 shadow-[6px_6px_0px_0px_rgba(255,84,176,0.3)] sm:shadow-[8px_8px_0px_0px_rgba(255,84,176,0.3)] dark:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-colors duration-300 flex flex-col">
-                
                 <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-4 border-b border-brand/20 dark:border-brand/45 pb-4">
                     <div>
                         <div class="text-brand font-black tracking-widest text-[10px] sm:text-[11px] uppercase font-logo">
@@ -765,8 +758,8 @@
     <!-- Core JS System -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'dope-profile-app';
         const firebaseConfig = {
@@ -873,34 +866,22 @@
 
         const getOndanaDocRef = () => doc(db, 'artifacts', appId, 'public', 'profile-content');
 
-        async function authenticate() {
-            try {
-                if (!auth) return false;
-                if (!auth.currentUser) {
-                    await signInAnonymously(auth);
-                }
-                return true;
-            } catch (error) {
-                console.warn("Auth deferred:", error.message);
-                return false;
-            }
-        }
-
-        function setupRealtimeFirestore() {
+        async function setupRealtimeFirestore() {
             if (!db) return;
-            const docRef = getOndanaDocRef();
 
+            const docRef = getOndanaDocRef();
             if (unsubscribeFirestore) unsubscribeFirestore();
 
+            // Anonymous auth 호출을 제거하여 400 인증 에러 방지
             unsubscribeFirestore = onSnapshot(docRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    globalUpboData = Array.isArray(data.upbo) ? data.upbo : defaultUpboData;
-                    globalNoticeData = Array.isArray(data.notice) ? data.notice : defaultNoticeData;
-                    globalScheduleData = Array.isArray(data.schedule) ? data.schedule : defaultScheduleData;
-                    globalProfileData = data.profile || defaultProfileData;
-                    globalSongsData = Array.isArray(data.songs) ? data.songs : defaultSongsData;
-                    globalOutfitsData = Array.isArray(data.outfits) ? data.outfits : defaultOutfitsData;
+                    if (data.upbo !== undefined) globalUpboData = data.upbo;
+                    if (data.notice !== undefined) globalNoticeData = data.notice;
+                    if (data.schedule !== undefined) globalScheduleData = data.schedule;
+                    if (data.profile !== undefined) globalProfileData = data.profile;
+                    if (data.songs !== undefined) globalSongsData = data.songs;
+                    if (data.outfits !== undefined) globalOutfitsData = data.outfits;
 
                     if (globalProfileData.socials && typeof globalProfileData.socials.cafe === 'undefined') {
                         globalProfileData.socials.cafe = "준비중";
@@ -912,18 +893,18 @@
                     safeSetStorage('dopeProfileData', globalProfileData);
                     safeSetStorage('dopeSongsData', globalSongsData);
                     safeSetStorage('dopeOutfitsData', globalOutfitsData);
-                    
+
                     renderAll();
                 } else {
                     saveAllToFirestore();
                 }
             }, (error) => {
-                console.warn("Firestore Realtime Sync Error:", error.message);
+                console.warn("Realtime Sync Warning:", error.message);
             });
         }
 
         async function saveAllToFirestore() {
-            if (!db || !auth || !auth.currentUser) return;
+            if (!db) return;
             try {
                 const docRef = getOndanaDocRef();
                 await setDoc(docRef, {
@@ -939,51 +920,59 @@
             }
         }
 
-        async function fetchSiteData() {
-            const isAuthed = await authenticate();
-            if (isAuthed && navigator.onLine) {
-                setupRealtimeFirestore();
-            }
-        }
-
         function fallbackToLocal() {
-            const localUpbo = safeGetStorage('dopeUpboData', null);
-            globalUpboData = Array.isArray(localUpbo) ? localUpbo : defaultUpboData;
-
-            const localNotice = safeGetStorage('dopeNoticeData', null);
-            globalNoticeData = Array.isArray(localNotice) ? localNotice : defaultNoticeData;
-
-            const localSchedule = safeGetStorage('dopeScheduleData', null);
-            globalScheduleData = Array.isArray(localSchedule) ? localSchedule : defaultScheduleData;
-
+            globalUpboData = safeGetStorage('dopeUpboData', defaultUpboData);
+            globalNoticeData = safeGetStorage('dopeNoticeData', defaultNoticeData);
+            globalScheduleData = safeGetStorage('dopeScheduleData', defaultScheduleData);
             globalProfileData = safeGetStorage('dopeProfileData', defaultProfileData);
-
-            const localSongs = safeGetStorage('dopeSongsData', null);
-            globalSongsData = Array.isArray(localSongs) ? localSongs : defaultSongsData;
-
-            const localOutfits = safeGetStorage('dopeOutfitsData', null);
-            globalOutfitsData = Array.isArray(localOutfits) ? localOutfits : defaultOutfitsData;
+            globalSongsData = safeGetStorage('dopeSongsData', defaultSongsData);
+            globalOutfitsData = safeGetStorage('dopeOutfitsData', defaultOutfitsData);
         }
 
         async function updateFirestore(key, data) {
             safeSetStorage(`dope${key.charAt(0).toUpperCase() + key.slice(1)}Data`, data);
             
-            if (auth && auth.currentUser && navigator.onLine) {
-                try { 
+            if (db) {
+                try {
                     const docRef = getOndanaDocRef();
-                    await setDoc(docRef, { [key]: data }, { merge: true }); 
-                } catch (error) { 
-                    console.warn("Sync deferred:", error.message);
+                    await setDoc(docRef, { [key]: data }, { merge: true });
+                } catch (error) {
+                    console.warn("Firestore Save Error:", error.message);
                 }
             }
         }
 
         window.forceSyncServerData = async function() {
-            showToast("서버 최신 데이터를 불러오는 중...");
-            fallbackToLocal();
-            renderAll();
-            await fetchSiteData();
-            showToast("서버 동기화 완료! ✨");
+            showToast("서버 최신 데이터를 불러오는 중... 🔄");
+            try {
+                if (!db) return;
+                const docRef = getOndanaDocRef();
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data.upbo !== undefined) globalUpboData = data.upbo;
+                    if (data.notice !== undefined) globalNoticeData = data.notice;
+                    if (data.schedule !== undefined) globalScheduleData = data.schedule;
+                    if (data.profile !== undefined) globalProfileData = data.profile;
+                    if (data.songs !== undefined) globalSongsData = data.songs;
+                    if (data.outfits !== undefined) globalOutfitsData = data.outfits;
+
+                    safeSetStorage('dopeUpboData', globalUpboData);
+                    safeSetStorage('dopeNoticeData', globalNoticeData);
+                    safeSetStorage('dopeScheduleData', globalScheduleData);
+                    safeSetStorage('dopeProfileData', globalProfileData);
+                    safeSetStorage('dopeSongsData', globalSongsData);
+                    safeSetStorage('dopeOutfitsData', globalOutfitsData);
+
+                    renderAll();
+                    showToast("서버 동기화 완료! ✨");
+                } else {
+                    showToast("서버 데이터가 아직 없습니다.");
+                }
+            } catch (e) {
+                console.error(e);
+                showToast("동기화 실패: 네트워크 상태를 확인하세요.");
+            }
         };
 
         function renderAll() {
@@ -994,78 +983,6 @@
             renderSongList();
             renderOutfits();
         }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // 1. 모바일 렌더링 차단 방지를 위해 로컬/디폴트 데이터로 즉시 렌더링
-            fallbackToLocal();
-            renderAll();
-
-            // 2. 배경 입자 효과
-            generateBgGlitter();
-
-            // 3. 다크모드 설정
-            const themeToggleBtns = [document.getElementById('theme-toggle'), document.getElementById('mobile-theme-toggle')];
-            const html = document.documentElement;
-            let savedTheme = 'light';
-            try { savedTheme = window.localStorage.getItem('theme'); } catch(e) {}
-            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                html.classList.add('dark'); updateIcons(true);
-            } else {
-                html.classList.remove('dark'); updateIcons(false);
-            }
-            themeToggleBtns.forEach(btn => {
-                if (btn) {
-                    btn.addEventListener('click', () => {
-                        html.classList.toggle('dark');
-                        const isDark = html.classList.contains('dark');
-                        try { window.localStorage.setItem('theme', isDark ? 'dark' : 'light'); } catch(e) {}
-                        updateIcons(isDark);
-                    });
-                }
-            });
-            function updateIcons(isDark) {
-                themeToggleBtns.forEach(btn => {
-                    if (btn) {
-                        const icon = btn.querySelector('i');
-                        if (icon) {
-                            if (isDark) { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); } 
-                            else { icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); }
-                        }
-                    }
-                });
-            }
-
-            // 4. 모바일 메뉴 토글
-            const mobileBtn = document.getElementById('mobile-menu-btn');
-            if (mobileBtn) {
-                mobileBtn.addEventListener('click', () => {
-                    document.getElementById('mobile-menu').classList.toggle('hidden');
-                });
-            }
-            document.querySelectorAll('#mobile-menu a').forEach(link => {
-                link.addEventListener('click', () => document.getElementById('mobile-menu').classList.add('hidden'));
-            });
-
-            // 5. 날짜 표시
-            const today = new Date();
-            const dateSpan = document.getElementById('upbo-date');
-            if (dateSpan) {
-                dateSpan.innerText = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-            }
-
-            // 6. 업보 검색 이벤트
-            const searchInput = document.getElementById('upbo-search');
-            if (searchInput) {
-                searchInput.addEventListener('input', (e) => {
-                    const keyword = e.target.value.toLowerCase();
-                    const filtered = globalUpboData.filter(user => user.nickname.toLowerCase().includes(keyword) || user.id.toLowerCase().includes(keyword));
-                    renderUpbo(filtered);
-                });
-            }
-
-            // 7. 실시간 Firestore 수신 연결
-            fetchSiteData();
-        });
 
         function generateBgGlitter() {
             const container = document.getElementById('glitter-bg');
@@ -1512,7 +1429,7 @@
         function openAdminLoginModal() {
             if (isAdminMode) {
                 isAdminMode = false;
-                signOut(auth).then(() => signInAnonymously(auth));
+                if (auth) signOut(auth).catch(() => {});
                 document.getElementById('admin-add-user-btn').classList.add('hidden'); document.getElementById('admin-add-user-btn').classList.remove('flex');
                 document.getElementById('admin-notice-edit-btn').classList.add('hidden'); document.getElementById('admin-schedule-edit-btn').classList.add('hidden'); document.getElementById('admin-profile-edit-btn').classList.add('hidden');
                 document.getElementById('admin-add-song-btn').classList.add('hidden'); document.getElementById('admin-add-song-btn').classList.remove('flex');
@@ -1543,7 +1460,9 @@
             }
 
             try {
-                await signInWithEmailAndPassword(auth, email, password);
+                if (auth) {
+                    await signInWithEmailAndPassword(auth, email, password);
+                }
                 isAdminMode = true; 
                 closeAdminLoginModal();
                 document.getElementById('admin-add-user-btn').classList.remove('hidden'); document.getElementById('admin-add-user-btn').classList.add('flex');
@@ -1995,6 +1914,79 @@
             showToast(`"${deletedTitle}" 곡이 노래책에서 삭제되었습니다.`);
         }
 
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. 모바일 렌더링 차단 방지를 위해 로컬/디폴트 데이터로 즉시 렌더링
+            fallbackToLocal();
+            renderAll();
+
+            // 2. 배경 입자 효과
+            generateBgGlitter();
+
+            // 3. 다크모드 설정
+            const themeToggleBtns = [document.getElementById('theme-toggle'), document.getElementById('mobile-theme-toggle')];
+            const html = document.documentElement;
+            let savedTheme = 'light';
+            try { savedTheme = window.localStorage.getItem('theme'); } catch(e) {}
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                html.classList.add('dark'); updateIcons(true);
+            } else {
+                html.classList.remove('dark'); updateIcons(false);
+            }
+            themeToggleBtns.forEach(btn => {
+                if (btn) {
+                    btn.addEventListener('click', () => {
+                        html.classList.toggle('dark');
+                        const isDark = html.classList.contains('dark');
+                        try { window.localStorage.setItem('theme', isDark ? 'dark' : 'light'); } catch(e) {}
+                        updateIcons(isDark);
+                    });
+                }
+            });
+            function updateIcons(isDark) {
+                themeToggleBtns.forEach(btn => {
+                    if (btn) {
+                        const icon = btn.querySelector('i');
+                        if (icon) {
+                            if (isDark) { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); } 
+                            else { icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); }
+                        }
+                    }
+                });
+            }
+
+            // 4. 모바일 메뉴 토글
+            const mobileBtn = document.getElementById('mobile-menu-btn');
+            if (mobileBtn) {
+                mobileBtn.addEventListener('click', () => {
+                    document.getElementById('mobile-menu').classList.toggle('hidden');
+                });
+            }
+            document.querySelectorAll('#mobile-menu a').forEach(link => {
+                link.addEventListener('click', () => document.getElementById('mobile-menu').classList.add('hidden'));
+            });
+
+            // 5. 날짜 표시
+            const today = new Date();
+            const dateSpan = document.getElementById('upbo-date');
+            if (dateSpan) {
+                dateSpan.innerText = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+            }
+
+            // 6. 업보 검색 이벤트
+            const searchInput = document.getElementById('upbo-search');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const keyword = e.target.value.toLowerCase();
+                    const filtered = globalUpboData.filter(user => user.nickname.toLowerCase().includes(keyword) || user.id.toLowerCase().includes(keyword));
+                    renderUpbo(filtered);
+                });
+            }
+
+            // 7. 실시간 Firestore 수신 연결 (익명 로그인 차단 오류 원천 해결)
+            setupRealtimeFirestore();
+        });
+
+        // Window Scope Exposure
         window.openProfileEditModal = openProfileEditModal;
         window.closeProfileEditModal = closeProfileEditModal;
         window.saveProfileChanges = saveProfileChanges;
